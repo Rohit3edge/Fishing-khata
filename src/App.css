@@ -4856,7 +4856,7 @@ input[type='submit'].btn-block, input[type='reset'].btn-block, input[type='butto
           flex-direction : column;
   min-width : 0;
   word-wrap : break-word;
-  background-color : #FFFFFF;
+  background-color :unset !important;
   -webkit-background-clip : border-box;
           background-clip : border-box;
   border : 1px solid rgba(0, 0, 0, 0.125);
@@ -7269,7 +7269,7 @@ a.bg-base:hover, a.bg-base:focus, button.bg-base:hover, button.bg-base:focus {
 .justify-content-around {
   -webkit-justify-content : space-around !important;
   -ms-flex-pack : distribute !important;
-          justify-content : space-around !important;
+          justify-content : space-evenly !important;
 }
 
 .align-items-start {
@@ -40067,8 +40067,6 @@ button:hover {
 .card {
   border : 0;
   margin : 15px 0;
-  -webkit-box-shadow : 0 6px 0 0 rgba(0, 0, 0, 0.01), 0 15px 32px 0 rgba(0, 0, 0, 0.06);
-          box-shadow : 0 6px 0 0 rgba(0, 0, 0, 0.01), 0 15px 32px 0 rgba(0, 0, 0, 0.06);
   border-radius : 8px;
 }
 .card[class*='gradient-'] .card-header, .card[class*='gradient-'] .card-footer {

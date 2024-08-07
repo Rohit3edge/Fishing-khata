@@ -74,6 +74,29 @@ const Navbarside = () => {
   return (
     <div>
       <nav className="top_nav">
+        <div className="top_nav_btn">
+        <button
+                  type="submit"
+                 
+                  className="btn btn-warning col-white submit-btn"
+                >
+                  Ledger
+                </button>
+                <button
+                  type="submit"
+                  
+                  className="btn btn-purple col-white submit-btn"
+                >
+                  Sale
+                </button>
+                <button
+                  type="submit"
+                 
+                  className="btn btn-success col-white submit-btn"
+                >
+                  Purchase
+                </button>
+        </div>
         <FcSettings className="setting animate-rotate " onClick={open} />
         <IoPersonCircle className="user-icon" onClick={drop} />
       </nav>
@@ -178,7 +201,7 @@ const Navbarside = () => {
      
         
             <li className="nav_items">
-              <NavLink to="/HealthCare" className="menu-title">
+              <NavLink to="/Ledger" className="menu-title">
                 <CgProfile  className="nav_icons" />
                 Ledger
               </NavLink>

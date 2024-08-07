@@ -16,26 +16,24 @@ function Home() {
             <div className="container-fluid pt-5">
               <div className="row">
                 <div className="col-xl-12 col-lg-12 col-md-6 col-12">
-                  <div className="card bg-white">
-                 
-                      <div
-                        className="card-block pt-2 pb-0 d-flex"
-                        style={{ gap: "15px" }}
-                      >
-                        <Widget type="user" />
-                        <Widget type="order" />
-                        <Widget type="earning" />
-                        <Widget type="balance" />
-                      </div>
-                      <div className="charts">
-          <Featured />
-          <Chart title="Last 6 Months (Revenue)" aspect={2 / 1} />
-        </div>
-                      <div
-                        id="Widget-line-chart"
-                        className="height-70 lineChartWidget WidgetlineChart mb-2"
-                      ></div>
-                    
+                  <div className="card">
+                    <div
+                      className="card-block pt-2 pb-0 d-flex"
+                      style={{ gap: "15px" }}
+                    >
+                      <Widget type="user" />
+                      <Widget type="order" />
+                      <Widget type="earning" />
+                      <Widget type="balance" />
+                    </div>
+                    <div className="charts">
+                      <Featured />
+                      <Chart title="Last 6 Months (Revenue)" aspect={2 / 1} />
+                    </div>
+                    <div
+                      id="Widget-line-chart"
+                      className="height-70 lineChartWidget WidgetlineChart mb-2"
+                    ></div>
                   </div>
                 </div>
               </div>
