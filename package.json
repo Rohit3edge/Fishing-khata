@@ -1,6 +1,6 @@
 {
   "name": "kissan-khata-admin",
-  "homepage": "https://updateproject.com/home",
+  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
