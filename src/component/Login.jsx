@@ -104,7 +104,7 @@ const Login = () => {
                   <button
                     type="submit"
                     className="btn btn-warning login-btn col-white"
-                    onClick={()=>navigate("/")}
+                    onClick={()=>navigate("/home")}
                   >
                     Sign in
                   </button>

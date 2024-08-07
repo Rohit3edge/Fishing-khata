@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.763fe30a.css",
-    "main.js": "/static/js/main.292b7d77.js",
-    "static/js/787.89fbe9e5.chunk.js": "/static/js/787.89fbe9e5.chunk.js",
-    "static/media/login.jpg": "/static/media/login.47920eba4a9992fb67cf.jpg",
-    "static/media/kisaankhatalogo.png": "/static/media/kisaankhatalogo.cba522c1ce72d9e1f134.png",
-    "index.html": "/index.html",
-    "main.763fe30a.css.map": "/static/css/main.763fe30a.css.map",
-    "main.292b7d77.js.map": "/static/js/main.292b7d77.js.map",
-    "787.89fbe9e5.chunk.js.map": "/static/js/787.89fbe9e5.chunk.js.map"
+    "main.css": "/home/static/css/main.47188068.css",
+    "main.js": "/home/static/js/main.c10e87e1.js",
+    "static/js/787.bef6194b.chunk.js": "/home/static/js/787.bef6194b.chunk.js",
+    "static/media/login.jpg": "/home/static/media/login.47920eba4a9992fb67cf.jpg",
+    "static/media/kisaankhatalogo.png": "/home/static/media/kisaankhatalogo.cba522c1ce72d9e1f134.png",
+    "index.html": "/home/index.html",
+    "main.47188068.css.map": "/home/static/css/main.47188068.css.map",
+    "main.c10e87e1.js.map": "/home/static/js/main.c10e87e1.js.map",
+    "787.bef6194b.chunk.js.map": "/home/static/js/787.bef6194b.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.763fe30a.css",
-    "static/js/main.292b7d77.js"
+    "static/css/main.47188068.css",
+    "static/js/main.c10e87e1.js"
   ]
 }

@@ -1,5 +1,6 @@
 {
-  "name": "Healthonify Admin",
+  "name": "kissan-khata-admin",
+  "homepage": "https://updateproject.com/home",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
