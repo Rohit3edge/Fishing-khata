@@ -102,14 +102,14 @@ const Navbarside = () => {
       </nav>
 
       <nav className="sidebar" id="side">
-        <NavLink to="/Home">
+        <NavLink to="/">
           <div className="d-flex justify-content-center logo-section">
             <img src={logo} alt="healthonify" />
           </div>
         </NavLink>
         <ul className="nav-lists pt-1">
           <li className="nav_items top_item">
-            <NavLink to="/Home" className="menu-title" activeClassName="active">
+            <NavLink to="/" className="menu-title" activeClassName="active">
               <RiHomeGearFill className="nav_icons" />
               Dashboard
             </NavLink>
@@ -126,7 +126,7 @@ const Navbarside = () => {
 
           
             <li className="nav_items">
-              <NavLink to="/Enquiry" className="menu-title">
+              <NavLink to="/" className="menu-title">
                 <GrCycle className="nav_icons" />
                 FPO Lifecycle
               </NavLink>
@@ -134,7 +134,7 @@ const Navbarside = () => {
        
           
             <li className="nav_items">
-              <NavLink to="/Weightmanagement" className="menu-title">
+              <NavLink to="/" className="menu-title">
                 <FaRupeeSign className="nav_icons" />
                 Sale
                 <FaAngleDown style={{float:"right",fontSize:"22px"}}/>
