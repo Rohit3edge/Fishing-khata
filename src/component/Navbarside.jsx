@@ -114,19 +114,9 @@ const Navbarside = () => {
               Dashboard
             </NavLink>
           </li>
-          {/* super admin  menu start*/}
-          {/* {role === "ROLE_SUPERADMIN" && (
-            <li className="nav_items">
-              <a href="/Enquiry" className="menu-title">
-                <i className="far fa-comments fa-edit-icon"></i>&nbsp; General
-                Enquiry
-              </a>
-            </li>
-          )} */}
-
           
-            <li className="nav_items">
-              <NavLink to="/" className="menu-title">
+         <li className="nav_items">
+              <NavLink to="/FPOLifecycle" className="menu-title">
                 <GrCycle className="nav_icons" />
                 FPO Lifecycle
               </NavLink>
@@ -134,11 +124,11 @@ const Navbarside = () => {
        
           
             <li className="nav_items">
-              <NavLink to="/" className="menu-title">
+              <p className="menu-title">
                 <FaRupeeSign className="nav_icons" />
                 Sale
                 <FaAngleDown style={{float:"right",fontSize:"22px"}}/>
-              </NavLink>
+              </p>
               <ul className="submenu">
                 <li className="submenu-item">
                   <NavLink to="/Sale/Submenu1" className="menu-title">
