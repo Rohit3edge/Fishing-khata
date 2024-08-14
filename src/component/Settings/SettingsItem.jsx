@@ -8,7 +8,6 @@ const SettingsItem = ({data}) => {
   const setting = useSelector((state) => state.settings.updatesettings);
 
   const [units, setUnits] = useState();
-  const [lowStockNotification, setlowStockNotification] = useState(data?.item_low_stock_alert==0);
   
   React.useEffect(() => {
     dispatch(Getunits())
@@ -21,12 +20,7 @@ const SettingsItem = ({data}) => {
       });
   }, [dispatch]);
 
-  React.useEffect(() => {
-    if (data?.item_low_stock_alert !== undefined) {
-      setlowStockNotification(data.item_low_stock_alert == 0);   
-    }
-  
-  }, [data]);
+
 
   return (
     <div className="row">
@@ -176,8 +170,8 @@ const SettingsItem = ({data}) => {
             <input
               type="checkbox"
               id="chk_low_stock"
-              checked={lowStockNotification}
-              onChange={(e) =>{ setlowStockNotification(e.target.checked); dispatch(updateSettingsField({ item_low_stock_alert: e.target.checked}))}}
+              checked={setting.item_low_stock_alert ?? data?.item_low_stock_alert}
+              onChange={(e) =>{dispatch(updateSettingsField({ item_low_stock_alert: e.target.checked}))}}
             />
           </div>
         </div>

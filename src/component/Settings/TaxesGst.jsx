@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React from 'react'
 import { BsFillInfoCircleFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { updateSettingsField } from "../../store/slices/settings";
@@ -7,18 +7,6 @@ const TaxesGst = ({data}) => {
   const dispatch = useDispatch();
   const setting = useSelector((state) => state.settings.updatesettings);
 
-  const [additionalTax, setAdditionalTax] = useState(data?.item_tax_default_value==0);
-  const [iscomposite, setIscomposite] = useState(data?.is_composite==0);
-
-  React.useEffect(() => {
-    if (data?.item_tax_default_value !== undefined) {
-      setAdditionalTax(data.item_tax_default_value == 0);   
-    }
-    if (data?.is_composite !== undefined) {
-      setIscomposite(data.is_composite == 0);   
-    }
-   
-  }, [data]);
 
 
   return (
@@ -47,8 +35,8 @@ const TaxesGst = ({data}) => {
             <div className="">
               <input
                 type="checkbox"
-                checked={additionalTax}
-                onChange={(e) =>{ setAdditionalTax(e.target.checked); dispatch(updateSettingsField({ item_tax_default_value: e.target.checked}))}}
+                checked={setting?.item_tax_default_value ?? data?.item_tax_default_value}
+                onChange={(e) =>{ dispatch(updateSettingsField({ item_tax_default_value: e.target.checked}))}}
               />
             </div>
         </div>
@@ -64,9 +52,9 @@ const TaxesGst = ({data}) => {
             <span className="">
               <input
                 type="checkbox"
-                checked={iscomposite}
+                checked={setting.is_composite ?? data?.is_composite}
               
-                onChange={(e) =>{ setIscomposite(e.target.checked); dispatch(updateSettingsField({ is_composite: e.target.checked}))}}
+                onChange={(e) =>{ dispatch(updateSettingsField({ is_composite: e.target.checked}))}}
               />
             </span>
          

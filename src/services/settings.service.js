@@ -28,9 +28,13 @@ class SettingsService {
         const api = `${API_PATHS.updatesettings}${id}`;
         console.log(api)
         
-        // return axios
-        //     .post(api,item)
-        //     .then((response) => response.data);
+        return axios
+            .post(api,item,{
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+            })
+            .then((response) => response.data);
     }
 
 

@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateSettingsField } from "../../store/slices/settings";
 const Invoice = ({data}) => {
@@ -6,21 +6,6 @@ const Invoice = ({data}) => {
   const dispatch = useDispatch();
   const setting = useSelector((state) => state.settings.updatesettings);
   // const { data, loading, error } = useSelector((state) => state.settings);
-
-
-
-  const [ewaybillValue, setEwaybillValue] = useState(data?.invoice_ewaybill == 0);
-  const [invoiceShipping, setInvoiceShipping] = useState(data?.invoice_shipping_address == 0);
-
-
-  useEffect(() => {
-    if (data?.invoice_ewaybill !== undefined) {
-      setEwaybillValue(data.invoice_ewaybill == 0);   
-    }
-    if(data?.invoice_shipping_address !== undefined){
-      setInvoiceShipping(data.invoice_shipping_address == 0)
-    }
-  }, [data]);
 
   
   return (
@@ -120,7 +105,7 @@ const Invoice = ({data}) => {
                 </div>
               </div>
               <div className="flot_right form-check form-switch">
-                <input  type="checkbox" name="chk_ewaybill"  checked={ewaybillValue} onChange={(e) =>{ setEwaybillValue(e.target.checked); dispatch(updateSettingsField({ invoice_ewaybill: e.target.checked}))}}/>
+                <input  type="checkbox" name="chk_ewaybill"  checked={setting.invoice_ewaybill ?? data?.invoice_ewaybill} onChange={(e) =>{ dispatch(updateSettingsField({ invoice_ewaybill: e.target.checked}))}}/>
               </div>
             </div>
 
@@ -136,7 +121,7 @@ const Invoice = ({data}) => {
                 </div>
               </div>
               <div className="flot_right form-check form-switch">
-                <input type="checkbox" name="chk_invo_shiping_address" checked={invoiceShipping} onChange={(e) =>{ setInvoiceShipping(e.target.checked); dispatch(updateSettingsField({ invoice_shipping_address: e.target.checked}))}} />
+                <input type="checkbox" name="chk_invo_shiping_address" checked={setting.invoice_shipping_address ?? data?.invoice_shipping_address} onChange={(e) =>{dispatch(updateSettingsField({ invoice_shipping_address: e.target.checked}))}} />
               </div>
             </div>
 

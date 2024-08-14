@@ -14,14 +14,10 @@ const Settings = () => {
   const setting = useSelector((state) => state.settings.updatesettings);
   // const { data, loading, error } = useSelector((state) => state.settings);
 
-  const [activeTab, setActiveTab] = useState("general");
+  const [activeTab, setActiveTab] = useState("General");
   const [settings, setSettings] = useState();
-  const [roundOff, setRoundOff] = useState(settings?.default_roundoff==0);
-  const [upiQR, setUpiQR] = useState(settings?.bank_upi_qrcode==0);
-  const [bankAccount, setbankAccount] = useState(settings?.bank_account_details==0);
 
-  console.log("setnijnjknkn",setting)
-  console.log("kya hai ye ",roundOff)
+
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
@@ -39,27 +35,16 @@ const Settings = () => {
       });
   }, [dispatch]);
 
-  
-  React.useEffect(() => {
-    if (settings?.default_roundoff !== undefined) {
-      setRoundOff(settings?.default_roundoff == 0);   
-    }  
-    if (settings?.bank_upi_qrcode !== undefined) {
-      setUpiQR(settings?.bank_upi_qrcode == 0);   
-    } 
-    if (settings?.bank_account_details !== undefined) {
-      setbankAccount(settings?.bank_account_details == 0);   
-    } 
-  }, [settings]);
 
- 
+const item=setting
 
-async function Updatesettings() {
+
+async function handleUpdatesettings () {
   try {
-    const data = await dispatch(Updatesettings(setting)).unwrap();
+    const data = await dispatch(Updatesettings(item)).unwrap();
     console.log("new data", data);
   } catch (error) {
-    console.error("An error occurred while updating settings:", error.message);
+    console.error(error.message);
   }
 }
 
@@ -103,7 +88,7 @@ async function Updatesettings() {
                   </ol>
                 </div>
                 <div class="d-flex justify-content-end">
-                  <button onClick={()=>Updatesettings()} class="btn ripple btn-default" type="button">Save</button>
+                  <button onClick={()=>handleUpdatesettings()} class="btn ripple btn-default" type="button">Save</button>
                 </div>
               </div>
 
@@ -169,7 +154,7 @@ async function Updatesettings() {
 
                     
                     <div className="tab-content">
-                      {activeTab === "general" && (
+                      {activeTab === "General" && (
                         <div>
                           
                           <div className="row pt-2">
@@ -194,8 +179,8 @@ async function Updatesettings() {
                                       <input
                                         className="form-check-input"
                                         type="checkbox"
-                                        checked={roundOff}
-                                        onChange={(e) =>{ setRoundOff(e.target.checked); dispatch(updateSettingsField({ default_roundoff: e.target.checked}))}}
+                                        checked={setting?.default_roundoff ?? settings?.default_roundoff}
+                                        onChange={(e) =>{dispatch(updateSettingsField({ default_roundoff: e.target.checked}))}}
                                         style={{
                                           width: "20px",
                                           height: "20px",
@@ -291,8 +276,8 @@ async function Updatesettings() {
                                     <input
                                       className="form-check-input "
                                       type="checkbox"
-                                      checked={upiQR}
-                                        onChange={(e) =>{ setUpiQR(e.target.checked); dispatch(updateSettingsField({ bank_upi_qrcode: e.target.checked}))}}
+                                      checked={setting.bank_upi_qrcode ?? settings?.bank_upi_qrcode}
+                                        onChange={(e) =>{dispatch(updateSettingsField({ bank_upi_qrcode: e.target.checked}))}}
                                     />
                                   </div>
                                     <span className="font-weight-bold">
@@ -316,8 +301,8 @@ async function Updatesettings() {
                                     <input
                                       className="form-check-input"
                                       type="checkbox"
-                                      checked={bankAccount}
-                                      onChange={(e) =>{ setbankAccount(e.target.checked);dispatch(updateSettingsField({ bank_account_details: e.target.checked}))}}
+                                      checked={setting.bank_account_details ?? settings?.bank_account_details}
+                                      onChange={(e) =>{ dispatch(updateSettingsField({ bank_account_details: e.target.checked}))}}
                                     />
                                   </div>
                                     <span className="font-weight-bold">
