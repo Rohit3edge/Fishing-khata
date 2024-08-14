@@ -2,56 +2,56 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import logo from "../img/logos/kisaankhatalogo.png";
-
-// import { login } from "../store/slices/auth";
+import { login } from "../store/slices/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { Loader } from "semantic-ui-react";
 import { VscEye } from "react-icons/vsc";
 
 const Login = () => {
   const [passwordShown, setPasswordShown] = useState(false);
-  const [mobileNo, setmobileNo] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [alertmobileNo, setAlertmobileNo] = useState("");
+  const [alertEmail, setAlertEmail] = useState("");
   const [alertpass, setAlertpass] = useState("");
 
   const navigate = useNavigate("");
-  // const { loading, error, user } = useSelector((state) => state.auth);
+  const { loading, error, user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const togglePassword = () => {
     setPasswordShown(!passwordShown);
   };
-  // async function signIn(e) {
-  //   e.preventDefault();
-  //   dispatch(login({ mobileNo, password }))
-  //     .unwrap()
-  //     .then(() => {
-  //       navigate("/Home");
-  //     })
-  //     .catch(({ message }) => {
-  //       alert(message);
-  //     });
-  // }
+  async function signIn(e) {
+    e.preventDefault();
+    dispatch(login({ email, password }))
+      .unwrap()
+      .then(() => {
+        navigate("/");
+      })
+      .catch(({ message }) => {
+        alert(message);
+      });
+  }
 
-  // const save = (e) => {
-  //   const regNum = /^(\+\d{1,3}[- ]?)?\d{10}$/;
-  //   if (regNum.test(mobileNo)) {
-  //     setAlertmobileNo("");
-  //   } else if (!regNum.test(mobileNo) && mobileNo === "") {
-  //     setAlertmobileNo("Please enter your mobile number or email");
-  //     e.preventDefault("");
-  //   }
+  const save = (e) => {
+    console.log("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+ const regEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (regEmail.test(email)) {
+      setAlertEmail("");
+    } else if (!regEmail.test(email) && email === "") {
+      setAlertEmail("Please enter your mobile number or email");
+      e.preventDefault("");
+    }
 
-  //   const regPass = /^(?=.*?[A-Za-z])(?=.*?[0-9]).{6,8}$/;
-  //   if (regPass.test(password)) {
-  //     setAlertpass("");
-  //   } else if (!regPass.test(password) && password === "") {
-  //     setAlertpass("Please enter your password");
-  //     e.preventDefault("");
-  //   } else {
-  //     setAlertpass("");
-  //   }
-  // };
+    const regPass = /^(?=.*?[A-Za-z])(?=.*?[0-9]).{6,8}$/;
+    if (regPass.test(password)) {
+      setAlertpass("");
+    } else if (!regPass.test(password) && password === "") {
+      setAlertpass("Please enter your password");
+      e.preventDefault("");
+    } else {
+      setAlertpass("");
+    }
+  };
 
   return (
     <div>
@@ -77,15 +77,15 @@ const Login = () => {
                 Login
               </h2>
 
-              <form>
+              <form onSubmit={signIn}>
                 <input
-                  value={mobileNo}
-                  onChange={(e) => setmobileNo(e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="form-control text-black-ph"
                   placeholder="User Email/Phone"
                   style={{ height: "50px" }}
                 />
-                <p className="alert-message">{alertmobileNo}</p>
+                <p className="alert-message">{alertEmail}</p>
 
                 <div className="position-r">
                   <input
@@ -104,7 +104,7 @@ const Login = () => {
                   <button
                     type="submit"
                     className="btn btn-warning login-btn col-white"
-                    onClick={()=>navigate("/")}
+                    onClick={save}
                   >
                     Sign in
                   </button>

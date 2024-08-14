@@ -1,27 +1,39 @@
-import React from 'react';
-import './App.css';
-import Home from './component/Home';
-import Ledger from './component/Ledger.jsx';
-import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
+import React from "react";
+// import "./App.css";
+import Home from "./component/Home";
+import Ledger from "./component/Ledger.jsx";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+} from "react-router-dom";
+import PublicRoutes from "./component/Routes/PublicRoutes.jsx";
+import ProtectedRoutes from "./component/Routes/ProtectedRoutes.jsx";
 //auth
-import Login from './component/Login';
-import Notfoundpage from './component/NotFound.jsx';
-
-
-
+import AddLedger from "./component/AddLedger.jsx";
+import Login from "./component/Login";
+import Settings from "./component/Settings/Settings.jsx";
+import Notfoundpage from "./component/NotFound.jsx";
 
 function App() {
-
   return (
     <Router>
       <Routes>
-        <Route exact path='/' element={<Home />} />       
-        <Route exact path="/login" element={<Login />} />
-        <Route exact path="/Ledger" element={<Ledger />} />
-        <Route path='*' element = {<Notfoundpage/>} />
+      {/* ProtectedRoutes */}
+        <Route path="/" element={<ProtectedRoutes />}>
+          <Route exact path="/" element={<Home />} />
+          <Route exact path="/ledger" element={<Ledger />} />
+          <Route exact path="/addLedger" element={<AddLedger />} />
+          <Route exact path="/settings" element={<Settings />} />
+          <Route path="*" element={<Notfoundpage />} />
+        </Route>
+
+        {/* PublicRoutes */}
+        <Route path="/login" element={<PublicRoutes />}>
+          <Route exact path="/login" element={<Login />} />
+        </Route>
       </Routes>
     </Router>
-
   );
 }
 

@@ -11804,7 +11804,7 @@ input:focus ~ .bg-primary {
 }
 
 .btn-primary {
-  background-color : #666EE8 !important;
+  background-color : #172b4d !important;
   color : #FFFFFF !important;
   border-color : #666EE8;
 }
@@ -40068,6 +40068,7 @@ button:hover {
   border : 0;
   margin : 15px 0;
   border-radius : 8px;
+ 
 }
 .card[class*='gradient-'] .card-header, .card[class*='gradient-'] .card-footer {
   background-color : initial;
@@ -40080,7 +40081,6 @@ button:hover {
 .card .card-header .card-title-wrap {
   margin-left : -1.5rem;
   padding-left : 1.5rem;
-  border-left : 3px solid #E9ECEF;
 }
 .card .card-subtitle {
   margin-top : 10px;
@@ -40091,7 +40091,7 @@ button:hover {
   height : auto;
 }
 .card .card-block {
-  padding : 1rem 1.5rem 1.5rem;
+  padding : 1rem .5rem 1.5rem;
 }
 .card .card-bordered {
   border : 1px solid rgba(0, 0, 0, 0.06);
