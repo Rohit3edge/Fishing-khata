@@ -26,7 +26,7 @@ class SettingsService {
         }
 
         const api = `${API_PATHS.updatesettings}${id}`;
-        console.log(api)
+     
         
         return axios
             .post(api,item,{

@@ -1,0 +1,190 @@
+.card-section {
+  border-radius: 10px;
+  box-shadow: 7px 8px 14px 0 #1b8aab;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 2%;
+}
+.card-section, .login-form-2 {
+  background-color: #fff;
+  padding: 2%;
+}
+input.form-control.text-black-ph::placeholder {
+  color: black;
+  font-size: 19px;
+  font-weight: 400;
+}
+
+.eye_icon_login {
+  color: #000;
+  font-size: 20px;
+  position: absolute;
+  right: 5%;
+  top: 50%;
+  transform: translate(-15%, -50%);
+  transition: all 0.4s ease-in-out;
+}
+
+.eye_icon_login:hover {
+  background-color: #dbdbdb;
+  padding: 3px;
+  font-size: 20px;
+  border-radius: 50%;
+}
+
+.login-form-2 {
+  background-color: white;
+  padding: 2%;
+  border-radius: 15px;
+}
+
+.position-r {
+  position: relative;
+}
+
+.bg-overlay-orange {
+  position: absolute;
+  height: -webkit-fill-available;
+  width: 100%;
+  opacity: 0.1;
+  z-index: -1;
+}
+
+.form-control {
+  border: 1px solid #cbcbcb !important;
+}
+
+@media only screen and (min-width: 1200px) {
+  .card-section {
+    width: 65%;
+  }
+
+  .logo-form-2 {
+    display: none;
+  }
+
+  .login-form-2 {
+    width: 40%;
+  }
+
+  .div-logo {
+    display: block;
+    height: 250px;
+    width: max-content;
+  }
+
+  .login-bg-image {
+    position: fixed;
+    background-image: url(img/login.jpg);
+    height: 100%;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: right;
+    opacity: 0.8;
+  }
+
+  .login-form {
+    position: absolute;
+    background-color: white;
+    top: 50%;
+    left: 5%;
+    transform: translate(-5%, -50%);
+    box-shadow: 7px 10px 20px 0px #4f4f4f;
+    padding: 2%;
+    border-radius: 15px;
+    width: 25%;
+  }
+}
+.login-btn, .login-btn-travel {
+  line-height: 2 !important;
+  width: 90%;
+}
+
+@media (min-width: 600px) and (max-width: 1200px) {
+  .card-section {
+    width: 50%;
+  }
+
+  .logo-form-2 {
+    display: block;
+    height: 180px;
+    width: max-content;
+  }
+
+  .login-form-2 {
+    width: 100%;
+  }
+
+  .div-logo {
+    display: none;
+  }
+
+  .login-bg-image {
+    position: fixed;
+    background-image: url(img/login.jpg);
+    height: 100%;
+    width: 100%;
+    opacity: 0.8;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .login-form {
+    position: absolute;
+    background-color: white;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 7px 10px 20px 0px #4f4f4f;
+    padding: 2%;
+    border-radius: 15px;
+    width: 45%;
+  }
+}
+
+
+@media only screen and (max-width: 600px) {
+  .card-section {
+    width: 90%;
+  }
+
+  .logo-form-2 {
+    display: block;
+    height: 130px;
+    width: max-content;
+  }
+
+  .login-form-2 {
+    width: 100%;
+  }
+
+  .div-logo {
+    display: none;
+  }
+
+  .login-bg-image {
+    position: fixed;
+    background-image: url(img/login.jpg);
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-position: right;
+    opacity: 0.8;
+  }
+
+  .login-form {
+    position: absolute;
+    background-color: white;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 7px 10px 20px 0px #4f4f4f;
+    padding: 2%;
+    border-radius: 15px;
+    width: 95%;
+  }
+}

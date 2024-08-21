@@ -1,5 +1,5 @@
 import React from "react";
-// import "./App.css";
+import "./login.css";
 import Home from "./component/Home";
 import Ledger from "./component/Ledger.jsx";
 import {
@@ -14,6 +14,9 @@ import AddLedger from "./component/AddLedger.jsx";
 import Login from "./component/Login";
 import Settings from "./component/Settings/Settings.jsx";
 import Notfoundpage from "./component/NotFound.jsx";
+import AddBankDetails from "./component/AddBankDetails.jsx";
+import BankBook from "./component/BankBook.jsx";
+import DepositWithdraw from "./component/DepositWithdraw.jsx"
 
 function App() {
   return (
@@ -25,6 +28,9 @@ function App() {
           <Route exact path="/ledger" element={<Ledger />} />
           <Route exact path="/addLedger" element={<AddLedger />} />
           <Route exact path="/settings" element={<Settings />} />
+          <Route exact path="/addbank" element={<AddBankDetails />} />
+          <Route exact path="/bankbook/:id" element={<BankBook />} />
+          <Route exact path="/bankbookEntry" element={<DepositWithdraw />} />
           <Route path="*" element={<Notfoundpage />} />
         </Route>
 

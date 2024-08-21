@@ -1,5 +1,5 @@
 export const API_BASE_URL =
-  process.env.API_BASE_URL || "http://kisaan-khata-api.updateproject.com";
+  process.env.API_BASE_URL || "https://kisaan-khata-api.updateproject.com";
 
 export const X_API_KEY="z3rlamk8xyv4r79x5wb8t35x3ot49yzg"
 
@@ -23,7 +23,15 @@ export const API_PATHS = {
   getledgergroups: "/common/getledgergroups",
   getsettings:"/client/getsettings",
   getunits: "/common/getunits",
-  updatesettings:"client/updatesettings/"
+  updatesettings:"client/updatesettings/",
+  addbank:"/client/add-bank-book",
+
+  getcompanybanks:"/client/get-company-banks/",
+  getsinglebank:"/client/get-bank/",
+  ledgerlist:"/ledger/list/",
+  ledgeradd:"/ledger/add"
+
+
 
 
 }

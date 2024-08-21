@@ -19,6 +19,47 @@ export const Getledgergroups = createAsyncThunk(
     }
 );
 
+
+export const LedgerList = createAsyncThunk(
+    "/get/ledgerlist",
+    async (thunkAPI) => {
+        try {
+            const data = await LedgerService.Ledgerlist();
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+
+
+export const LedgerAdd = createAsyncThunk(
+    "/post/ledgeradd",
+    async (item,thunkAPI) => {
+        try {
+            const data = await LedgerService.LedgerAdd(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+
+
 const initialState = {
     loading: false,
     error: "",

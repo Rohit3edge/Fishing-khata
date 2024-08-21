@@ -1,24 +1,31 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbarside from "../component/Navbarside";
 import Featured from "./featured/Featured";
 import Chart from "./chart/Chart";
 import Footer from "./Footer";
 import Widget from "./widget/widget";
 function Home() {
+  const navigate = useNavigate();
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const Name = user?.data?.company_name;
+
+
   return (
-    <div clssName="container-fluid">
+    <div >
       <div class="row" style={{marginLeft:"0",marginRight:"0"}}>
         <Navbarside />
         <div className="col-md-10">
           <div className="row top-header">
             <div className="col-md-7">
               <div className="company-name">
-                THE KOSLI FARMER CO-OP MULTIPURPOSE SOCIETY LTD
+                {Name}
               </div>
             </div>
             <div className="col-md-5">
               <div className="d-flex justify-content-end">
-                <button type="submit" className="btn btn-default">
+                <button type="submit" className="btn btn-default" onClick={()=>navigate("/ledger")}>
                   Ledger
                 </button>
                 <button type="submit" className="btn btn-default">
@@ -48,7 +55,7 @@ function Home() {
 
               <div className="row">
                 <div className="col-md-12">
-                  <div className="card custom-card">
+                  <div className="card custom-card-home">
                     <div className="card-body">
                     <div className="container-fluid">
                       <div className="row">
