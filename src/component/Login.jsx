@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import Cookies from 'js-cookie';
 import logo from "../img/logos/kisaankhatalogo.png";
 import { login } from "../store/slices/auth";
 import { useDispatch, useSelector } from "react-redux";
@@ -56,7 +57,10 @@ const Login = () => {
     if (validateInputs()) {
       dispatch(login({ email, password }))
         .unwrap()
-        .then(() => {
+        .then((data) => {
+          console.log(data)
+          const expirationDate = new Date(new Date().getTime() + 10 * 60 * 1000); 
+          Cookies.set('user', JSON.stringify(user), { expires: expirationDate });
           setAlertEmail("");
           setPassword("");
           navigate("/");
@@ -83,7 +87,7 @@ const Login = () => {
               <h2 className="text-start mb-4" style={{ color: "black", fontWeight: "500" }}>
                 Login
               </h2>
-              <p className="alert-message">{invalid}</p>
+              <span className="alert-message">{invalid}</span>
               <form onSubmit={signIn}>
                 <input
                   value={email}

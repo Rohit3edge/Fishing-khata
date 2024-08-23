@@ -53,7 +53,7 @@ input.form-control.text-black-ph::placeholder {
   z-index: -1;
 }
 
-.form-control {
+.form-control.text-black-ph {
   border: 1px solid #cbcbcb !important;
 }
 

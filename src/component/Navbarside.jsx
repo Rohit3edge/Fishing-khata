@@ -14,6 +14,7 @@ import {
   RiMentalHealthFill,
   RiBarChart2Fill,
 } from "react-icons/ri";
+import Cookies from 'js-cookie';
 import { CgProfile } from "react-icons/cg";
 import { CiBank } from "react-icons/ci";
 import { GiWallet, GiNotebook } from "react-icons/gi";
@@ -40,8 +41,11 @@ const Navbarside = () => {
   let data = JSON.parse(localStorage.getItem("user"));
   const name = data?.data?.name;
 
+
   const signOut = (e) => {
+
     localStorage.clear();
+    Cookies.remove("user");
     navigate("/login");
   };
 
@@ -165,7 +169,7 @@ const Navbarside = () => {
                 </NavLink>
               </li>
               <li className="nav_items">
-                <NavLink to="/Challenges" className="menu-title">
+                <NavLink to="/addnewstock" className="menu-title">
                   <FaBoxes className="nav_icons" />
                   Stock
                 </NavLink>

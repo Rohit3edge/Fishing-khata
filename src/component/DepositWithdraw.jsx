@@ -1,37 +1,49 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import Navbarside from "./Navbarside";
-import Footer from "./Footer";
-import { useDispatch, useSelector } from "react-redux";
-import { AddBankBook } from "../store/slices/bankbook";
-import Loader from "../common/Loader";
+import Navbarside from './Navbarside';
+import Footer from './Footer';
+import { useDispatch } from 'react-redux';
+import { Getcompanybanks,AddBankBook } from '../store/slices/bankbook';
+import Loader from '../common/Loader';
 
 const DepositWithdraw = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-  const { data } = location.state || {}; 
-  const [currentDate, setCurrentDate] = useState("");
+  const { data } = location.state || {};
+  const [bankData, setBankData] = useState();
+  const [currentDate, setCurrentDate] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
-  console.log(data)
+  const [paymentMode, setPaymentMode] = useState('Withdraw');
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id;
   const Name = user?.data?.company_name;
 
+  React.useEffect(() => {
+    dispatch(Getcompanybanks())
+      .unwrap()
+      .then((data) => {
+        setBankData(data.data);
+        console.log(data.data[0]);
+      })
+      .catch(({ message }) => {
+        alert(message);
+      });
+  }, [dispatch]);
+
   const [formData, setFormData] = useState({
     profile_id: id,
-    date: "",
-    display_name: "",
-    account_no: "",
-    account_holder: "",
-    bank_name: "",
-    ifsc: "",
-    opening_balance: Number(""),
-    date_as_of: "",
-    type: "",
+    date: '',
+    display_name: '',
+    account_no: '',
+    account_holder: '',
+    bank_name: '',
+    ifsc: '',
+    opening_balance: Number(''),
+    date_as_of: '',
+    type: '',
   });
 
   const handleInputChange = (e) => {
@@ -42,32 +54,31 @@ const DepositWithdraw = () => {
     });
   };
 
-  // Discard handler
+  const handlePaymentModeChange = (e) => {
+    setPaymentMode(e.target.value);
+  };
+
   const handleDiscard = () => {
     setFormData({
       profile_id: id,
-      date: "",
-      display_name: "",
-      account_no: "",
-      account_holder: "",
-      bank_name: "",
-      ifsc: "",
-      opening_balance: "",
+      date: '',
+      display_name: '',
+      account_no: '',
+      account_holder: '',
+      bank_name: '',
+      ifsc: '',
+      opening_balance: '',
       date_as_of: currentDate,
-      type: "",
+      type: '',
     });
   };
 
-  // Submit handler
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
     const { display_name, account_no, ifsc, type, account_holder } = formData;
 
     if (!display_name || !account_no || !ifsc || !type || !account_holder) {
-      alert(
-        "Please fill all the mandatory fields: Display Name, Account No, IFSC, and Account Type."
-      );
+      alert('Please fill all the mandatory fields: Display Name, Account No, IFSC, and Account Type.');
       return;
     }
     setIsLoading(true);
@@ -76,19 +87,18 @@ const DepositWithdraw = () => {
       .then((data) => {
         setIsLoading(false);
         setFormData({
-          profile_id: "",
-          date: "",
-          display_name: "",
-          account_no: "",
-          account_holder: "",
-          bank_name: "",
-          ifsc: "",
-          opening_balance: Number(""),
-          date_as_of: "",
-          type: "",
+          profile_id: '',
+          date: '',
+          display_name: '',
+          account_no: '',
+          account_holder: '',
+          bank_name: '',
+          ifsc: '',
+          opening_balance: Number(''),
+          date_as_of: '',
+          type: '',
         });
-        console.log("Form submitted successfully", data);
-        navigate("/");
+        navigate('/');
       })
       .catch(({ message }) => {
         setIsLoading(false);
@@ -98,7 +108,7 @@ const DepositWithdraw = () => {
 
   return (
     <div>
-      <div class="row" style={{ marginLeft: "0", marginRight: "0" }}>
+      <div class="row" style={{ marginLeft: '0', marginRight: '0' }}>
         <Navbarside />
         {isLoading && <Loader />}
         <div className="col-md-10">
@@ -108,11 +118,7 @@ const DepositWithdraw = () => {
             </div>
             <div className="col-md-5">
               <div className="d-flex justify-content-end">
-                <button
-                  type="submit"
-                  className="btn btn-default"
-                  onClick={() => navigate("/ledger")}
-                >
+                <button type="submit" className="btn btn-default" onClick={() => navigate('/ledger')}>
                   Ledger
                 </button>
                 <button type="submit" className="btn btn-default">
@@ -128,9 +134,7 @@ const DepositWithdraw = () => {
             <div className="container">
               <div className="page-header">
                 <div>
-                  <h2 class="main-content-title tx-24 mg-b-5">
-                    Deposit / Withdraw
-                  </h2>
+                  <h2 class="main-content-title tx-24 mg-b-5">Deposit / Withdraw</h2>
                   <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                       <a href="#">Bank Book</a>
@@ -148,94 +152,90 @@ const DepositWithdraw = () => {
                       <div class="form-group">
                         <div class="row">
                           <div className="col-md-12">
-                          <label>
-                          Payment Mode <span class="required">*</span>
+                            <label>
+                              Payment Mode <span class="required">*</span>
                             </label>
-                            <select
-                              name="invoice_account_type"
-                              class="form-control form-control-sm"
-                              //   value={
-                              //     setting?.invoice_account_type ??
-                              //     data?.invoice_account_type
-                              //   }
-                              //   onChange={(e) => {
-                              //     dispatch(
-                              //       updateSettingsField({
-                              //         invoice_account_type: e.target.value,
-                              //       })
-                              //     );
-                              //   }}
-                            >
-                              <option value="Deposit">Deposit</option>
+                            <select name="invoice_account_type" class="form-control form-control-sm" value={paymentMode} onChange={handlePaymentModeChange}>
                               <option value="Withdraw">Withdraw</option>
+                              <option value="Deposit">Deposit</option>
                               <option value="Bank to Bank">Bank to Bank</option>
                             </select>
                           </div>
                         </div>
                       </div>
 
-                      
-
                       <div class="form-group">
                         <div class="row">
-                          <div class="col-md-6">
-                            <label>
-                              From <span class="required">*</span>
-                            </label>
-                            <input
-                              name="account_no"
-                              type="text"
-                              class="form-control text-uppercase"
-                              disabled
-                              value={data}
-                            />
-                          </div>
-                          <div class="col-md-6">
-                            <label>To <span class="required">*</span></label>
-                            <select
-                              name="invoice_account_type"
-                              class="form-control form-control-sm"
-                              //   value={
-                              //     setting?.invoice_account_type ??
-                              //     data?.invoice_account_type
-                              //   }
-                              //   onChange={(e) => {
-                              //     dispatch(
-                              //       updateSettingsField({
-                              //         invoice_account_type: e.target.value,
-                              //       })
-                              //     );
-                              //   }}
-                            >
-                              <option value="Deposit" className="text-uppercase">{data}</option>
-                              
-                            </select>
-                          </div>
+                          {paymentMode === 'Withdraw' && (
+                            <>
+                              <div class="col-md-6">
+                                <label>
+                                  From <span class="required">*</span>
+                                </label>
+                                <input name="account_no" type="text" class="form-control text-uppercase" disabled value={data} />
+                              </div>
+                              <div class="col-md-6">
+                                <label>
+                                  To <span class="required">*</span>
+                                </label>
+                                <input name="to_account" type="text" class="form-control" disabled value="Cash" />
+                              </div>
+                            </>
+                          )}
+                          {paymentMode === 'Deposit' && (
+                            <>
+                              <div class="col-md-6">
+                                <label>
+                                  From <span class="required">*</span>
+                                </label>
+                                <input name="from_account" type="text" class="form-control" disabled value="Cash" />
+                              </div>
+                              <div class="col-md-6">
+                                <label>
+                                  To <span class="required">*</span>
+                                </label>
+                                <input name="account_no" type="text" class="form-control text-uppercase" disabled value={data} />
+                              </div>
+                            </>
+                          )}
+                          {paymentMode === 'Bank to Bank' && (
+                            <>
+                              <div class="col-md-6">
+                                <label>
+                                  From <span class="required">*</span>
+                                </label>
+                                <input name="account_no" type="text" class="form-control text-uppercase" disabled value={data} />
+                              </div>
+                              <div class="col-md-6">
+                                <label>
+                                  To <span class="required">*</span>
+                                </label>
+                                <select name="to_account" class="form-control">
+                                  {bankData?.map((option, index) => (
+                                    <option value={option.bank_name} key={index}>
+                                      {option.bank_name}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            </>
+                          )}
                         </div>
                       </div>
 
                       <div class="form-group">
                         <div class="row">
                           <div class="col-md-6">
-                            <label>Amount <span class="required">*</span></label>
-                            <input
-                              name="account_holder"
-                              type="text"
-                              class="form-control"
-                              onChange={handleInputChange}
-                            />
+                            <label>
+                              Amount <span class="required">*</span>
+                            </label>
+                            <input name="amount" type="text" class="form-control" onChange={handleInputChange} />
                           </div>
                           <div class="col-md-6">
-                          <label>
-                             Date <span class="required">*</span>
+                            <label>
+                              Date <span class="required">*</span>
                             </label>
-                            <input
-                              name="as_of_date"
-                              type="date"
-                              class="form-control"
-                              value={currentDate}
-                              onChange={handleInputChange}
-                            />
+                            <input name="as_of_date" type="date" class="form-control" value={currentDate} onChange={handleInputChange} />
                           </div>
                         </div>
                       </div>
@@ -245,18 +245,8 @@ const DepositWithdraw = () => {
                           <div class="col-md-12">
                             <label>Remark</label>
                             <div class="input-group">
-                              <input
-                                name="opening_balance"
-                                aria-describedby="basic-addon1"
-                                aria-label="Username"
-                                class="form-control"
-                                type="text"
-                                onChange={handleInputChange}
-                              />
+                              <input name="remark" aria-describedby="basic-addon1" aria-label="Username" class="form-control" type="text" onChange={handleInputChange} />
                             </div>
-                          </div>
-                          <div class="col-md-6">
-                            
                           </div>
                         </div>
                       </div>
@@ -264,22 +254,13 @@ const DepositWithdraw = () => {
                       <div class="form-group">
                         <div class="row">
                           <div class="col-md-6">
-                            <button
-                              type="button"
-                              class="btn btn-default"
-                              onClick={handleSubmit}
-                            >
+                            <button type="button" class="btn btn-default" onClick={handleSubmit}>
                               Submit
                             </button>
                             &nbsp;
-                            <button
-                              type="button"
-                              class="btn btn-cancel"
-                              onClick={handleDiscard}
-                            >
+                            <button type="button" class="btn btn-cancel" onClick={handleDiscard}>
                               Cancel
                             </button>
-                            &nbsp;
                           </div>
                         </div>
                       </div>

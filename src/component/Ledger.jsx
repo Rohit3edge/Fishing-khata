@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,7 +10,7 @@ import Footer from "./Footer";
 const Ledger = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const tableRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [ledgerList, setLedgerList] = useState();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -18,16 +18,16 @@ const Ledger = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const Name = user?.data?.company_name;
 
+  const [columns, setColumn] = useState([
+    { isHtml: false, name: "ID" },
+    { isHtml: true, name: "Date" },
+    { isHtml: false, name: "Type" },
+    { isHtml: false, name: "Number" },
+    { isHtml: false, name: "Dr" },
+    { isHtml: false, name: "Cr" },
+    { isHtml: false, name: "Closing Balance" },
+  ]);
 
-  const columns = [
-    { name: "ID" },
-    { name: "Date" },
-    { name: "Type" },
-    { name: "Number" },
-    { name: "Dr" },
-    { name: "Cr" },
-    { name: "Closing Balance" },
-  ];
 
   const data = [
     { ID: 1, Date: "2024-08-01", Type: "Invoice", Number: "101", Dr: "", Cr: "1000.0", "Closing Balance": "1000" },
@@ -164,7 +164,10 @@ const Ledger = () => {
                       </div>
                     </div>
                   </div>
-                  <Table columns={columns} data={data}/>
+                  <div className="row mt-3">
+                  <div className="col-md-12">
+                  <Table columns={columns} data={data} tableRef={tableRef}/>
+
                   {/* <div class="row mt-3">
                     <div class="col-md-12">
                       <div class="card custom-card">
@@ -237,6 +240,8 @@ const Ledger = () => {
                     </div>
                   </div> */}
                 </div>
+              </div>
+              </div>
               </div>
             </div>
           </div>

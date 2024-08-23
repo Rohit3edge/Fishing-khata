@@ -27,6 +27,14 @@ const AddBankDetails = () => {
     ifsc: "",
     opening_balance: Number(""),
     date_as_of:"",
+    type: "Regular",
+  });
+
+  const [errors, setErrors] = useState({
+    display_name: "",
+    account_no: "",
+    account_holder: "",
+    ifsc: "",
     type: "",
   });
 
@@ -54,13 +62,23 @@ const AddBankDetails = () => {
   }, []);
 
 
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+
+    // Update form data
+    setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+    }));
+
+    // Clear any previous error for the field being edited
+    setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: "",
+    }));
+};
+
 
 
     // Discard handler
@@ -79,44 +97,66 @@ const AddBankDetails = () => {
       });
     };
 
+
+
   // Submit handler
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData)
-    const {
-      display_name,
-      account_no,
-      ifsc,
-      type,account_holder
-    } = formData;
-  
-    if (!display_name || !account_no || !ifsc || !type ||!account_holder) {
-      alert("Please fill all the mandatory fields: Display Name, Account No, IFSC, and Account Type.");
-      return; // Stop form submission if validation fails
+    console.log(formData);
+
+    const { display_name, account_no, ifsc, type, account_holder } = formData;
+
+    let newErrors = {};
+
+    if (!display_name) {
+        newErrors.display_name = "Display Name is required.";
     }
-    setIsLoading(true)
+    if (!account_no) {
+        newErrors.account_no = "Account No is required.";
+    }
+    if (!ifsc) {
+        newErrors.ifsc = "IFSC is required.";
+    }
+    if (!type) {
+        newErrors.type = "Account Type is required.";
+    }
+    if (!account_holder) {
+        newErrors.account_holder = "Account Holder Name is required.";
+    }
+
+    setErrors(newErrors);
+
+    // If there are any errors, don't submit the form
+    if (Object.keys(newErrors).length > 0) {
+        return;
+    }
+
+    setIsLoading(true);
     dispatch(AddBankBook(formData))
-      .unwrap()
-      .then((data) => {
-        setIsLoading(false)
-        setFormData({profile_id: "",
-          date: "",
-          display_name: "",
-          account_no: "",
-          account_holder: "",
-          bank_name: "",
-          ifsc: "",
-          opening_balance: Number(""),
-          date_as_of:"",
-          type: "",})
-        console.log("Form submitted successfully", data);
-        navigate("/")
-      })
-      .catch(({ message }) => {
-        setIsLoading(false)
-        alert(message);
-      });
-  };
+        .unwrap()
+        .then((data) => {
+            setIsLoading(false);
+            setFormData({
+                profile_id: "",
+                date: "",
+                display_name: "",
+                account_no: "",
+                account_holder: "",
+                bank_name: "",
+                ifsc: "",
+                opening_balance: Number(""),
+                date_as_of:"",
+                type: "",
+            });
+            console.log("Form submitted successfully", data);
+            navigate("/");
+        })
+        .catch(({ message }) => {
+            setIsLoading(false);
+            alert(message);
+        });
+};
+
 
   
   return (
@@ -184,6 +224,7 @@ const AddBankDetails = () => {
                                             <div class="col-md-12">
                                                 <label>Display Name <span class="required">*</span></label>
                                                 <input name="display_name" type="text" class="form-control" onChange={handleInputChange}/>
+                                                {errors.display_name && <span className="alert-message">{errors.display_name}</span>}
                                             </div>
                                         </div>
                                     </div>
@@ -193,6 +234,7 @@ const AddBankDetails = () => {
                                             <div class="col-md-6">
                                                 <label>Account No <span class="required">*</span></label>
                                                 <input name="account_no" type="text" class="form-control" onChange={handleInputChange}/>
+                                                {errors.account_no && <p className="alert-message">{errors.account_no}</p>}
                                             </div>
                                             <div class="col-md-6">
                                                 <label>Bank Name</label>
@@ -210,6 +252,7 @@ const AddBankDetails = () => {
                                             <div class="col-md-6">
                                                 <label>IFSC <span class="required">*</span></label>
                                                 <input name="ifsc" type="text" class="form-control" onChange={handleInputChange} />
+                                                {errors.ifsc && <p className="alert-message">{errors.ifsc}</p>}
                                             </div>
                                         </div>
                                     </div>

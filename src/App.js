@@ -5,22 +5,38 @@ import Ledger from "./component/Ledger.jsx";
 import {
   BrowserRouter as Router,
   Route,
-  Routes,
+  Routes,useNavigate,
 } from "react-router-dom";
 import PublicRoutes from "./component/Routes/PublicRoutes.jsx";
 import ProtectedRoutes from "./component/Routes/ProtectedRoutes.jsx";
+import Cookies from "js-cookie";
 //auth
 import AddLedger from "./component/AddLedger.jsx";
 import Login from "./component/Login";
 import Settings from "./component/Settings/Settings.jsx";
 import Notfoundpage from "./component/NotFound.jsx";
 import AddBankDetails from "./component/AddBankDetails.jsx";
+import AddNewStock from "./component/AddNewStock.jsx";
 import BankBook from "./component/BankBook.jsx";
 import DepositWithdraw from "./component/DepositWithdraw.jsx"
 
 function App() {
+
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    console.log("load")
+    const user = Cookies.get("user");
+
+    if (!user) {
+      localStorage.removeItem("user");
+      navigate("/login");
+    }
+  }, [window.location.href]);
+
+
   return (
-    <Router>
+    
       <Routes>
       {/* ProtectedRoutes */}
         <Route path="/" element={<ProtectedRoutes />}>
@@ -31,6 +47,7 @@ function App() {
           <Route exact path="/addbank" element={<AddBankDetails />} />
           <Route exact path="/bankbook/:id" element={<BankBook />} />
           <Route exact path="/bankbookEntry" element={<DepositWithdraw />} />
+          <Route exact path="/addnewstock" element={<AddNewStock />} />
           <Route path="*" element={<Notfoundpage />} />
         </Route>
 
@@ -39,7 +56,6 @@ function App() {
           <Route exact path="/login" element={<Login />} />
         </Route>
       </Routes>
-    </Router>
   );
 }
 
