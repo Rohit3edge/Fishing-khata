@@ -32,7 +32,6 @@ const AddLedger = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   const Name = user?.data?.company_name;
   const parsedObject = groupName ? JSON.parse(groupName) : {};
-  console.log(parsedObject.group_name)
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -121,7 +120,7 @@ const AddLedger = () => {
       opening_date: openingDate,
       ...accountDetails, // Include account details if they were entered
     };
-  console.log("hiiiiiiiiiiiiiii",ledgerData)
+    
     setIsLoading(true);
     dispatch(LedgerAdd(ledgerData))
       .unwrap()

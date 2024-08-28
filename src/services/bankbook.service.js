@@ -40,6 +40,33 @@ class BankBookService {
         .then((response) => response.data);
     }
     
+    static Ledgerentires(item) {
+
+        const api = `${API_PATHS.ledgerentires}`;
+        
+        return axios
+        .post(api,item,{
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+        })
+        .then((response) => response.data);
+    }
+
+
+    static DepositWithdraw(item) {
+
+        const api = `${API_PATHS.Depositwithdraw}`;
+        
+        return axios
+        .post(api,item,{
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+        })
+        .then((response) => response.data);
+    }
+
 }
 
 export default BankBookService;

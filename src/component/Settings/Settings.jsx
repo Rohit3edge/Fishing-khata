@@ -34,7 +34,7 @@ const Settings = () => {
       .unwrap()
       .then((data) => {
         setIsLoading(false)
-        console.log(data.data);
+       
         setSettings(data?.data);
       })
       .catch(({ message }) => {
@@ -51,7 +51,7 @@ const Settings = () => {
       const data = await dispatch(Updatesettings(item)).unwrap();
       setIsLoading(false)
       const updatedSettings = await dispatch(Getsettings()).unwrap();
-      console.log("new data", data);
+  
       alert(data?.message);
       setSettings(updatedSettings?.data);
     } catch (error) {

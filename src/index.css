@@ -368,3 +368,44 @@ padding-left: 25px;
   background-color: #3498db;
   color: #fff;
 }
+
+.PaginationContainer {
+  display: flex;
+  justify-content: space-between; /* Distributes items along the main axis with space between */
+  align-items: center; /* Centers items along the cross axis */
+}
+.listgroup-example2 ul {
+  list-style-type: none;
+}
+
+.listgroup-example2 ul li {
+  padding: 5px 5px;
+}
+
+.listgroup-example2 ul ul {
+  list-style-type: circle;
+  margin: 10px 0 0 0;
+}
+
+.list-group {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+  margin-bottom: 0;
+  color: #3c4858;
+  border-radius: .25rem;
+  margin-top: 0;
+}
+
+ul.sub-categories{
+    padding-left: 40px;
+}
+
+.btn-sm {
+  padding: .25rem .5rem;
+  font-size: 0.70rem;
+  line-height: 1.5;
+  border-radius: 3px;
+  min-height: 0;
+  min-width: 60px !important;
+}

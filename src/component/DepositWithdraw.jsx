@@ -4,8 +4,9 @@ import { useLocation } from 'react-router-dom';
 import Navbarside from './Navbarside';
 import Footer from './Footer';
 import { useDispatch } from 'react-redux';
-import { Getcompanybanks,AddBankBook } from '../store/slices/bankbook';
+import { Getcompanybanks,Depositwithdraw } from '../store/slices/bankbook';
 import Loader from '../common/Loader';
+
 
 const DepositWithdraw = () => {
   const navigate = useNavigate();
@@ -21,29 +22,33 @@ const DepositWithdraw = () => {
   const id = user?.data?.id;
   const Name = user?.data?.company_name;
 
+  // console.log("newdata",data)
   React.useEffect(() => {
     dispatch(Getcompanybanks())
       .unwrap()
       .then((data) => {
         setBankData(data.data);
-        console.log(data.data[0]);
+        if (paymentMode === 'BankToBank' && data.data.length > 0) {
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            to_ledger_id: data.data[0].id,
+          }));
+        }
       })
       .catch(({ message }) => {
-        alert(message);
+        console.log(message);
       });
-  }, [dispatch]);
-
+  }, [dispatch,paymentMode]);
+ 
+  console.log(paymentMode === 'BankToBank',bankData.length)
   const [formData, setFormData] = useState({
     profile_id: id,
+    entry_type: paymentMode||"",
     date: '',
-    display_name: '',
-    account_no: '',
-    account_holder: '',
-    bank_name: '',
-    ifsc: '',
-    opening_balance: Number(''),
-    date_as_of: '',
-    type: '',
+    amount: '',
+    from_ledger_id: '',
+    to_ledger_id: paymentMode === 'BankToBank' && bankData.length > 0 ? bankData?.[0].id: '',
+    remark: '',
   });
 
   const handleInputChange = (e) => {
@@ -55,54 +60,60 @@ const DepositWithdraw = () => {
   };
 
   const handlePaymentModeChange = (e) => {
-    setPaymentMode(e.target.value);
+    const selectedMode = e.target.value;
+  setPaymentMode(selectedMode);
+  setFormData((prevFormData) => ({
+    ...prevFormData,
+    entry_type: selectedMode,
+  }));
   };
 
   const handleDiscard = () => {
     setFormData({
       profile_id: id,
+      entry_type: paymentMode,
       date: '',
-      display_name: '',
-      account_no: '',
-      account_holder: '',
-      bank_name: '',
-      ifsc: '',
-      opening_balance: '',
-      date_as_of: currentDate,
-      type: '',
+      amount: '',
+      from_ledger_id: '',
+      to_ledger_id: '',
+      remark: '',
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { display_name, account_no, ifsc, type, account_holder } = formData;
+    let updatedFormData = { ...formData };
 
-    if (!display_name || !account_no || !ifsc || !type || !account_holder) {
-      alert('Please fill all the mandatory fields: Display Name, Account No, IFSC, and Account Type.');
-      return;
+    if (paymentMode === 'Withdraw') {
+      updatedFormData.from_ledger_id = data?.ledger_id || '';
+      updatedFormData.to_ledger_id = '';
+    } else if (paymentMode === 'Deposit') {
+      updatedFormData.from_ledger_id = '';
+      updatedFormData.to_ledger_id = data?.ledger_id || '';
+    } else if (paymentMode === 'BankToBank') {
+      updatedFormData.from_ledger_id = data?.ledger_id || '';
+      updatedFormData.to_ledger_id = formData.to_ledger_id; 
     }
+    console.log("NewOne",updatedFormData)
     setIsLoading(true);
-    dispatch(AddBankBook(formData))
+    dispatch(Depositwithdraw(updatedFormData))
       .unwrap()
       .then((data) => {
         setIsLoading(false);
         setFormData({
-          profile_id: '',
+          profile_id: id,
+          entry_type: paymentMode,
           date: '',
-          display_name: '',
-          account_no: '',
-          account_holder: '',
-          bank_name: '',
-          ifsc: '',
-          opening_balance: Number(''),
-          date_as_of: '',
-          type: '',
+          amount: '',
+          from_ledger_id: '',
+          to_ledger_id: '',
+          remark: '',
         });
         navigate('/');
       })
       .catch(({ message }) => {
         setIsLoading(false);
-        alert(message);
+        console.log(message);
       });
   };
 
@@ -158,7 +169,7 @@ const DepositWithdraw = () => {
                             <select name="invoice_account_type" class="form-control form-control-sm" value={paymentMode} onChange={handlePaymentModeChange}>
                               <option value="Withdraw">Withdraw</option>
                               <option value="Deposit">Deposit</option>
-                              <option value="Bank to Bank">Bank to Bank</option>
+                              <option value="BankToBank">Bank to Bank</option>
                             </select>
                           </div>
                         </div>
@@ -172,13 +183,13 @@ const DepositWithdraw = () => {
                                 <label>
                                   From <span class="required">*</span>
                                 </label>
-                                <input name="account_no" type="text" class="form-control text-uppercase" disabled value={data} />
+                                <input name="from_ledger_id" type="text" class="form-control text-uppercase" disabled value={data?.bank_name  || ''} />
                               </div>
                               <div class="col-md-6">
                                 <label>
                                   To <span class="required">*</span>
                                 </label>
-                                <input name="to_account" type="text" class="form-control" disabled value="Cash" />
+                                <input name="to_ledger_id" type="text" class="form-control" disabled value="Cash" />
                               </div>
                             </>
                           )}
@@ -188,32 +199,32 @@ const DepositWithdraw = () => {
                                 <label>
                                   From <span class="required">*</span>
                                 </label>
-                                <input name="from_account" type="text" class="form-control" disabled value="Cash" />
+                                <input name="from_ledger_id" type="text" class="form-control" disabled value="Cash" />
                               </div>
                               <div class="col-md-6">
                                 <label>
                                   To <span class="required">*</span>
                                 </label>
-                                <input name="account_no" type="text" class="form-control text-uppercase" disabled value={data} />
+                                <input name="to_ledger_id" type="text" class="form-control text-uppercase" disabled value={data?.bank_name } />
                               </div>
                             </>
                           )}
-                          {paymentMode === 'Bank to Bank' && (
+                          {paymentMode === 'BankToBank' && (
                             <>
                               <div class="col-md-6">
                                 <label>
                                   From <span class="required">*</span>
                                 </label>
-                                <input name="account_no" type="text" class="form-control text-uppercase" disabled value={data} />
+                                <input name="from_ledger_id" type="text" class="form-control text-uppercase" disabled value={data?.bank_name  || ""} />
                               </div>
                               <div class="col-md-6">
                                 <label>
                                   To <span class="required">*</span>
                                 </label>
-                                <select name="to_account" class="form-control">
+                                <select name="to_ledger_id" class="form-control" onChange={handleInputChange}>
                                   {bankData?.map((option, index) => (
-                                    <option value={option.bank_name} key={index}>
-                                      {option.bank_name}
+                                    <option value={option.id} key={index}>
+                                      {option.ledger}
                                     </option>
                                   ))}
                                 </select>
@@ -229,13 +240,13 @@ const DepositWithdraw = () => {
                             <label>
                               Amount <span class="required">*</span>
                             </label>
-                            <input name="amount" type="text" class="form-control" onChange={handleInputChange} />
+                            <input name="amount" type="text" class="form-control" onChange={handleInputChange} value={formData.amount}/>
                           </div>
                           <div class="col-md-6">
                             <label>
                               Date <span class="required">*</span>
                             </label>
-                            <input name="as_of_date" type="date" class="form-control" value={currentDate} onChange={handleInputChange} />
+                            <input name="date" type="date" class="form-control" value={formData.date} onChange={handleInputChange} />
                           </div>
                         </div>
                       </div>
@@ -245,7 +256,7 @@ const DepositWithdraw = () => {
                           <div class="col-md-12">
                             <label>Remark</label>
                             <div class="input-group">
-                              <input name="remark" aria-describedby="basic-addon1" aria-label="Username" class="form-control" type="text" onChange={handleInputChange} />
+                              <input name="remark" aria-describedby="basic-addon1" aria-label="Username" class="form-control" type="text" onChange={handleInputChange} value={formData.remark} />
                             </div>
                           </div>
                         </div>

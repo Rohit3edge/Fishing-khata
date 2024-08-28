@@ -16,9 +16,12 @@ import Login from "./component/Login";
 import Settings from "./component/Settings/Settings.jsx";
 import Notfoundpage from "./component/NotFound.jsx";
 import AddBankDetails from "./component/AddBankDetails.jsx";
-import AddNewStock from "./component/AddNewStock.jsx";
 import BankBook from "./component/BankBook.jsx";
 import DepositWithdraw from "./component/DepositWithdraw.jsx"
+import AddCategory from "./component/AddCategory.jsx";
+import Categories from "./component/Categories.jsx";
+import Item from "./component/ItemList.jsx";
+import AddItem from "./component/AddItem.jsx"
 
 function App() {
 
@@ -46,8 +49,11 @@ function App() {
           <Route exact path="/settings" element={<Settings />} />
           <Route exact path="/addbank" element={<AddBankDetails />} />
           <Route exact path="/bankbook/:id" element={<BankBook />} />
-          <Route exact path="/bankbookEntry" element={<DepositWithdraw />} />
-          <Route exact path="/addnewstock" element={<AddNewStock />} />
+          <Route exact path="/bankbookEntry/:id" element={<DepositWithdraw />} />
+          <Route exact path="/addcategory" element={<AddCategory />} />
+          <Route exact path="/categories" element={<Categories />} />
+          <Route exact path="/item" element={<Item />} />
+          <Route exact path="/add-item" element={<AddItem />} />
           <Route path="*" element={<Notfoundpage />} />
         </Route>
 

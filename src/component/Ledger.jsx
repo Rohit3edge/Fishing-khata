@@ -1,76 +1,99 @@
-import React, { useState,useRef } from "react";
-import { NavLink } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { LedgerList } from "../store/slices/ledger";
-import Table from "../common/Table";
-import Navbarside from "./Navbarside";
-import Loader from "../common/Loader"
-import Footer from "./Footer";
+import React, { useEffect, useState, useRef } from 'react';
+import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { LedgerList } from '../store/slices/ledger';
+import { LedgerEntires } from '../store/slices/bankbook';
+import Pagination from '../common/Pagination';
+import Moment from 'moment';
+import Navbarside from './Navbarside';
+import Loader from '../common/Loader';
+import Footer from './Footer';
+
 const Ledger = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const tableRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [ledgerList, setLedgerList] = useState();
+  const [ledgerList, setLedgerList] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [ledgerEntires, setLedgerEntires] = useState();
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 25; // Set the number of items you want per page
+
+  // Calculate the current items based on the current page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = ledgerEntires?.slice(indexOfFirstItem, indexOfLastItem);
+
+  const user = JSON.parse(localStorage.getItem('user'));
   const Name = user?.data?.company_name;
+  const profile_id = user?.data?.id;
 
-  const [columns, setColumn] = useState([
-    { isHtml: false, name: "ID" },
-    { isHtml: true, name: "Date" },
-    { isHtml: false, name: "Type" },
-    { isHtml: false, name: "Number" },
-    { isHtml: false, name: "Dr" },
-    { isHtml: false, name: "Cr" },
-    { isHtml: false, name: "Closing Balance" },
-  ]);
-
-
-  const data = [
-    { ID: 1, Date: "2024-08-01", Type: "Invoice", Number: "101", Dr: "", Cr: "1000.0", "Closing Balance": "1000" },
-    { ID: 2, Date: "2024-08-02", Type: "Payment", Number: "102", Dr: "500.0", Cr: "", "Closing Balance": "500" },
-    { ID: 3, Date: "2024-08-03", Type: "Invoice", Number: "103", Dr: "", Cr: "1500.0", "Closing Balance": "2000" },
-    { ID: 4, Date: "2024-08-04", Type: "Payment", Number: "104", Dr: "800.0", Cr: "", "Closing Balance": "1200" },
-    { ID: 5, Date: "2024-08-05", Type: "Invoice", Number: "105", Dr: "", Cr: "2000.0", "Closing Balance": "3200" },
-  ];
+  const [item, setItem] = useState({
+    profile_id: profile_id,
+    ledger_id: ledgerList[0]?.id,
+  });
 
   React.useEffect(() => {
-    setIsLoading(true)
+    setIsLoading(true);
     dispatch(LedgerList())
       .unwrap()
       .then((data) => {
-        setIsLoading(false)
+        setIsLoading(false);
         setLedgerList(data?.data);
-        console.log(data?.data);
+        if (data?.data?.length > 0) {
+          const firstLedgerId = data.data?.[0].id;
+          setActiveIndex(0);
+          setItem({ ...item, ledger_id: firstLedgerId });
+        }
       })
       .catch(({ message }) => {
-        setIsLoading(false)
-        alert(message);
+        setIsLoading(false);
+        console.log(message);
       });
   }, [dispatch]);
 
+  React.useEffect(() => {
+    if (item.ledger_id) {
+      setIsLoading(true);
+      dispatch(LedgerEntires(item))
+        .unwrap()
+        .then((data) => {
+          setIsLoading(false);
+          setLedgerEntires(data?.data);
+          console.log(data.data);
+        })
+        .catch(({ message }) => {
+          setIsLoading(false);
+          console.log(message);
+        });
+    }
+  }, [dispatch, item]);
+
+  const handleLedgerClick = (id, index) => {
+    setActiveIndex(index);
+    setItem({ ...item, ledger_id: id });
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
   return (
-    <div >
-      <div class="row" style={{ marginLeft: "0", marginRight: "0" }}>
+    <div>
+      <div class="row" style={{ marginLeft: '0', marginRight: '0' }}>
         <Navbarside />
         {isLoading && <Loader />}
         <div className="col-md-10">
           <div className="row top-header">
             <div className="col-md-7">
-              <div className="company-name">
-                {Name}
-              </div>
+              <div className="company-name">{Name}</div>
             </div>
             <div className="col-md-5">
               <div className="d-flex justify-content-end">
-                <button
-                  type="submit"
-                  className="btn btn-default"
-                  onClick={() => navigate("/ledger")}
-                >
+                <button type="submit" className="btn btn-default" onClick={() => navigate('/ledger')}>
                   Ledger
                 </button>
                 <button type="submit" className="btn btn-default">
@@ -97,10 +120,7 @@ const Ledger = () => {
                   </ol>
                 </div>
                 <div class="d-flex justify-content-end">
-                  <a
-                    class="btn ripple btn-default"
-                    onClick={() => navigate("/addLedger")}
-                  >
+                  <a class="btn ripple btn-default" onClick={() => navigate('/addLedger')}>
                     Add Ledger
                   </a>
                 </div>
@@ -112,11 +132,8 @@ const Ledger = () => {
                     <div class="card-body p-2">
                       <ul class="ledger-list">
                         {ledgerList?.map((option, index) => (
-                          <li key={index} onClick={() => setActiveIndex(index)}>
-                            <a
-                              href="#"
-                              className={index === activeIndex ? "active" : ""}
-                            >
+                          <li key={index} onClick={() => handleLedgerClick(option?.id, index)}>
+                            <a href="#" className={index === activeIndex ? 'active' : ''}>
                               {option?.ledger}
                             </a>
                           </li>
@@ -135,21 +152,13 @@ const Ledger = () => {
                             <div class="col-md-4 form-inline">
                               <div class="form-group">
                                 <label class="">From Date</label>
-                                <input
-                                  class="form-control"
-                                  required=""
-                                  type="date"
-                                />
+                                <input class="form-control" required="" type="date" />
                               </div>
                             </div>
                             <div class="col-md-4 form-inline">
                               <div class="form-group">
                                 <label class="">To Date</label>
-                                <input
-                                  class="form-control"
-                                  required=""
-                                  type="date"
-                                />
+                                <input class="form-control" required="" type="date" />
                               </div>
                             </div>
                             <div class="col-md-3 form-inline">
@@ -165,83 +174,75 @@ const Ledger = () => {
                     </div>
                   </div>
                   <div className="row mt-3">
-                  <div className="col-md-12">
-                  <Table columns={columns} data={data} tableRef={tableRef}/>
-
-                  {/* <div class="row mt-3">
-                    <div class="col-md-12">
-                      <div class="card custom-card">
-                        <div class="card-body">
-                          <table
-                            class="table table-bordered border-bottom"
-                            id="example1"
-                          >
-                            <thead>
-                              <tr>
-                                <th>ID</th>
-                                <th>Date</th>
-                                <th>Type</th>
-                                <th>Number</th>
-                                <th>Dr</th>
-                                <th>Cr</th>
-                                <th>Closing Balance</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td>1</td>
-                                <td>2024-08-01</td>
-                                <td>Invoice</td>
-                                <td>101</td>
-                                <td></td>
-                                <td>1000.0</td>
-                                <td>1000</td>
-                              </tr>
-                              <tr>
-                                <td>2</td>
-                                <td>2024-08-02</td>
-                                <td>Payment</td>
-                                <td>102</td>
-                                <td>500.0</td>
-                                <td></td>
-                                <td>500</td>
-                              </tr>
-                              <tr>
-                                <td>3</td>
-                                <td>2024-08-03</td>
-                                <td>Invoice</td>
-                                <td>103</td>
-                                <td></td>
-                                <td>1500.0</td>
-                                <td>2000</td>
-                              </tr>
-                              <tr>
-                                <td>4</td>
-                                <td>2024-08-04</td>
-                                <td>Payment</td>
-                                <td>104</td>
-                                <td>800.0</td>
-                                <td></td>
-                                <td>1200</td>
-                              </tr>
-                              <tr>
-                                <td>5</td>
-                                <td>2024-08-05</td>
-                                <td>Invoice</td>
-                                <td>105</td>
-                                <td></td>
-                                <td>2000.0</td>
-                                <td>3200</td>
-                              </tr>
-                            </tbody>
-                          </table>
+                    <div className="col-md-12">
+                      <div class="row mt-3">
+                        <div class="col-md-12">
+                          <div class="card custom-card  mb-4" >
+                            <div class="card-body">
+                              {currentItems?.length == 0 ? <h2 className="text-center">No Record Found !</h2> : null}
+                              <table class="table table-bordered border-bottom" id="example1">
+                                <thead>
+                                  <tr>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                    <th>Date</th>
+                                    <th>Dr</th>
+                                    <th>Cr</th>
+                                    <th>Closing Balance</th>
+                                  </tr>
+                                </thead>
+                                {/* <tbody>
+                                {ledgerEntires?.map((ledgerEntires, index) => (
+                                  <tr key={index}>
+                                    <td>{ledgerEntires?.type}</td>
+                                    <td>
+                                      {ledgerEntires?.description.split('\n').map((line, index) => (
+                                        <React.Fragment key={index}>
+                                          {line}
+                                          <br />
+                                        </React.Fragment>
+                                      ))}
+                                    </td>
+                                    <td> {Moment(ledgerEntires?.added_on).format('DD-MM-YYYY')}</td>
+                                    <td className={`text-danger`}>{Number(ledgerEntires?.dr) === 0 ? '' : ledgerEntires?.dr}</td>
+                                    <td className={`text-success`}>{Number(ledgerEntires?.cr) === 0 ? '' : ledgerEntires?.cr}</td>
+                                    <td></td>
+                                  </tr>
+                                ))}
+                                </tbody> */}
+                                <tbody>
+                                  {currentItems?.map((ledgerEntry, index) => (
+                                    <tr key={index}>
+                                      <td>{ledgerEntry?.type}</td>
+                                      <td>
+                                        {ledgerEntry?.description.split('\n').map((line, index) => (
+                                          <React.Fragment key={index}>
+                                            {line}
+                                            <br />
+                                          </React.Fragment>
+                                        ))}
+                                      </td>
+                                      <td> {Moment(ledgerEntry?.added_on).format('DD-MM-YYYY')}</td>
+                                      <td className={`text-danger`}>{Number(ledgerEntry?.dr) === 0 ? '' : ledgerEntry?.dr}</td>
+                                      <td className={`text-success`}>{Number(ledgerEntry?.cr) === 0 ? '' : ledgerEntry?.cr}</td>
+                                      <td></td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                              <div className="PaginationContainer">
+                                <span className="total-elements">
+                                  Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, ledgerEntires?.length)} of {ledgerEntires?.length} entries
+                                </span>
+                                <Pagination currentPage={currentPage} totalCount={ledgerEntires?.length} itemsPerPage={itemsPerPage} onPageChange={handlePageChange} />
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div> */}
+                  </div>
                 </div>
-              </div>
-              </div>
               </div>
             </div>
           </div>

@@ -54,7 +54,6 @@ const Navbarside = () => {
       .unwrap()
       .then((data) => {
         setBankData(data.data);
-        console.log(data.data[0]);
       })
       .catch(({ message }) => {
         alert(message);
@@ -169,10 +168,30 @@ const Navbarside = () => {
                 </NavLink>
               </li>
               <li className="nav_items">
-                <NavLink to="/addnewstock" className="menu-title">
-                  <FaBoxes className="nav_icons" />
-                  Stock
-                </NavLink>
+              <p
+                  className="menu-title"
+                  onClick={() => {
+                    setShow(show === "Items" ? "" : "Items");
+                  }}
+                >
+                  <FaShoppingCart className="nav_icons" />
+                  Items
+                  <FaAngleDown style={{ float: "right", fontSize: "0.9rem" }} />
+                </p>
+                {show === "Items" && (
+                  <ul className="submenu">
+                    <li className="submenu-item">
+                      <NavLink to="/item" className="menu-title">
+                        Item
+                      </NavLink>
+                    </li>
+                    <li className="submenu-item">
+                      <NavLink to="/categories" className="menu-title">
+                      Categories
+                      </NavLink>
+                    </li>
+                  </ul>
+                )}
               </li>
               <li className="nav_items">
                 <NavLink to="/Physiotherapy" className="menu-title">
@@ -206,7 +225,7 @@ const Navbarside = () => {
                           }} 
                           className="menu-title text-uppercase"
                         >
-                          {option.bank_name}
+                          {option.ledger}
                         </NavLink>
                       </li>
                     ))}

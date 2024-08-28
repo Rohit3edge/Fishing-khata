@@ -153,7 +153,7 @@ const AddBankDetails = () => {
         })
         .catch(({ message }) => {
             setIsLoading(false);
-            alert(message);
+            console.log(message);
         });
 };
 

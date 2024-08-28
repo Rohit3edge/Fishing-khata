@@ -29,9 +29,13 @@ export const API_PATHS = {
   getcompanybanks:"/client/get-company-banks/",
   getsinglebank:"/client/get-bank/",
   ledgerlist:"/ledger/list/",
-  ledgeradd:"/ledger/add"
-
-
+  ledgeradd:"/ledger/add",
+  ledgerentires:"/ledger/get-ledger-entires",
+  Depositwithdraw:"/ledger/add-bank-entry",
+  listcategories:"/items/list-categories",
+  addcategory:"/items/add-category",
+  additems:"/items/add",
+  listitems:"/items/list"
 
 
 }

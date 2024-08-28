@@ -3,23 +3,33 @@ import Navbarside from './Navbarside';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { GetSingleBank } from '../store/slices/bankbook';
+import { GetSingleBank, LedgerEntires } from '../store/slices/bankbook';
+import Pagination from '../common/Pagination';
 import Loader from '../common/Loader';
 import Footer from './Footer';
-import Table from '../common/Table';
+import Moment from 'moment';
 
 const BankBook = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const NewID = id;
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
   const [bankData, setBankData] = useState();
+  const [ledgerEntires, setLedgerEntires] = useState();
 
   const user = JSON.parse(localStorage.getItem('user'));
   const Name = user?.data?.company_name;
+  const profile_id = user?.data?.id;
+  const item = { profile_id: profile_id, ledger_id: id };
 
-  const columns = [{ name: 'Transaction Type' }, { name: 'Bank' }, { name: 'Name' }, { name: 'Date' }, { name: 'Dr' }, { name: 'Cr' }, { name: 'Closing Balance' }];
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 25;
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = ledgerEntires?.slice(indexOfFirstItem, indexOfLastItem);
+
 
   React.useEffect(() => {
     setIsLoading(true);
@@ -28,13 +38,32 @@ const BankBook = () => {
       .then((data) => {
         setIsLoading(false);
         setBankData(data?.data);
-        console.log(data?.data);
       })
       .catch(({ message }) => {
         setIsLoading(false);
-        alert(message);
+        console.log(message);
       });
   }, [dispatch, id]);
+
+  React.useEffect(() => {
+    setIsLoading(true);
+    dispatch(LedgerEntires(item))
+      .unwrap()
+      .then((data) => {
+        setIsLoading(false);
+        setLedgerEntires(data?.data);
+        console.log(data.data);
+      })
+      .catch(({ message }) => {
+        setIsLoading(false);
+        console.log(message);
+      });
+  }, [dispatch, NewID]);
+
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <>
@@ -72,7 +101,12 @@ const BankBook = () => {
                             </ol> */}
                   </div>
                   <div class="d-flex justify-content-end">
-                    <button class="btn ripple btn-default" onClick={() => navigate('/bankbookEntry', { state: { data: bankData?.bank_name } })}>
+                    <button
+                      class="btn ripple btn-default"
+                      onClick={() => {
+                        navigate(`/bankbookEntry/${bankData.ledger_id ? bankData.ledger_id : null}`, { state: { data: bankData } });
+                      }}
+                    >
                       Deposit/Withdraw
                     </button>
                   </div>
@@ -107,35 +141,63 @@ const BankBook = () => {
 
                     <div class="row mt-3">
                       <div class="col-md-12">
-                        {/* <Table  columns={columns} data={bankData}/> */}
-                        <div class="card custom-card">
+                        <div class="card custom-card mb-4">
                           <div class="card-body">
+                            {ledgerEntires?.length == 0 ? <h2 className="text-center">No Record Found !</h2> : null}
                             <table class="table table-bordered border-bottom" id="example1">
                               <thead>
                                 <tr>
-                                  <th>Transaction Type</th>
-                                  <th>Bank</th>
-                                  <th>Name</th>
+                                  <th>Description</th>
                                   <th>Date</th>
                                   <th>Dr</th>
                                   <th>Cr</th>
                                   <th>Closing Balance</th>
                                 </tr>
                               </thead>
+                              {/* <tbody>
+                                {ledgerEntires?.map((ledgerEntires, index) => (
+                                  <tr key={index}>
+                                    <td>
+                                      {ledgerEntires?.description.split('\n').map((line, index) => (
+                                        <React.Fragment key={index}>
+                                          {line}
+                                          <br />
+                                        </React.Fragment>
+                                      ))}
+                                    </td>
+                                    <td> {Moment(ledgerEntires?.added_on).format('DD-MM-YYYY')}</td>
+                                    <td className={`text-danger`}>{Number(ledgerEntires?.dr) === 0 ? '' : ledgerEntires?.dr}</td>
+                                    <td className={`text-success`}>{Number(ledgerEntires?.cr) === 0 ? '' : ledgerEntires?.cr}</td>
+                                    <td></td>
+                                  </tr>
+                                ))}
+                              </tbody> */}
                               <tbody>
-                                <tr>
-                                  <td>{bankData?.type}</td>
-                                  <td>
-                                    <span className="text-uppercase">{bankData?.bank_name}</span> Bank
-                                  </td>
-                                  <td>{bankData?.account_holder}</td>
-                                  <td>{bankData?.date_as_of}</td>
-                                  <td></td>
-                                  <td>1000.0</td>
-                                  <td>Dr50000.00</td>
-                                </tr>
-                              </tbody>
+                                  {currentItems?.map((ledgerEntry, index) => (
+                                    <tr key={index}>
+                                      
+                                      <td>
+                                        {ledgerEntry?.description.split('\n').map((line, index) => (
+                                          <React.Fragment key={index}>
+                                            {line}
+                                            <br />
+                                          </React.Fragment>
+                                        ))}
+                                      </td>
+                                      <td> {Moment(ledgerEntry?.added_on).format('DD-MM-YYYY')}</td>
+                                      <td className={`text-danger`}>{Number(ledgerEntry?.dr) === 0 ? '' : ledgerEntry?.dr}</td>
+                                      <td className={`text-success`}>{Number(ledgerEntry?.cr) === 0 ? '' : ledgerEntry?.cr}</td>
+                                      <td></td>
+                                    </tr>
+                                  ))}
+                                </tbody>
                             </table>
+                            <div className="PaginationContainer">
+                                <span className="total-elements">
+                                  Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, ledgerEntires?.length)} of {ledgerEntires?.length} entries
+                                </span>
+                                <Pagination currentPage={currentPage} totalCount={ledgerEntires?.length} itemsPerPage={itemsPerPage} onPageChange={handlePageChange} />
+                              </div>
                           </div>
                         </div>
                       </div>

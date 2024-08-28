@@ -56,6 +56,44 @@ export const GetSingleBank = createAsyncThunk(
 );
 
 
+export const LedgerEntires = createAsyncThunk(
+    "/post/ledgerentires",
+    async (item,thunkAPI) => {
+        try {
+            const data = await BankBookService.Ledgerentires(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+
+export const Depositwithdraw = createAsyncThunk(
+    "/post/depositwithdraw",
+    async (item,thunkAPI) => {
+        try {
+            const data = await BankBookService.DepositWithdraw(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+
 const initialState = {
     loading: false,
     error: "",

@@ -1,0 +1,131 @@
+import React,{useState,useEffect} from "react";
+import { useNavigate } from "react-router-dom";
+import { ListCategories} from '../store/slices/items';
+import Navbarside from "./Navbarside";
+import Loader from "../common/Loader"
+import Footer from "./Footer";
+import { useDispatch, useSelector } from "react-redux";
+const Categories = () => {
+
+    const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const id = user?.data?.id; 
+  const Name = user?.data?.company_name;
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [listCategories, setListCategories] = useState([]);
+
+  React.useEffect(() => {
+    setIsLoading(true);
+    dispatch(ListCategories({ profile_id: id }))
+      .unwrap()
+      .then((data) => {
+        setIsLoading(false);
+        setListCategories(data?.data);
+        console.log(data.data);
+      })
+      .catch(({ message }) => {
+        setIsLoading(false);
+        console.log(message);
+      });
+  }, [dispatch]);
+
+  const renderCategories = (categories) => {
+    return categories.map((category) => (
+      <li key={category.id}>
+        {category.category_name}&nbsp;
+        [<a href="#" className="link">Edit</a>]
+        {category.children && category.children.length > 0 && (
+          <ul className="sub-categories">
+            {renderCategories(category.children)}
+          </ul>
+        )}
+      </li>
+    ));
+  };
+
+  return (
+    <div >
+    <div className="row" style={{ marginLeft: "0", marginRight: "0" }}>
+      <Navbarside />
+      {isLoading && <Loader />}
+      <div className="col-md-10">
+        <div className="row top-header">
+          <div className="col-md-7">
+            <div className="company-name">
+              {Name}
+            </div>
+          </div>
+          <div className="col-md-5">
+            <div className="d-flex justify-content-end">
+              <button type="submit" className="btn btn-default" onClick={()=>navigate("/ledger")}>
+                Ledger
+              </button>
+              <button type="submit" className="btn btn-default">
+                Sale
+              </button>
+              <button type="submit" className="btn btn-default">
+                Purchase
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="row content-body">
+                <div className="container-fluid">
+                    <div className="page-header">
+                        <div>
+                            <h2 className="main-content-title tx-24 mg-b-5">Categories</h2>
+                            <ol className="breadcrumb">
+                                <li className="breadcrumb-item"><a href="#">Item</a></li>
+                                <li className="breadcrumb-item active" aria-current="page">Category List</li>
+                            </ol>
+                        </div>
+                        <div className="d-flex justify-content-end">
+                            <button className="btn ripple btn-default" onClick={()=>navigate("/addcategory")}>Add Category</button>
+                        </div>
+                    </div>
+
+                    <div className="row">
+                        <div className="col-md-12">
+                            <div className="row mt-3">
+                                <div className="col-md-12">
+                                    <div className="card custom-card">
+                                        <div className="card-body">
+                                            
+                                            <div className="listgroup-example2">
+                                                <ul className="list-group">
+                                                    {/* <li>Dapibus ac facilisis in&nbsp;[<a href="" className="link">Edit</a>]</li>
+                                                    <li>Morbi leo risus&nbsp;[<a href="" className="link">Edit</a>]</li>
+                                                    <li>Cras justo odio&nbsp;[<a href="" className="link">Edit</a>]
+                                                        <ul className="sub-categories">
+                                                          <li>Lorem &nbsp;[<a href="" className="link">Edit</a>]</li>
+                                                          <li>established&nbsp;[<a href="" className="link">Edit</a>]</li>
+                                                          <li>Contrary&nbsp;[<a href="" className="link">Edit</a>]</li>
+                                                        </ul>
+                                                    </li>
+                                                    <li>Porta ac consectetur ac&nbsp;[<a href="" className="link">Edit</a>]</li>
+                                                    <li>Vestibulum at eros&nbsp;[<a href="" className="link">Edit</a>]</li> */}
+                                                    {renderCategories(listCategories)}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+      </div>
+    </div>
+    <Footer />
+  </div>
+  )
+}
+
+
+export default Categories
