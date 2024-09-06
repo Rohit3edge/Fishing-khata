@@ -22,6 +22,9 @@ import AddCategory from "./component/AddCategory.jsx";
 import Categories from "./component/Categories.jsx";
 import Item from "./component/ItemList.jsx";
 import AddItem from "./component/AddItem.jsx"
+import PartyMaster from "./component/PartyMaster.jsx";
+import AddParty from "./component/AddParty.jsx";
+import Invoice from "./component/Invoice.jsx";
 
 function App() {
 
@@ -54,6 +57,9 @@ function App() {
           <Route exact path="/categories" element={<Categories />} />
           <Route exact path="/item" element={<Item />} />
           <Route exact path="/add-item" element={<AddItem />} />
+          <Route exact path="/partymaster" element={<PartyMaster />} />
+          <Route exact path="/addparty" element={<AddParty />} />
+          <Route exact path="/invoice" element={<Invoice />} />
           <Route path="*" element={<Notfoundpage />} />
         </Route>
 

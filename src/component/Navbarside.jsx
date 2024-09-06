@@ -162,6 +162,13 @@ const Navbarside = () => {
                 )}
               </li>
               <li className="nav_items">
+                <NavLink to="/partymaster" className="menu-title">
+                  <CgProfile className="nav_icons" />
+                  Party Master
+                </NavLink>
+              </li>
+              
+              <li className="nav_items">
                 <NavLink to="/ledger" className="menu-title">
                   <CgProfile className="nav_icons" />
                   Ledger

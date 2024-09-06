@@ -35,7 +35,9 @@ export const API_PATHS = {
   listcategories:"/items/list-categories",
   addcategory:"/items/add-category",
   additems:"/items/add",
-  listitems:"/items/list"
-
-
+  listitems:"/items/list",
+  addparties:"/parties/add",
+  partieslist:"/parties/list",
+  synctoledger:"/parties/sync-to-ledger",
+  getsingledetail:"/items/get-detail"
 }

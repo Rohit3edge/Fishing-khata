@@ -4,8 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { LedgerList } from '../store/slices/ledger';
 import { LedgerEntires } from '../store/slices/bankbook';
-import Pagination from '../common/Pagination';
-import Moment from 'moment';
+import Table from '../common/Table';
 import Navbarside from './Navbarside';
 import Loader from '../common/Loader';
 import Footer from './Footer';
@@ -18,15 +17,11 @@ const Ledger = () => {
   const [ledgerList, setLedgerList] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [ledgerEntires, setLedgerEntires] = useState();
+  const [searchTerm, setSearchTerm] = useState('');
 
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 25; // Set the number of items you want per page
-
-  // Calculate the current items based on the current page
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = ledgerEntires?.slice(indexOfFirstItem, indexOfLastItem);
+  const [pageSize, setPageSize] = useState(25);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const user = JSON.parse(localStorage.getItem('user'));
   const Name = user?.data?.company_name;
@@ -36,6 +31,15 @@ const Ledger = () => {
     profile_id: profile_id,
     ledger_id: ledgerList[0]?.id,
   });
+
+  const [columns, setcolumns] = useState([
+    { header: 'Type', field: 'type' },
+    { header: 'Description', field: 'description',isMultiline: true },
+    { header: 'Date', field: 'added_on' },
+    { header: 'Dr', field: 'dr', isDrCr: true, isDr: true  },
+    { header: 'Cr', field: 'cr', isDrCr: true, isDr: false  },
+    { header: 'Closing Balance', field: 'closing_balance' },
+  ]);
 
   React.useEffect(() => {
     setIsLoading(true);
@@ -73,6 +77,11 @@ const Ledger = () => {
     }
   }, [dispatch, item]);
 
+  const handleSearchChangeul = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+
   const handleLedgerClick = (id, index) => {
     setActiveIndex(index);
     setItem({ ...item, ledger_id: id });
@@ -81,6 +90,26 @@ const Ledger = () => {
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredLedgerList = ledgerList.filter(option =>
+    option.ledger.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Filter data based on search query
+  const filteredledgerEntires = ledgerEntires?.filter(party => 
+    party?.type?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
+    party?.description?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
+    party?.added_on?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
+    party?.dr?.toLowerCase()?.includes(searchQuery?.toLowerCase())||
+    party?.cr?.toLowerCase()?.includes(searchQuery?.toLowerCase())||
+    party?.closing_balance?.toLowerCase()?.includes(searchQuery?.toLowerCase())
+  );
+
   return (
     <div>
       <div class="row" style={{ marginLeft: '0', marginRight: '0' }}>
@@ -96,7 +125,7 @@ const Ledger = () => {
                 <button type="submit" className="btn btn-default" onClick={() => navigate('/ledger')}>
                   Ledger
                 </button>
-                <button type="submit" className="btn btn-default">
+                <button type="submit" className="btn btn-default" onClick={() => navigate('/invoice')}>
                   Sale
                 </button>
                 <button type="submit" className="btn btn-default">
@@ -127,11 +156,18 @@ const Ledger = () => {
               </div>
 
               <div class="row">
-                <div class="col-md-2">
+                <div class="col-md-3">
                   <div class="card custom-card">
                     <div class="card-body p-2">
-                      <ul class="ledger-list">
-                        {ledgerList?.map((option, index) => (
+                    <input
+              type="text"
+              placeholder="Search..."
+              className="form-control mb-2"
+              value={searchTerm}
+              onChange={handleSearchChangeul}
+            />
+                      <ul class="ledger-list" style={{ maxHeight: '400px', overflowY: 'scroll' }}>
+                        {filteredLedgerList?.map((option, index) => (
                           <li key={index} onClick={() => handleLedgerClick(option?.id, index)}>
                             <a href="#" className={index === activeIndex ? 'active' : ''}>
                               {option?.ledger}
@@ -143,7 +179,7 @@ const Ledger = () => {
                   </div>
                 </div>
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                   <div class="row">
                     <div class="col-md-12">
                       <div class="card custom-card">
@@ -177,7 +213,7 @@ const Ledger = () => {
                     <div className="col-md-12">
                       <div class="row mt-3">
                         <div class="col-md-12">
-                          <div class="card custom-card  mb-4" >
+                          {/* <div class="card custom-card  mb-4" >
                             <div class="card-body">
                               {currentItems?.length == 0 ? <h2 className="text-center">No Record Found !</h2> : null}
                               <table class="table table-bordered border-bottom" id="example1">
@@ -191,25 +227,6 @@ const Ledger = () => {
                                     <th>Closing Balance</th>
                                   </tr>
                                 </thead>
-                                {/* <tbody>
-                                {ledgerEntires?.map((ledgerEntires, index) => (
-                                  <tr key={index}>
-                                    <td>{ledgerEntires?.type}</td>
-                                    <td>
-                                      {ledgerEntires?.description.split('\n').map((line, index) => (
-                                        <React.Fragment key={index}>
-                                          {line}
-                                          <br />
-                                        </React.Fragment>
-                                      ))}
-                                    </td>
-                                    <td> {Moment(ledgerEntires?.added_on).format('DD-MM-YYYY')}</td>
-                                    <td className={`text-danger`}>{Number(ledgerEntires?.dr) === 0 ? '' : ledgerEntires?.dr}</td>
-                                    <td className={`text-success`}>{Number(ledgerEntires?.cr) === 0 ? '' : ledgerEntires?.cr}</td>
-                                    <td></td>
-                                  </tr>
-                                ))}
-                                </tbody> */}
                                 <tbody>
                                   {currentItems?.map((ledgerEntry, index) => (
                                     <tr key={index}>
@@ -237,7 +254,18 @@ const Ledger = () => {
                                 <Pagination currentPage={currentPage} totalCount={ledgerEntires?.length} itemsPerPage={itemsPerPage} onPageChange={handlePageChange} />
                               </div>
                             </div>
-                          </div>
+                          </div> */}
+                          <Table
+                            columns={columns}
+                            data={filteredledgerEntires}
+                            tableRef={tableRef}
+                            pageSize={pageSize}
+                            setPageSize={setPageSize}
+                            currentPage={currentPage}
+                            totalCount={filteredledgerEntires?.length}
+                            onPageChange={handlePageChange}
+                            handleSearchChange={handleSearchChange}
+                          />
                         </div>
                       </div>
                     </div>

@@ -48,6 +48,15 @@ const AddLedger = () => {
       });
   }, [dispatch]);
 
+  const validateAmount = (value) => {
+    const regex = /^\d+(\.\d{0,2})?$/;
+    if (regex.test(value)) {
+      return value;
+    } else {
+      return value.substring(0, value.length - 1);
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     switch (name) {
@@ -64,7 +73,7 @@ const AddLedger = () => {
         setOpeningDate(value);
         break;
       case 'amount':
-        setAmount(value);
+        setAmount(validateAmount(value));
         break;
       case 'transactionType':
         setTransactionType(value);
@@ -92,7 +101,7 @@ const AddLedger = () => {
     if (!ledgerName) formErrors.ledger_name = 'Ledger name is required';
     if (!groupId) formErrors.group_name = 'Group name is required';
     if (!openingDate) formErrors.opening_date = 'Opening date is required';
-    if (!amount) formErrors.amount = 'Amount is required';
+    if (!amount || (parseFloat(amount)<= 0)) formErrors.amount = 'Amount is required';
     if (!transactionType) formErrors.transactionType = 'Transaction type is required';
 
     if (parsedObject.group_name === 'Bank Accounts') {
@@ -176,7 +185,7 @@ const AddLedger = () => {
                   <button type="submit" className="btn btn-default" onClick={() => navigate('/ledger')}>
                     Ledger
                   </button>
-                  <button type="submit" className="btn btn-default">
+                  <button type="submit" className="btn btn-default" onClick={() => navigate('/invoice')}>
                     Sale
                   </button>
                   <button type="submit" className="btn btn-default">

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState,useRef } from 'react';
 import Navbarside from './Navbarside';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { GetSingleBank, LedgerEntires } from '../store/slices/bankbook';
+import Table from '../common/Table';
 import Pagination from '../common/Pagination';
 import Loader from '../common/Loader';
 import Footer from './Footer';
@@ -14,6 +15,7 @@ const BankBook = () => {
   const { id } = useParams();
   const NewID = id;
   const dispatch = useDispatch();
+  const tableRef = useRef(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [bankData, setBankData] = useState();
@@ -24,11 +26,17 @@ const BankBook = () => {
   const profile_id = user?.data?.id;
   const item = { profile_id: profile_id, ledger_id: id };
 
+  const [columns, setcolumns] = useState([
+    { header: 'Description', field: 'description', isMultiline: true },
+    { header: 'Date', field: 'added_on', isDate: true },
+    { header: 'Dr', field: 'dr', isDrCr: true, isDr: true },
+    { header: 'Cr', field: 'cr', isDrCr: true, isDr: false },
+    { header: 'Closing Balance', field: 'closing_balance' }
+  ]);
+
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 25;
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = ledgerEntires?.slice(indexOfFirstItem, indexOfLastItem);
+  const [pageSize, setPageSize] = useState(25);
+  const [searchQuery, setSearchQuery] = useState('');
 
 
   React.useEffect(() => {
@@ -65,6 +73,19 @@ const BankBook = () => {
     setCurrentPage(pageNumber);
   };
 
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Filter data based on search query
+  const filteredledgerEntires = ledgerEntires?.filter(party => 
+    party?.description?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
+    party?.added_on?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
+    party?.dr?.toLowerCase()?.includes(searchQuery?.toLowerCase())||
+    party?.cr?.toLowerCase()?.includes(searchQuery?.toLowerCase())||
+    party?.closing_balance?.toLowerCase()?.includes(searchQuery?.toLowerCase())
+  );
   return (
     <>
       <div>
@@ -81,7 +102,7 @@ const BankBook = () => {
                   <button type="submit" className="btn btn-default" onClick={() => navigate('/ledger')}>
                     Ledger
                   </button>
-                  <button type="submit" className="btn btn-default">
+                  <button type="submit" className="btn btn-default" onClick={() => navigate('/invoice')}>
                     Sale
                   </button>
                   <button type="submit" className="btn btn-default">
@@ -141,7 +162,7 @@ const BankBook = () => {
 
                     <div class="row mt-3">
                       <div class="col-md-12">
-                        <div class="card custom-card mb-4">
+                        {/* <div class="card custom-card mb-4">
                           <div class="card-body">
                             {ledgerEntires?.length == 0 ? <h2 className="text-center">No Record Found !</h2> : null}
                             <table class="table table-bordered border-bottom" id="example1">
@@ -154,24 +175,6 @@ const BankBook = () => {
                                   <th>Closing Balance</th>
                                 </tr>
                               </thead>
-                              {/* <tbody>
-                                {ledgerEntires?.map((ledgerEntires, index) => (
-                                  <tr key={index}>
-                                    <td>
-                                      {ledgerEntires?.description.split('\n').map((line, index) => (
-                                        <React.Fragment key={index}>
-                                          {line}
-                                          <br />
-                                        </React.Fragment>
-                                      ))}
-                                    </td>
-                                    <td> {Moment(ledgerEntires?.added_on).format('DD-MM-YYYY')}</td>
-                                    <td className={`text-danger`}>{Number(ledgerEntires?.dr) === 0 ? '' : ledgerEntires?.dr}</td>
-                                    <td className={`text-success`}>{Number(ledgerEntires?.cr) === 0 ? '' : ledgerEntires?.cr}</td>
-                                    <td></td>
-                                  </tr>
-                                ))}
-                              </tbody> */}
                               <tbody>
                                   {currentItems?.map((ledgerEntry, index) => (
                                     <tr key={index}>
@@ -199,7 +202,20 @@ const BankBook = () => {
                                 <Pagination currentPage={currentPage} totalCount={ledgerEntires?.length} itemsPerPage={itemsPerPage} onPageChange={handlePageChange} />
                               </div>
                           </div>
-                        </div>
+                        </div> */}
+                        
+                        <Table
+                        columns={columns}
+                        data={filteredledgerEntires}
+                        tableRef={tableRef}
+                        pageSize={pageSize}
+                        setPageSize={setPageSize}
+                        currentPage={currentPage}
+                        totalCount={filteredledgerEntires?.length}
+                        onPageChange={handlePageChange}
+                        handleSearchChange={handleSearchChange}
+                      />
+                        
                       </div>
                     </div>
                   </div>

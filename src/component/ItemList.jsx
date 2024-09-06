@@ -24,12 +24,21 @@ const Item = () => {
     { header: 'Item Name', field: 'name' },
     { header: 'Price', field: 'sale_price' },
     { header: 'HSN/SAC Code', field: 'hsn' },
-    { header: 'Action', field: 'actions', isAction: true }
+    { 
+      header: 'Actions', 
+      field: 'actions', 
+      isAction: true, 
+      actionButtons: [
+        { name: 'Edit', className: 'btn-default' }, 
+        { name: 'Delete', className: 'btn-cancel' }
+      ]
+    }
   ]);
  
 
   const [pageSize, setPageSize] = useState(25);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -62,6 +71,20 @@ const Item = () => {
       });
   }, [dispatch]);
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filtereditemList = itemList?.filter(party => 
+    party?.type?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
+    party?.category_name?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
+    party?.name?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
+    party?.sale_price?.toLowerCase()?.includes(searchQuery?.toLowerCase())||
+    party?.hsn?.toLowerCase()?.includes(searchQuery?.toLowerCase())
+
+  );
+
+
   return (
     <div>
       <div className="row" style={{ marginLeft: '0', marginRight: '0' }}>
@@ -77,7 +100,7 @@ const Item = () => {
                 <button type="submit" className="btn btn-default" onClick={() => navigate('/ledger')}>
                   Ledger
                 </button>
-                <button type="submit" className="btn btn-default">
+                <button type="submit" className="btn btn-default" onClick={() => navigate('/invoice')}>
                   Sale
                 </button>
                 <button type="submit" className="btn btn-default">
@@ -169,16 +192,16 @@ const Item = () => {
                   </div> */}
                  <Table
                     columns={columns}
-                    data={itemList}
-                    isFooter={false}
+                    data={filtereditemList}
                     tableRef={tableRef}
                     pageSize={pageSize}
                     setPageSize={setPageSize}
                     currentPage={currentPage}
-                    totalCount={itemList?.length}
+                    totalCount={filtereditemList?.length}
                     onPageChange={handlePageChange}
                     handleEdit={handleEdit}
                     handleDelete={handleDelete}
+                    handleSearchChange={handleSearchChange}
                   />
                 </div>
               </div>

@@ -77,7 +77,7 @@ const Settings = () => {
                 <button type="submit" className="btn btn-default" onClick={()=>navigate("/ledger")}>
                   Ledger
                 </button>
-                <button type="submit" className="btn btn-default">
+                <button type="submit" className="btn btn-default" onClick={() => navigate('/invoice')}>
                   Sale
                 </button>
                 <button type="submit" className="btn btn-default">

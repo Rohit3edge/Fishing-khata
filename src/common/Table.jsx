@@ -1,7 +1,8 @@
 import React from 'react';
 import Pagination from './Pagination';
+import Moment from 'moment';
 
-const Table = ({ columns, data, isFooter, tableRef, pageSize, setPageSize, currentPage, totalCount, onPageChange }) => {
+const Table = ({ columns, data, tableRef, pageSize, setPageSize, currentPage, totalCount, onPageChange, handleSearchChange }) => {
   const handlePageSizeChange = (e) => {
     setPageSize(Number(e.target.value));
   };
@@ -10,69 +11,110 @@ const Table = ({ columns, data, isFooter, tableRef, pageSize, setPageSize, curre
   const indexOfFirstItem = indexOfLastItem - pageSize;
   const currentItems = data?.slice(indexOfFirstItem, indexOfLastItem);
 
+  const renderCellContent = (column, row) => {
+    const formatAmount = (value) => {
+      return new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(value);
+    };
+
+    if (column.isAction) {
+      return (
+        <>
+          {column.actionButtons?.map((button, index) => (
+            <button key={index} className={`btn-sm ${button.className}`}>
+              {button.name}
+            </button>
+          ))}
+        </>
+      );
+    }
+
+    switch (column.field) {
+      case 'added_on':
+        return Moment(row[column.field]).format('DD-MM-YYYY');
+      case 'dr':
+        return Number(row[column.field]) === 0 ? '' : <span className="text-danger">{formatAmount(row[column.field])}</span>;
+      case 'cr':
+        return Number(row[column.field]) === 0 ? '' : <span className="text-success">{formatAmount(row[column.field])}</span>;
+      case 'description':
+        return row[column.field].split('\n').map((line, index) => (
+          <React.Fragment key={index}>
+            {line}
+            <br />
+          </React.Fragment>
+        ));
+      case 'sale_price':
+        return formatAmount(row[column.field]); // Assuming 'sale_price' is a column in your data
+      default:
+        return row[column.field];
+    }
+  };
+
   return (
     <div className="card custom-card mb-4">
-      <div className="card-body">
-        <div className="row mb-3">
-          <div className="col-md-6">
-            <label>
-              <select name="pageSize" value={pageSize} onChange={handlePageSizeChange} className="form-select">
-                <option value="25">25</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-              </select>
-              &nbsp;items/page
-            </label>
-          </div>
-          <div className="col-md-6">
-            <input type="search" className="form-control" placeholder="Search..." style={{ float: 'right', width: 'auto' }} />
-          </div>
+      {data?.length === 0 && !handleSearchChange ? (
+        <div className="card-body">
+          <h2 className="text-center">No Record Found!!</h2>
         </div>
-        <table className="table table-bordered border-bottom" ref={tableRef}>
-          <thead className="table-header">
-            <tr>
-              {columns?.map((column) => (
-                <th key={column?.field}>{column?.header}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {currentItems?.map((row, rowIndex) => (
-              <tr key={rowIndex}>
-                {columns.map((column, colIndex) => (
-                  <td key={colIndex}>
-                    {column.isAction ? (
-                      <>
-                        <button  className="btn-sm btn-default">
-                          Edit
-                        </button>
-                        <button  className="btn-sm btn-cancel">
-                          Delete
-                        </button>
-                      </>
-                    ) : (
-                      row[column.field]
-                    )}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-          {isFooter && (
-            <tfoot>
-              <tr>
-                <td colSpan={columns?.length} className="table-border-bottom"></td>
-              </tr>
-            </tfoot>
+      ) : (
+        <div className="card-body">
+          <div className="row mb-3">
+            <div className="col-md-6">
+              <label>
+                <select name="pageSize" value={pageSize} onChange={handlePageSizeChange} className="form-select">
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+                &nbsp;items/page
+              </label>
+            </div>
+            <div className="col-md-6">
+              <input
+                type="search"
+                className="form-control"
+                placeholder="Search..."
+                style={{ float: 'right', width: 'auto' }}
+                onChange={handleSearchChange}
+              />
+            </div>
+          </div>
+          {data?.length === 0 ? (
+            <h2 className="text-center">No Record Found!!</h2>
+          ) : (
+            <>
+              <table className="table table-bordered border-bottom" ref={tableRef}>
+                <thead className="table-header">
+                  <tr>
+                    {columns?.map((column) => (
+                      <th key={column?.field}>{column?.header}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentItems?.map((row, rowIndex) => (
+                    <tr key={rowIndex}>
+                      {columns.map((column, colIndex) => (
+                        <td key={colIndex}>{renderCellContent(column, row)}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="PaginationContainer">
+                <span className="total-elements">
+                  Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, totalCount)} of {totalCount} entries
+                </span>
+                <Pagination currentPage={currentPage} totalCount={totalCount} itemsPerPage={pageSize} onPageChange={onPageChange} />
+              </div>
+            </>
           )}
-        </table>
-        <div className="PaginationContainer">
-          <span className="total-elements">
-            Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, totalCount)} of {totalCount} entries
-          </span>
-          <Pagination currentPage={currentPage} totalCount={totalCount} itemsPerPage={pageSize} onPageChange={onPageChange} />
         </div>
-      </div>
+      )}
     </div>
   );
 };

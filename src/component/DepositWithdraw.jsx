@@ -17,6 +17,7 @@ const DepositWithdraw = () => {
   const [currentDate, setCurrentDate] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [paymentMode, setPaymentMode] = useState('Withdraw');
+  const [errors, setErrors] = useState({});
 
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id;
@@ -40,23 +41,33 @@ const DepositWithdraw = () => {
       });
   }, [dispatch,paymentMode]);
  
-  console.log(paymentMode === 'BankToBank',bankData.length)
+
   const [formData, setFormData] = useState({
     profile_id: id,
     entry_type: paymentMode||"",
     date: '',
     amount: '',
     from_ledger_id: '',
-    to_ledger_id: paymentMode === 'BankToBank' && bankData.length > 0 ? bankData?.[0].id: '',
+    to_ledger_id: paymentMode === 'BankToBank' && bankData?.length > 0 ? bankData?.[0].id: '',
     remark: '',
   });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+
+    if (name === 'amount') {
+      if (/^\d*\.?\d{0,2}$/.test(value)) {
+        setFormData((prevState) => ({
+          ...prevState,
+          [name]: value,
+        }));
+      }
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   };
 
   const handlePaymentModeChange = (e) => {
@@ -80,8 +91,19 @@ const DepositWithdraw = () => {
     });
   };
 
+ 
+  const validate = () => {
+    let newErrors = {};
+    if (!formData.amount || parseFloat(formData.amount) <= 0) newErrors.amount= 'Please enter a valid amount greater than 0.';
+    if (!formData.date) newErrors.date = 'Date is required.';
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (validate()) {
     let updatedFormData = { ...formData };
 
     if (paymentMode === 'Withdraw') {
@@ -95,10 +117,11 @@ const DepositWithdraw = () => {
       updatedFormData.to_ledger_id = formData.to_ledger_id; 
     }
     console.log("NewOne",updatedFormData)
+    console.log("NewOne",data?.ledger_id)
     setIsLoading(true);
     dispatch(Depositwithdraw(updatedFormData))
       .unwrap()
-      .then((data) => {
+      .then(() => {
         setIsLoading(false);
         setFormData({
           profile_id: id,
@@ -109,12 +132,13 @@ const DepositWithdraw = () => {
           to_ledger_id: '',
           remark: '',
         });
-        navigate('/');
+        navigate(`/bankbook/${data?.ledger_id ?data?.ledger_id:""}`);
       })
       .catch(({ message }) => {
         setIsLoading(false);
         console.log(message);
       });
+    }
   };
 
   return (
@@ -132,7 +156,7 @@ const DepositWithdraw = () => {
                 <button type="submit" className="btn btn-default" onClick={() => navigate('/ledger')}>
                   Ledger
                 </button>
-                <button type="submit" className="btn btn-default">
+                <button type="submit" className="btn btn-default" onClick={() => navigate('/invoice')}>
                   Sale
                 </button>
                 <button type="submit" className="btn btn-default">
@@ -241,12 +265,18 @@ const DepositWithdraw = () => {
                               Amount <span class="required">*</span>
                             </label>
                             <input name="amount" type="text" class="form-control" onChange={handleInputChange} value={formData.amount}/>
+                            {errors.amount && (
+        <span className="text-danger">{errors.amount}</span>
+      )}
                           </div>
                           <div class="col-md-6">
                             <label>
                               Date <span class="required">*</span>
                             </label>
                             <input name="date" type="date" class="form-control" value={formData.date} onChange={handleInputChange} />
+                            {errors.date && (
+        <span className="text-danger">{errors.date}</span>
+      )}
                           </div>
                         </div>
                       </div>

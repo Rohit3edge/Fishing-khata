@@ -18,11 +18,12 @@ const AddItem = () => {
   const [units, setUnits] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [listCategories, setListCategories] = useState([]);
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     profile_id: id,
     type: 'Product',
     name: '',
-    category_id: '',
+    category_id: "",
     serial_no: '',
     unit: '',
     opening_quantity: '',
@@ -55,43 +56,69 @@ const AddItem = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  
+    if (name === 'sale_price' || name === 'purchase_price') {
+      if (/^\d*\.?\d{0,2}$/.test(value)) {
+        setFormData(prevState => ({
+          ...prevState,
+          [name]: value
+        }));
+      }
+    } else {
+      setFormData(prevState => ({
+        ...prevState,
+        [name]: value
+      }));
+    }
   };
+  
 
-
-
+  const validate = () => {
+    let newErrors = {};
+    if (!formData.name) newErrors.name = "Item Name is required.";
+    if (!formData.category_id) newErrors.category_id = "Category is required.";
+    if (!formData.sale_price || (parseFloat(formData.sale_price)<= 0))newErrors.sale_price = "Sale/Service Price is required.";    
+    if (!formData.tax) newErrors.tax = "Tax is required.";
+    if (!formData.hsn) newErrors.hsn = "HSN/SAC is required.";
+    if (formData.type === 'Product' && !formData.unit) newErrors.unit = "Unit is required for products.";
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  
   const handleSubmit = () => {
     console.log(formData);
+    if (validate()) {
     setIsLoading(true);
     dispatch(Additems(formData))
       .unwrap()
       .then((data) => {
         setIsLoading(false);
         setFormData({
-            profile_id: id,
-            type: 'Product',
-            name: '',
-            category_id: '',
-            serial_no: '',
-            unit: '',
-            opening_quantity: '',
-            opening_stock_value: '',
-            opening_stock_date: '',
-            sale_price: '',
-            sale_price_tax_type: '',
-            purchase_price: '',
-            purchase_price_tax_type: '',
-            tax: '',
-            hsn: '',
-            discount_type: '',
-            discount: '',
-            mrp: '',
-            mfg_date: '',
-            exp_date: '',
-            description: '',
-            batch_no: '',
-            model_no: '',
-            item_size: '',
+          profile_id: id,
+          type: 'Product',
+          name: '',
+          category_id: "",
+          serial_no: '',
+          unit: '',
+          opening_quantity: '',
+          opening_stock_value: '',
+          opening_stock_date: '',
+          sale_price: '',
+          sale_price_tax_type: '',
+          purchase_price: '',
+          purchase_price_tax_type: '',
+          tax: '',
+          hsn: '',
+          discount_type: '',
+          discount: '',
+          mrp: '',
+          mfg_date: '',
+          exp_date: '',
+          description: '',
+          batch_no: '',
+          model_no: '',
+          item_size: '',
         });
         navigate('/item');
       })
@@ -99,11 +126,8 @@ const AddItem = () => {
         setIsLoading(false);
         console.log(message);
       });
-    
+    }
   };
-
-
-
 
   React.useEffect(() => {
     dispatch(Getunits())
@@ -123,6 +147,12 @@ const AddItem = () => {
       .then((data) => {
         setIsLoading(false);
         setListCategories(data?.data);
+        if (data?.data.length > 0) {
+          setFormData(prevState => ({
+            ...prevState,
+            category_id: data.data[0].id
+          }));
+        }
       })
       .catch(({ message }) => {
         setIsLoading(false);
@@ -156,7 +186,7 @@ const AddItem = () => {
                 <button type="submit" className="btn btn-default" onClick={() => navigate('/ledger')}>
                   Ledger
                 </button>
-                <button type="submit" className="btn btn-default">
+                <button type="submit" className="btn btn-default" onClick={() => navigate('/invoice')}>
                   Sale
                 </button>
                 <button type="submit" className="btn btn-default">
@@ -216,6 +246,7 @@ const AddItem = () => {
                                       Item Name <span className="required">*</span>
                                     </label>
                                     <input name="name" type="text" className="form-control" onChange={handleInputChange} value={formData.name} />
+                                    {errors.name && <p className="alert-message">{errors.name}</p>}
                                   </div>
                                   <div className="col-md-6">
                                     <label>
@@ -225,6 +256,7 @@ const AddItem = () => {
                                       <option value="">Select Category</option>
                                       {renderCategoryOptions(listCategories)}
                                     </select>
+                                    {errors.category_id && <p className="alert-message">{errors.category_id}</p>}
                                   </div>
                                 </div>
                               </div>
@@ -244,6 +276,7 @@ const AddItem = () => {
                                         <option value="Excluding Tax">Excluding Tax</option>
                                         <option value="Including Tax">Including Tax</option>
                                       </select>
+                                      {errors.sale_price && <p className="alert-message">{errors.sale_price}</p>}
                                     </div>
                                   </div>
 
@@ -264,6 +297,7 @@ const AddItem = () => {
                                       <option value="GST@28%">GST@28%</option>
                                       <option value="Exempted">Exempted</option>
                                     </select>
+                                    {errors.tax && <p className="alert-message">{errors.tax}</p>}
                                   </div>
                                 </div>
                               </div>
@@ -275,6 +309,7 @@ const AddItem = () => {
                                       HSN/SAC <span className="required">*</span>
                                     </label>
                                     <input name="hsn" type="text" className="form-control" onChange={handleInputChange} value={formData.hsn} />
+                                    {errors.hsn && <p className="alert-message">{errors.hsn}</p>}
                                   </div>
                                 </div>
                               </div>
@@ -301,6 +336,7 @@ const AddItem = () => {
                                           ))}
                                         </select>
                                       </div>
+                                      {errors.unit && <p className="alert-message">{errors.unit}</p>}
                                     </div>
 
                                     <div className="col-md-6">
