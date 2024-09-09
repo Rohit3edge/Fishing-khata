@@ -19,7 +19,7 @@ const InvoiceSecond = () => {
   const [shippingCost, setShippingCost] = useState(0);
   const [addedItems, setAddedItems] = useState([]); // State to store the added items
   const [selectedUnit, setSelectedUnit] = useState('');
-  const [taxAmounts, settaxAmounts]=useState({})
+  const [taxAmounts, settaxAmounts] = useState({});
 
   useEffect(() => {
     dispatch(Getunits())
@@ -49,7 +49,6 @@ const InvoiceSecond = () => {
         .unwrap()
         .then((data) => {
           setSingleDetail(data?.data);
-          console.log(data.data)
         })
         .catch(({ message }) => {
           console.log(message);
@@ -65,7 +64,17 @@ const InvoiceSecond = () => {
   const handleDiscountChange = (e) => setDiscount(e.target.value);
   const handleDiscountTypeChange = (e) => setDiscountType(e.target.value);
   const handleShippingCostChange = (e) => setShippingCost(e.target.value);
-  const handleUnitChange = (e) => setSelectedUnit(e.target.value);
+  const handleUnitChange = (e) => {
+    const selectedUnitId = e.target.value;
+    
+    // Update singleDetail with the newly selected unit
+    setSelectedUnit((prevDetail) => ({
+      ...prevDetail,
+      unit: selectedUnitId,
+    }));
+  };
+  
+  
 
   const totalAmount = useMemo(() => {
     let price = parseFloat(singleDetail?.sale_price) || 0;
@@ -79,90 +88,96 @@ const InvoiceSecond = () => {
       total -= (total * parseFloat(discount)) / 100;
     }
 
-    // Handle GST if tax is "Excluding"
-    // if (singleDetail?.sale_price_tax_type === 'Excluding Tax') {
-    //   const taxAmount = (total * gst) / 100;
-  
-    //   // Check and accumulate tax for different GST rates
-    //   console.log(taxAmounts[gst] ,gst)
-    //   if (gst==18) {
-    //     taxAmounts[gst] = taxAmount;
-    //   } else if (gst==12) {
-        
-    //     taxAmounts[gst] = taxAmount;
-    //   }else if (gst==28) {
-    
-    //     taxAmounts[gst] = taxAmount;
-    //   }else if (gst==5) {
-
-    //     taxAmounts[gst] = taxAmount;
-    //   }
-    //   else if (gst==2.5) {
-    //     taxAmounts[gst] = taxAmount;
-    //   }
-  
-  
-    //   total += taxAmount;
-    // }
-
-
+    // Handle GST calculation
+    let taxAmount = 0;
     if (singleDetail?.sale_price_tax_type === 'Excluding Tax') {
-      const taxAmount = (total * gst) / 100;
-  
-      // Check and accumulate tax for different GST rates
-      if (taxAmounts[gst]) {
-        // Accumulate if the tax rate already exists
-        taxAmounts[gst] += taxAmount;
-      } else {
-        // Initialize the tax rate with the first tax amount
-        taxAmounts[gst] = taxAmount;
-      }
-  
+      taxAmount = (price * quantity * gst) / 100;
       total += taxAmount;
+    } else if (singleDetail?.sale_price_tax_type === 'Including Tax') {
+      const priceIncludingTax = price * quantity;
+      taxAmount = (priceIncludingTax * gst) / (100 + gst);
+      total = priceIncludingTax; // Total already includes tax
     }
-  
-    // Example: Log the tax amounts for each rate (5%, 12%, 18%, etc.)
-    console.log("Tax amounts by rate:", taxAmounts);
 
     return total.toFixed(2); // Format to 2 decimal places
   }, [quantity, discount, discountType, singleDetail]);
 
   const handleAddItem = () => {
-
-    const newTaxAmounts = { ...taxAmounts };
-
     const gst = parseFloat(singleDetail?.tax) || 0;
-    const total = parseFloat(totalAmount) || 0;
-    const taxAmount = (total * gst) / 100;
+    const price = parseFloat(singleDetail?.sale_price) || 0;
+    let taxAmount = 0;
 
+    if (singleDetail?.sale_price_tax_type === 'Excluding Tax') {
+      // Tax is excluded, calculate tax normally
+      taxAmount = (price * quantity * gst) / 100;
+    } else if (singleDetail?.sale_price_tax_type === 'Including Tax') {
+      // Tax is included, reverse calculate the tax
+      const priceIncludingTax = price * quantity;
+      taxAmount = (priceIncludingTax * gst) / 100;
+    }
+
+    // Update the taxAmounts state
+    const newTaxAmounts = { ...taxAmounts };
     if (newTaxAmounts[gst]) {
-      // Accumulate if the tax rate already exists
       newTaxAmounts[gst] += taxAmount;
     } else {
-      // Initialize the tax rate with the first tax amount
       newTaxAmounts[gst] = taxAmount;
     }
-  
-    // Set updated taxAmounts in state
+
     settaxAmounts(newTaxAmounts);
 
-
-    console.log(units.find((unit) => unit.id === singleDetail?.unit)?.id)
     const newItem = {
       id: selectedProduct,
       name: selectedProduct,
       hsn: singleDetail?.hsn,
       quantity,
-      unit:String(units.find((unit) => unit.id === singleDetail?.unit)?.id || ""), 
-      price: singleDetail?.sale_price,
-      gst: singleDetail?.tax,
+      unit: String(units.find((unit) => unit.id === singleDetail?.unit)?.id || ''),
+      price: price,
+      gst: gst,
       discount,
       discountType,
       total: totalAmount,
       taxType: singleDetail?.sale_price_tax_type,
     };
+
     setAddedItems([...addedItems, newItem]);
     clearInputs(); // Clear the inputs after adding the item
+  };
+
+  // Handle removing item and update the taxAmounts state accordingly
+  const handleRemoveItem = (index) => {
+    const updatedItems = [...addedItems];
+    const item = updatedItems[index];
+
+    // Recalculate the tax for the item being removed
+    const gst = parseFloat(item.gst) || 0;
+    const price = parseFloat(item.price) || 0;
+    const itemQuantity = parseFloat(item.quantity) || 0;
+    let taxAmount = 0;
+
+    if (item.taxType === 'Excluding Tax') {
+      // Tax is excluded, calculate tax normally
+      taxAmount = (price * itemQuantity * gst) / 100;
+    } else if (item.taxType === 'Including Tax') {
+      // Tax is included, reverse calculate the tax
+      const priceIncludingTax = price * itemQuantity;
+      taxAmount = (priceIncludingTax * gst) / 100;
+    }
+
+    // Subtract the tax amount from taxAmounts
+    const newTaxAmounts = { ...taxAmounts };
+    if (newTaxAmounts[gst]) {
+      newTaxAmounts[gst] -= taxAmount;
+      if (newTaxAmounts[gst] < 0) {
+        newTaxAmounts[gst] = 0; // Ensure no negative tax amounts
+      }
+    }
+
+    settaxAmounts(newTaxAmounts);
+
+    // Remove the item from addedItems
+    updatedItems.splice(index, 1);
+    setAddedItems(updatedItems);
   };
 
   const clearInputs = () => {
@@ -172,24 +187,74 @@ const InvoiceSecond = () => {
     setDiscountType('Amount');
   };
 
-  const handleRemoveItem = (index) => {
-    const updatedItems = addedItems.filter((_, i) => i !== index);
-    setAddedItems(updatedItems);
-  };
-
   const handleItemChange = (index, field, value) => {
     const updatedItems = [...addedItems];
     updatedItems[index] = { ...updatedItems[index], [field]: value };
+
+    // Get the item price, quantity, and current tax type
+    const itemPrice = parseFloat(updatedItems[index].price) || 0;
+    const itemQuantity = parseFloat(updatedItems[index].quantity) || 0;
+    const itemTotalWithoutTax = itemPrice * itemQuantity;
+
+    // If tax is updated, recalculate the taxAmounts and total
+    if (field === 'gst' || field === 'taxType') {
+      const newTaxAmounts = { ...taxAmounts };
+      const oldGst = parseFloat(addedItems[index]?.gst) || 0;
+      const newGst = parseFloat(field === 'gst' ? value : updatedItems[index].gst) || 0;
+
+      const oldTaxAmount = (itemTotalWithoutTax * oldGst) / 100;
+      const newTaxAmount = (itemTotalWithoutTax * newGst) / 100;
+
+      // Remove the old tax amount
+      if (newTaxAmounts[oldGst]) {
+        newTaxAmounts[oldGst] -= oldTaxAmount;
+        if (newTaxAmounts[oldGst] < 0) {
+          newTaxAmounts[oldGst] = 0; // Ensure no negative tax amounts
+        }
+      }
+
+      // Add the new tax amount
+      if (newTaxAmounts[newGst]) {
+        newTaxAmounts[newGst] += newTaxAmount;
+      } else {
+        newTaxAmounts[newGst] = newTaxAmount;
+      }
+
+      settaxAmounts(newTaxAmounts);
+
+      // Update the total based on tax type
+      let newTotal;
+      if (updatedItems[index]?.taxType === 'Including Tax') {
+        // If tax is included, the total remains the same
+        newTotal = itemTotalWithoutTax.toFixed(2);
+      } else if (updatedItems[index]?.taxType === 'Excluding Tax') {
+        // Add tax to the total
+        newTotal = (itemTotalWithoutTax + newTaxAmount).toFixed(2);
+      }
+
+      updatedItems[index].total = newTotal;
+    }
+
+    // Update the discount if applicable
+    if (field === 'discount' || field === 'discountType') {
+      let discountValue = parseFloat(updatedItems[index].discount) || 0;
+      if (updatedItems[index].discountType === 'Percentage') {
+        discountValue = (itemTotalWithoutTax * discountValue) / 100;
+      }
+
+      updatedItems[index].total = (itemTotalWithoutTax - discountValue).toFixed(2);
+    }
+
     setAddedItems(updatedItems);
   };
-
 
   const grandTotal = useMemo(() => {
     const itemsTotal = addedItems.reduce((sum, item) => sum + parseFloat(item.total), 0);
     return (itemsTotal + parseFloat(shippingCost)).toFixed(2);
   }, [addedItems, shippingCost]);
-  
-  // console.log(addedItems,singleDetail?.tax);
+
+  console.log('taxAmounts', taxAmounts);
+
   return (
     <div className="row my-3">
       <div className="col-md-12">
@@ -225,26 +290,25 @@ const InvoiceSecond = () => {
                       </td>
                       <td>{singleDetail?.hsn}</td>
                       <td>
-                        <div className='input-group'>
-                        <input className="form-control" type="number" value={quantity} onChange={handleQuantityChange} />
-                        <select className="form-control" value={singleDetail.unit ?? selectedUnit} onChange={handleUnitChange} readOnly>
-                          <option value="">--Select Unit--</option>
-                          {units?.map((option, index) => (
-                            <option key={index} value={option?.id}>
-                              {option?.unit}
-                            </option>
-                          ))}
-                        </select>
+                        <div className="input-group">
+                          <input className="form-control" type="number" value={ quantity} onChange={handleQuantityChange} />
+                          <select className="form-control" value={!singleDetail.unit ? selectedUnit:singleDetail.unit} onChange={handleUnitChange}>
+  <option value="">--Select Unit--</option>
+  {units?.map((option, index) => (
+    <option key={index} value={option?.id}>
+      {option?.unit}
+    </option>
+  ))}
+</select>
                         </div>
                       </td>
-                     
+
                       <td>
-                        <input type="text" className="form-control" value={ singleDetail?.sale_price ? parseFloat(singleDetail?.sale_price).toFixed(2) : 0} readOnly />
+                        <input type="text" className="form-control" value={singleDetail?.sale_price ? parseFloat(singleDetail?.sale_price).toFixed(2) : 0} readOnly />
                       </td>
                       <td>
-                        
                         <div class="input-group">
-                          <select class="form-control" name="tax" value={parseFloat(singleDetail?.tax)} style={{width:"100px"}}>
+                          <select class="form-control" name="tax" value={parseFloat(singleDetail?.tax)} style={{ width: '100px' }}>
                             <option value="0">Exempted</option>
                             <option value="2.5">2.5%</option>
                             <option value="5">5%</option>
@@ -274,7 +338,7 @@ const InvoiceSecond = () => {
                         </button>
                       </td>
                     </tr>
-                   
+
                     {addedItems?.map((item, index) => (
                       <tr key={index}>
                         {/* Product Name Dropdown */}
@@ -328,7 +392,7 @@ const InvoiceSecond = () => {
                         {/* GST and Tax */}
                         <td className="align-middle">
                           <div className="input-group">
-                            <select className="form-control" name="tax" value={parseFloat(item?.gst)} onChange={(e) => handleItemChange(index, 'gst', e.target.value)} style={{width:"100px"}}>
+                            <select className="form-control" name="tax" value={parseFloat(item?.gst)} onChange={(e) => handleItemChange(index, 'gst', e.target.value)} style={{ width: '100px' }}>
                               <option value="0">Exempted</option>
                               <option value="2.5">2.5%</option>
                               <option value="5">5%</option>
@@ -390,23 +454,30 @@ const InvoiceSecond = () => {
                         ₹{grandTotal ? grandTotal : 0}
                       </td>
                     </tr>
-
-                    <tr>
+                    {Object.entries(taxAmounts).map(([taxRate, amount], index) => {
+                      if (amount > 0) {
+                        // Only show taxes with a non-zero amount
+                        return (
+                          <tr key={index}>
+                            <td colSpan="7" className="text-right align-middle">
+                              <strong>GST {taxRate}%:</strong>
+                            </td>
+                            <td colSpan="2" className="align-middle">
+                              ₹{amount.toFixed(2)}
+                            </td>
+                          </tr>
+                        );
+                      }
+                      return null; // Do not render rows with zero tax amounts
+                    })}
+                    {/* <tr>
                       <td colspan="7" class="text-right align-middle">
                         <strong>GST 5%:</strong>
                       </td>
                       <td colspan="2" class="align-middle">
                         ₹1,629.00
                       </td>
-                    </tr>
-                    <tr>
-                      <td colspan="7" class="text-right align-middle">
-                        <strong>GST 18%:</strong>
-                      </td>
-                      <td colspan="2" class="align-middle">
-                        ₹2,629.00
-                      </td>
-                    </tr>
+                    </tr> */}
                   </tbody>
                 </table>
               </div>

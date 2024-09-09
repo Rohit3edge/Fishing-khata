@@ -98,7 +98,7 @@ const Navbarside = () => {
                 {show === "Sale" && (
                   <ul className="submenu">
                     <li className="submenu-item">
-                      <NavLink to="/Sale/Submenu1" className="menu-title">
+                      <NavLink to="/invoice" className="menu-title">
                         Invoice
                       </NavLink>
                     </li>
