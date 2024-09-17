@@ -4,6 +4,7 @@ import Navbarside from './Navbarside';
 import Footer from './Footer';
 import { useDispatch } from 'react-redux';
 import { UpdateParties, EditParties } from '../store/slices/parties';
+import Moment from 'moment';
 import Loader from '../common/Loader';
 
 const PartyForm = () => {
@@ -55,7 +56,7 @@ const PartyForm = () => {
             gstin: parties?.gstin || '',
             opening_blance: parties?.opening_blance || '',
             isactive: '1',
-            ob_date: parties?.ob_date || '',
+            ob_date:Moment(parties?.ob_date).format('DD-MM-YYYY')  || '',
             party_type: parties?.party_type || 'Customer',
             ledger_id: parties?.ledger_id || ''
           });
@@ -103,7 +104,7 @@ const PartyForm = () => {
         console.error(message);
       });
   };
-
+console.log(formData.ob_date)
   return (
     <div>
       <div class="row" style={{ marginLeft: '0', marginRight: '0' }}>
@@ -168,8 +169,8 @@ const PartyForm = () => {
                             <label>
                               Party Name <span class="required">*</span>
                             </label>
-                            <input name="name" type="text" className="form-control" value={formData.name} onChange={handleInputChange} />
-                            <input name="ledger_id" type="hidden" className="form-control" value={formData.ledger_id} onChange={handleInputChange} />
+                            <input name="name" type="text" className="form-control" value={formData?.name} onChange={handleInputChange} />
+                            <input name="ledger_id" type="hidden" className="form-control" value={formData?.ledger_id} onChange={handleInputChange} />
                             
                           </div>
                         </div>
@@ -181,11 +182,11 @@ const PartyForm = () => {
                             <label>
                               Address <span class="required">*</span>
                             </label>
-                            <input name="address" type="text" className="form-control" value={formData.address} onChange={handleInputChange} />
+                            <input name="address" type="text" className="form-control" value={formData?.address} onChange={handleInputChange} />
                           </div>
                           <div class="col-md-6">
                             <label>State</label>
-                            <input name="state" type="text" className="form-control" value={formData.state} onChange={handleInputChange} />
+                            <input name="state" type="text" className="form-control" value={formData?.state} onChange={handleInputChange} />
                           </div>
                         </div>
                       </div>
@@ -194,11 +195,11 @@ const PartyForm = () => {
                         <div class="row">
                           <div class="col-md-6">
                             <label>Phone Number</label>
-                            <input name="phone" type="text" className="form-control" value={formData.phone} onChange={handleInputChange} />
+                            <input name="phone" type="text" className="form-control" value={formData?.phone} onChange={handleInputChange} />
                           </div>
                           <div class="col-md-6">
                             <label>Email Address</label>
-                            <input name="email" type="text" className="form-control" value={formData.email} onChange={handleInputChange} />
+                            <input name="email" type="text" className="form-control" value={formData?.email} onChange={handleInputChange} />
 
                           </div>
                         </div>
@@ -208,7 +209,7 @@ const PartyForm = () => {
                         <div class="row">
                           <div class="col-md-6">
                             <label>GST Number</label>
-                            <input name="gstin" type="text" class="form-control" value={formData.gstin} onChange={handleInputChange} />
+                            <input name="gstin" type="text" class="form-control" value={formData?.gstin} onChange={handleInputChange} />
                           </div>
                         </div>
                       </div>
@@ -222,14 +223,13 @@ const PartyForm = () => {
                               <span class="input-group-text" id="basic-addon1">
                                 ₹
                               </span>
-                              <input name="opening_blance" class="form-control" type="text" value={formData.opening_blance} onChange={handleInputChange} />
+                              <input name="opening_blance" class="form-control" type="text" value={formData?.opening_blance} onChange={handleInputChange} />
                               
                             </div>
                           </div>
                           <div class="col-md-6">
                             <label>As of Date</label>
-                            <input name="ob_date" type="date" class="form-control" value={formData.ob_date} onChange={handleInputChange} />
-                            
+                            <input name="ob_date" type="date" class="form-control"  value={formData.ob_date ? Moment(formData.ob_date, 'DD-MM-YYYY').format('YYYY-MM-DD') : ''} onChange={handleInputChange} />
                           </div>
                         </div>
                       </div>

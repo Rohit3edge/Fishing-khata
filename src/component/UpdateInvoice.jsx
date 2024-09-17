@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ListParties } from '../store/slices/parties';
-import {GetInvoicesSingleDetails } from '../store/slices/sale';
+import { GetInvoicesSingleDetails } from '../store/slices/sale';
 import UpdateInvoiceSecond from './UpdateInvoiceSecond';
 import Select from 'react-select';
 import Navbarside from './Navbarside';
@@ -23,14 +23,15 @@ const UpdateAddInvoice = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [listParties, setListParties] = useState([]);
   const [isSameAsBilling, setIsSameAsBilling] = useState(false);
-  const [invoiceSecond, setInvoiceSecond] = useState({});
-  const [invoicedetails, setInvoicedetails] = useState();
+  const [invoiceSecond, setInvoiceSecond] = useState([]);
+  const [invoicedetails, setInvoicedetails] = useState({});
   const [selectedPartyDetails, setSelectedPartyDetails] = useState({
     address: '',
     gstin: '',
     phone: '',
     state: '',
     ledger_id: '',
+    party_id: '',
   });
   const [shippingAddress, setShippingAddress] = useState({
     address: '',
@@ -53,13 +54,12 @@ const UpdateAddInvoice = () => {
   useEffect(() => {
     if (invoiceId && userId) {
       setIsLoading(true);
-      dispatch(GetInvoicesSingleDetails({ profile_id: userId, invoice_id: invoiceId })) // Fetch invoice details by ID
+      dispatch(GetInvoicesSingleDetails({ profile_id: userId, invoice_id: invoiceId }))
         .unwrap()
         .then((data) => {
           setIsLoading(false);
           const invoice = data?.data?.invoice;
-          setInvoicedetails(data?.data||[])
-          // console.log('invoice', invoice);
+          setInvoicedetails(data?.data || {});
           setFormData({
             invoice_date: invoice?.invoice_date || currentDate,
             eway_number: invoice?.eway_bill || '',
@@ -69,18 +69,18 @@ const UpdateAddInvoice = () => {
             po_number: invoice?.po_number || '',
           });
           setSelectedPartyDetails({
-            address: invoice?.billing_address,
-            gstin: invoice?.party_gstn,
-            phone: invoice?.billing_phone,
-            state: invoice?.billing_state,
-            ledger_id: invoice?.ledger_id,
-            party_id: invoice?.party_id,
+            address: invoice?.billing_address || '',
+            gstin: invoice?.party_gstn || '',
+            phone: invoice?.billing_phone || '',
+            state: invoice?.billing_state || '',
+            ledger_id: invoice?.ledger_id || '',
+            party_id: invoice?.party_id || '',
           });
           setShippingAddress({
-            address: invoice?.shipping_address,
-            gstin: invoice?.party_gstn,
-            phone: invoice?.shipping_phone,
-            state: invoice?.shipping_state,
+            address: invoice?.shipping_address || '',
+            gstin: invoice?.party_gstn || '',
+            phone: invoice?.shipping_phone || '',
+            state: invoice?.shipping_state || '',
           });
           setInvoiceSecond(invoice?.items || []); // Assuming the invoice items are in `items`
         })
@@ -89,7 +89,7 @@ const UpdateAddInvoice = () => {
           console.log(message);
         });
     }
-  }, [dispatch, invoiceId]);
+  }, [dispatch, invoiceId, userId]);
 
   // Fetch the list of parties
   useEffect(() => {
@@ -98,13 +98,13 @@ const UpdateAddInvoice = () => {
       .unwrap()
       .then((data) => {
         setIsLoading(false);
-        setListParties(data?.data);
+        setListParties(data?.data || []);
       })
       .catch(({ message }) => {
         setIsLoading(false);
         console.log(message);
       });
-  }, [dispatch]);
+  }, [dispatch, userId]);
 
   // Party selection logic
   const partyOptions = listParties.map((party) => ({
@@ -121,6 +121,7 @@ const UpdateAddInvoice = () => {
         phone: party.phone,
         state: party.state,
         ledger_id: party.ledger_id,
+        party_id: party.id,
       });
 
       if (isSameAsBilling) {
@@ -172,13 +173,13 @@ const UpdateAddInvoice = () => {
     e.preventDefault();
 
     const billingData = {
-      profile_id: id,
-      party_id: listParties.find((party) => party.address === selectedPartyDetails.address)?.id,
+      profile_id: userId,
+      party_id: selectedPartyDetails.party_id,
       ledger_id: selectedPartyDetails.ledger_id,
       invoice_number: formData.invoice_number,
       invoice_date: formData.invoice_date,
       fin_year: '2024-2025',
-      po_number: 'PO12345',
+      po_number: formData.po_number,
       billing_address: selectedPartyDetails.address,
       billing_state: selectedPartyDetails.state,
       billing_phone: selectedPartyDetails.phone,
@@ -190,29 +191,15 @@ const UpdateAddInvoice = () => {
       vehicle_number: formData.vehicle_number,
       notes: formData.message,
     };
+    console.log(billingData)
 
     const mergedData = {
       ...billingData,
-      ...invoiceSecond,
+      items: invoiceSecond,
     };
 
-    //   handleCreate(mergedData);
   };
 
-  // Function to handle updating an existing invoice
-  // const handleUpdate = (billingData) => {
-  //   setIsLoading(true);
-  //   dispatch(UpdateInvoices({ invoiceId, ...billingData }))
-  //     .unwrap()
-  //     .then((data) => {
-  //       setIsLoading(false);
-  //       navigate('/invoicelist');
-  //     })
-  //     .catch(({ message }) => {
-  //       setIsLoading(false);
-  //       console.log(message);
-  //     });
-  // };
 
   return (
     <div>
@@ -226,13 +213,13 @@ const UpdateAddInvoice = () => {
             </div>
             <div className="col-md-5">
               <div className="d-flex justify-content-end">
-                <button type="submit" className="btn btn-default" onClick={() => navigate('/ledger')}>
+                <button type="button" className="btn btn-default" onClick={() => navigate('/ledger')}>
                   Ledger
                 </button>
-                <button type="submit" className="btn btn-default" onClick={() => navigate('/invoice')}>
+                <button type="button" className="btn btn-default" onClick={() => navigate('/invoice')}>
                   Sale
                 </button>
-                <button type="submit" className="btn btn-default">
+                <button type="button" className="btn btn-default">
                   Purchase
                 </button>
               </div>
@@ -278,22 +265,22 @@ const UpdateAddInvoice = () => {
                               <div className="row mt-2">
                                 <div className="col-md-6">
                                   <label>Address </label>
-                                  <input name="address" type="text" className="form-control" value={selectedPartyDetails?.address} onChange={handleInputChange} />
+                                  <input name="address" type="text" className="form-control" value={selectedPartyDetails?.address || ''} onChange={handleInputChange} />
                                 </div>
                                 <div className="col-md-6">
                                   <label>State </label>
-                                  <input name="state" type="text" className="form-control" value={selectedPartyDetails?.state} onChange={handleInputChange} />
+                                  <input name="state" type="text" className="form-control" value={selectedPartyDetails?.state || ''} onChange={handleInputChange} />
                                 </div>
                               </div>
 
                               <div className="row mt-2">
                                 <div className="col-md-6">
                                   <label>GSTN </label>
-                                  <input name="gstin" type="text" className="form-control" value={selectedPartyDetails?.gstin} onChange={handleInputChange} />
+                                  <input name="gstin" type="text" className="form-control" value={selectedPartyDetails?.gstin || ''} onChange={handleInputChange} />
                                 </div>
                                 <div className="col-md-6">
                                   <label>Phone </label>
-                                  <input name="phone" type="text" className="form-control" value={selectedPartyDetails?.phone} onChange={handleInputChange} />
+                                  <input name="phone" type="text" className="form-control" value={selectedPartyDetails?.phone || ''} onChange={handleInputChange} />
                                 </div>
                               </div>
                             </fieldset>
@@ -314,22 +301,22 @@ const UpdateAddInvoice = () => {
                               <div className="row mt-2">
                                 <div className="col-md-6">
                                   <label>Address </label>
-                                  <input name="address" type="text" className="form-control" value={shippingAddress.address} onChange={handleShippingInputChange} />
+                                  <input name="address" type="text" className="form-control" value={shippingAddress.address || ''} onChange={handleShippingInputChange} />
                                 </div>
                                 <div className="col-md-6">
                                   <label>State </label>
-                                  <input name="state" type="text" className="form-control" value={shippingAddress.state} onChange={handleShippingInputChange} />
+                                  <input name="state" type="text" className="form-control" value={shippingAddress.state || ''} onChange={handleShippingInputChange} />
                                 </div>
                               </div>
 
                               <div className="row mt-2">
                                 <div className="col-md-6">
                                   <label>GSTN </label>
-                                  <input name="gstin" type="text" className="form-control" value={shippingAddress.gstin} onChange={handleShippingInputChange} />
+                                  <input name="gstin" type="text" className="form-control" value={shippingAddress.gstin || ''} onChange={handleShippingInputChange} />
                                 </div>
                                 <div className="col-md-6">
                                   <label>Phone </label>
-                                  <input name="phone" type="text" className="form-control" value={shippingAddress.phone} onChange={handleShippingInputChange} />
+                                  <input name="phone" type="text" className="form-control" value={shippingAddress.phone || ''} onChange={handleShippingInputChange} />
                                 </div>
                               </div>
                             </fieldset>
@@ -341,7 +328,7 @@ const UpdateAddInvoice = () => {
                             <div className="row">
                               <div className="col-md-6">
                                 <label>Invoice Number </label>
-                                <input name="invoice_number" type="text" className="form-control" value={formData.invoice_number} />
+                                <input name="invoice_number" type="text" className="form-control" value={formData.invoice_number || ''} onChange={handleInputChange} readOnly/>
                               </div>
 
                               <div className="col-md-6">
@@ -360,19 +347,19 @@ const UpdateAddInvoice = () => {
                             <div className="row mt-3">
                               <div className="col-md-6">
                                 <label>E-Way Bill Number </label>
-                                <input name="eway_number" type="text" className="form-control" value={formData.eway_number} onChange={handleInputChange} />
+                                <input name="eway_number" type="text" className="form-control" value={formData.eway_number || ''} onChange={handleInputChange} />
                               </div>
 
                               <div className="col-md-6">
                                 <label>Vehicle Number </label>
-                                <input name="vehicle_number" type="text" className="form-control" value={formData.vehicle_number} onChange={handleInputChange} />
+                                <input name="vehicle_number" type="text" className="form-control" value={formData.vehicle_number || ''} onChange={handleInputChange} />
                               </div>
                             </div>
                           </div>
 
                           <div className="col-md-6">
                             <label>Notes </label>
-                            <textarea name="message" className="form-control" rows="6" cols="70" value={formData.message} onChange={handleInputChange}></textarea>
+                            <textarea name="message" className="form-control" rows="6" cols="70" value={formData.message || ''} onChange={handleInputChange}></textarea>
                           </div>
                         </div>
                       </div>
