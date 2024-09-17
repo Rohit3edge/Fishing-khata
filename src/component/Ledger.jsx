@@ -15,9 +15,10 @@ const Ledger = () => {
   const tableRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [ledgerList, setLedgerList] = useState([]);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [ledgerEntires, setLedgerEntires] = useState();
+  const [activeIndex, setActiveIndex] = useState(null);
+  const [ledgerEntires, setLedgerEntires] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const[closingBalance,setClosingBalance ]=useState("")
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
@@ -38,7 +39,7 @@ const Ledger = () => {
     { header: 'Date', field: 'added_on' },
     { header: 'Dr', field: 'dr', isDrCr: true, isDr: true  },
     { header: 'Cr', field: 'cr', isDrCr: true, isDr: false  },
-    { header: 'Closing Balance', field: 'closing_balance' },
+    { header: 'Closing Balance', field: 'balance' },
   ]);
 
   React.useEffect(() => {
@@ -60,32 +61,39 @@ const Ledger = () => {
       });
   }, [dispatch]);
 
-  React.useEffect(() => {
-    if (item.ledger_id) {
-      setIsLoading(true);
-      dispatch(LedgerEntires(item))
-        .unwrap()
-        .then((data) => {
-          setIsLoading(false);
-          setLedgerEntires(data?.data);
-          console.log(data.data);
-        })
-        .catch(({ message }) => {
-          setIsLoading(false);
-          console.log(message);
-        });
+  const handleLedgerClick = async (id, index) => {
+    setActiveIndex(index);
+    
+    const newItem = { ...item, ledger_id: id };
+    setItem(newItem);
+  
+    const requestId = Date.now();
+    const currentRequestId = requestId;
+    setIsLoading(true);
+  
+    try {
+      const data = await dispatch(LedgerEntires(newItem)).unwrap();
+
+      if (currentRequestId === requestId) {
+        setLedgerEntires(data?.data?.entries || []);
+        setClosingBalance(data?.data?.closing_balance || "");
+        console.log("entries", data?.data?.entries)
+        console.log("closing_balance",data?.data?.closing_balance)
+      }
+    } catch (error) {
+      console.log(error.message);
+    } finally {
+      setIsLoading(false);
     }
-  }, [dispatch, item]);
+  };
+
+
+  
 
   const handleSearchChangeul = (e) => {
     setSearchTerm(e.target.value);
   };
 
-
-  const handleLedgerClick = (id, index) => {
-    setActiveIndex(index);
-    setItem({ ...item, ledger_id: id });
-  };
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -96,18 +104,18 @@ const Ledger = () => {
     setSearchQuery(e.target.value);
   };
 
-  const filteredLedgerList = ledgerList.filter(option =>
-    option.ledger.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredLedgerList = ledgerList?.filter(option =>
+    option?.ledger?.toLowerCase()?.includes(searchTerm?.toLowerCase())
   );
 
   // Filter data based on search query
-  const filteredledgerEntires = ledgerEntires?.filter(party => 
+  const filteredledgerEntires = (ledgerEntires || [])?.filter(party => 
     party?.type?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
     party?.description?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
     party?.added_on?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
     party?.dr?.toLowerCase()?.includes(searchQuery?.toLowerCase())||
     party?.cr?.toLowerCase()?.includes(searchQuery?.toLowerCase())||
-    party?.closing_balance?.toLowerCase()?.includes(searchQuery?.toLowerCase())
+    party?.balance?.toLowerCase()?.includes(searchQuery?.toLowerCase())
   );
 
   return (
@@ -265,6 +273,7 @@ const Ledger = () => {
                             totalCount={filteredledgerEntires?.length}
                             onPageChange={handlePageChange}
                             handleSearchChange={handleSearchChange}
+                            closing_balance={closingBalance}
                           />
                         </div>
                       </div>

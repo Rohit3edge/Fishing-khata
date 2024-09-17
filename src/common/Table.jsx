@@ -2,7 +2,8 @@ import React from 'react';
 import Pagination from './Pagination';
 import Moment from 'moment';
 
-const Table = ({ columns, data, tableRef, pageSize, setPageSize, currentPage, totalCount, onPageChange, handleSearchChange }) => {
+const Table = ({ columns, data, tableRef, pageSize, setPageSize, currentPage, totalCount, onPageChange, handleSearchChange, closing_balance,handleEdit }) => {
+  console.log(closing_balance);
   const handlePageSizeChange = (e) => {
     setPageSize(Number(e.target.value));
   };
@@ -20,39 +21,54 @@ const Table = ({ columns, data, tableRef, pageSize, setPageSize, currentPage, to
         maximumFractionDigits: 2,
       }).format(value);
     };
-
+  
     if (column.isAction) {
       return (
         <>
           {column.actionButtons?.map((button, index) => (
-            <button key={index} className={`btn-sm ${button.className}`}>
+            <button key={index} className={`btn-sm ${button.className}`} onClick={() => {
+              if (button.name === "Edit") {
+                handleEdit(row);
+              }
+            }}>
               {button.name}
             </button>
           ))}
         </>
       );
     }
-
+  
     switch (column.field) {
       case 'added_on':
+        return Moment(row[column.field]).format('DD-MM-YYYY');
+      case 'payment_date':
+        return Moment(row[column.field]).format('DD-MM-YYYY');
+        case 'invoice_date':
         return Moment(row[column.field]).format('DD-MM-YYYY');
       case 'dr':
         return Number(row[column.field]) === 0 ? '' : <span className="text-danger">{formatAmount(row[column.field])}</span>;
       case 'cr':
         return Number(row[column.field]) === 0 ? '' : <span className="text-success">{formatAmount(row[column.field])}</span>;
+      case 'amount': 
+        return formatAmount(row[column.field]);
+      case 'balance':
+        return formatAmount(row[column.field]);
       case 'description':
-        return row[column.field].split('\n').map((line, index) => (
+        // Trim the description to remove leading/trailing newlines
+        const trimmedDescription = row[column.field].trim();
+        return trimmedDescription.split('\n').map((line, index) => (
           <React.Fragment key={index}>
             {line}
             <br />
           </React.Fragment>
         ));
       case 'sale_price':
-        return formatAmount(row[column.field]); // Assuming 'sale_price' is a column in your data
+        return formatAmount(row[column.field]);
       default:
         return row[column.field];
     }
   };
+  
 
   return (
     <div className="card custom-card mb-4">
@@ -74,15 +90,14 @@ const Table = ({ columns, data, tableRef, pageSize, setPageSize, currentPage, to
               </label>
             </div>
             <div className="col-md-6">
-              <input
-                type="search"
-                className="form-control"
-                placeholder="Search..."
-                style={{ float: 'right', width: 'auto' }}
-                onChange={handleSearchChange}
-              />
+              <input type="search" className="form-control" placeholder="Search..." style={{ float: 'right', width: 'auto' }} onChange={handleSearchChange} />
             </div>
           </div>
+          {closing_balance ? (
+            <div className="text-right" style={{ padding: '10px 0 10px 0px', fontWeight: '700' }}>
+              Closing Balance: ₹ {closing_balance}
+            </div>
+          ) : null}
           {data?.length === 0 ? (
             <h2 className="text-center">No Record Found!!</h2>
           ) : (
@@ -91,7 +106,7 @@ const Table = ({ columns, data, tableRef, pageSize, setPageSize, currentPage, to
                 <thead className="table-header">
                   <tr>
                     {columns?.map((column) => (
-                      <th key={column?.field}>{column?.header}</th>
+                      <th key={column?.field} style={column?.field === 'added_on' || column?.field === 'payment_date' || column?.field === 'invoice_date' ? { width: '8rem' } : {}}>{column?.header} </th>
                     ))}
                   </tr>
                 </thead>

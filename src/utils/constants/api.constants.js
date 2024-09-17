@@ -39,5 +39,13 @@ export const API_PATHS = {
   addparties:"/parties/add",
   partieslist:"/parties/list",
   synctoledger:"/parties/sync-to-ledger",
-  getsingledetail:"/items/get-detail"
+  getsingledetail:"/items/get-detail",
+  getinvoiceslistpayments: "invoice/list-payments",
+  getinvoicesnextnumber:"/invoices/next-number/",
+  paymentmethods:"/client/payment-methods",
+  getbycustomer:"/invoice/get-by-customer",
+  invoiceslist:"/invoices/list",
+  addinvoicespayment:"/invoice/payment/add",
+  addinvoices: "/invoices/add",
+  getinvoicessingledetails:"/invoice/get",
 }

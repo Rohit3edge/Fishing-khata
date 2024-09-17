@@ -25,6 +25,10 @@ import AddItem from "./component/AddItem.jsx"
 import PartyMaster from "./component/PartyMaster.jsx";
 import AddParty from "./component/AddParty.jsx";
 import Invoice from "./component/Invoice.jsx";
+import Invoicepaymentlist from "./component/Invoicepaymentlist.jsx";
+import AddNewInvoicePayment from "./component/AddNewInvoicePayment.jsx"
+import InvoiceList from "./component/InvoiceList.jsx";
+import UpdateAddInvoice from "./component/UpdateInvoice.jsx";
 
 function App() {
 
@@ -60,6 +64,10 @@ function App() {
           <Route exact path="/partymaster" element={<PartyMaster />} />
           <Route exact path="/addparty" element={<AddParty />} />
           <Route exact path="/invoice" element={<Invoice />} />
+          <Route exact path="/invoicepaymentlist" element={<Invoicepaymentlist />} />
+          <Route exact path="/addnewinvoicepayment" element={<AddNewInvoicePayment />} />
+          <Route exact path="/invoicelist" element={<InvoiceList />} />
+          <Route exact path="/Updateaddinvoice/:id" element={<UpdateAddInvoice />} />
           <Route path="*" element={<Notfoundpage />} />
         </Route>
 

@@ -31,12 +31,13 @@ const BankBook = () => {
     { header: 'Date', field: 'added_on', isDate: true },
     { header: 'Dr', field: 'dr', isDrCr: true, isDr: true },
     { header: 'Cr', field: 'cr', isDrCr: true, isDr: false },
-    { header: 'Closing Balance', field: 'closing_balance' }
+    { header: 'Closing Balance', field: 'balance' }
   ]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
   const [searchQuery, setSearchQuery] = useState('');
+  const[closingBalance,setClosingBalance ]=useState("")
 
 
   React.useEffect(() => {
@@ -59,8 +60,9 @@ const BankBook = () => {
       .unwrap()
       .then((data) => {
         setIsLoading(false);
-        setLedgerEntires(data?.data);
-        console.log(data.data);
+        setLedgerEntires(data?.data?.entries);
+        setClosingBalance(data?.data?.closing_balance);
+        
       })
       .catch(({ message }) => {
         setIsLoading(false);
@@ -214,6 +216,7 @@ const BankBook = () => {
                         totalCount={filteredledgerEntires?.length}
                         onPageChange={handlePageChange}
                         handleSearchChange={handleSearchChange}
+                        closing_balance={closingBalance}
                       />
                         
                       </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ListParties } from '../store/slices/parties';
+import { Getinvoicesnextnumber, AddInvoices } from '../store/slices/sale';
 import InvoiceSecond from './InvoiceSecond';
 import Select from 'react-select';
 import Navbarside from './Navbarside';
@@ -13,18 +14,21 @@ const AddInvoice = () => {
   const dispatch = useDispatch();
 
   const user = JSON.parse(localStorage.getItem('user'));
-  const id = user?.data?.id;
+  const id = user?.data?.id;  // profile_id
   const Name = user?.data?.company_name;
+  const currentDate = new Date().toISOString().split('T')[0];
 
   const [isLoading, setIsLoading] = useState(false);
-
   const [listParties, setListParties] = useState([]);
+  const [getInvoicesNumber, setGetInvoicesNumber] = useState();
   const [isSameAsBilling, setIsSameAsBilling] = useState(false);
+  const [invoiceSecond, setInvoiceSecond] = useState({});
   const [selectedPartyDetails, setSelectedPartyDetails] = useState({
     address: '',
     gstin: '',
     phone: '',
     state: '',
+    ledger_id:""
   });
   const [shippingAddress, setShippingAddress] = useState({
     address: '',
@@ -33,14 +37,30 @@ const AddInvoice = () => {
     state: '',
   });
 
+  // New state for additional fields
+  const [formData, setFormData] = useState({
+    invoice_date: currentDate,
+    eway_number: '',
+    vehicle_number: '',
+    message: '',
+    invoice_number: '',
+    po_number: '',
+  });
 
+
+
+  // Fetch the next invoice number
   useEffect(() => {
     setIsLoading(true);
-    dispatch(ListParties({ profile_id: id }))
+    dispatch(Getinvoicesnextnumber())
       .unwrap()
       .then((data) => {
         setIsLoading(false);
-        setListParties(data?.data);
+        setGetInvoicesNumber(data?.next_invoice_number);
+        setFormData((prevData) => ({
+          ...prevData,
+          invoice_number: data?.next_invoice_number, 
+        }));
       })
       .catch(({ message }) => {
         setIsLoading(false);
@@ -48,6 +68,24 @@ const AddInvoice = () => {
       });
   }, [dispatch]);
 
+  // Fetch the list of parties
+  useEffect(() => {
+    setIsLoading(true);
+    dispatch(ListParties({ profile_id: id }))
+      .unwrap()
+      .then((data) => {
+        setIsLoading(false);
+        setListParties(data?.data);
+        console.log("party",listParties)
+
+      })
+      .catch(({ message }) => {
+        setIsLoading(false);
+        console.log(message);
+      });
+  }, [dispatch]);
+
+  // Party selection logic
   const partyOptions = listParties.map((party) => ({
     value: party.id,
     label: party.name,
@@ -61,6 +99,7 @@ const AddInvoice = () => {
         gstin: party.gstin,
         phone: party.phone,
         state: party.state,
+        ledger_id:party.ledger_id
       });
 
       if (isSameAsBilling) {
@@ -71,33 +110,28 @@ const AddInvoice = () => {
           state: party.state,
         });
       }
-    } else {
-      setSelectedPartyDetails({
-        address: '',
-        gstin: '',
-        phone: '',
-        state: '',
-      });
-
-      if (isSameAsBilling) {
-        setShippingAddress({
-          address: '',
-          gstin: '',
-          phone: '',
-          state: '',
-        });
-      }
     }
   };
 
+  // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setSelectedPartyDetails((prevDetails) => ({
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  // Shipping address changes
+  const handleShippingInputChange = (e) => {
+    const { name, value } = e.target;
+    setShippingAddress((prevDetails) => ({
       ...prevDetails,
       [name]: value,
     }));
   };
 
+  // Checkbox for "Same as Billing Address"
   const handleCheckboxChange = (e) => {
     const checked = e.target.checked;
     setIsSameAsBilling(checked);
@@ -109,34 +143,53 @@ const AddInvoice = () => {
         phone: selectedPartyDetails.phone,
         state: selectedPartyDetails.state,
       });
-    } else {
-      setShippingAddress({
-        address: '',
-        gstin: '',
-        phone: '',
-        state: '',
-      });
     }
   };
 
-  const handleSubmit = () => {
+  // Form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
     const billingData = {
+      profile_id:Number(id),
+      party_id: Number(listParties.find((party) => party.address === selectedPartyDetails.address)?.id),
+      ledger_id:Number(selectedPartyDetails.ledger_id),  // Assuming this is hardcoded for now
+      invoice_number: formData.invoice_number,
+      invoice_date: formData.invoice_date,
+      fin_year: '2024-2025',
+      po_number: formData.po_number,
       billing_address: selectedPartyDetails.address,
-      billing_gstin: selectedPartyDetails.gstin,
-      billing_phone: selectedPartyDetails.phone,
       billing_state: selectedPartyDetails.state,
+      billing_phone: selectedPartyDetails.phone,
+      party_gstn: selectedPartyDetails.gstin,
       shipping_address: shippingAddress.address,
-      shipping_gstin: shippingAddress.gstin,
-      shipping_phone: shippingAddress.phone,
       shipping_state: shippingAddress.state,
+      shipping_phone: shippingAddress.phone,
+      eway_bill: formData.eway_number,
+      vehicle_number: formData.vehicle_number,
+      notes: formData.message,
     };
 
-    console.log('Data to be sent:', billingData);
 
-    // Send this data to your API
-    // Example: dispatch(submitInvoice(billingData));
+    const mergedData = {
+      ...billingData,
+      ...invoiceSecond
+    };
+    console.log('Data to be sent:', mergedData);
+
+    // Call API to submit invoice (replace comment with actual API call)
+    setIsLoading(true);
+    dispatch(AddInvoices(mergedData))
+      .unwrap()
+      .then((data) => {
+        setIsLoading(false);
+        navigate('/invoicelist');
+      })
+      .catch(({ message }) => {
+        setIsLoading(false);
+        console.log(message);
+      });
   };
-
   return (
     <div>
       <div className="row" style={{ marginLeft: '0', marginRight: '0' }}>
@@ -174,11 +227,6 @@ const AddInvoice = () => {
                       Add Invoice
                     </li>
                   </ol>
-                </div>
-                <div className="d-flex justify-content-end">
-                  <button className="btn ripple btn-default" onClick={() => navigate('/addparty')}>
-                    Add Invoice
-                  </button>
                 </div>
               </div>
               <div className="row">
@@ -237,50 +285,22 @@ const AddInvoice = () => {
                               <div className="row mt-2">
                                 <div className="col-md-6">
                                   <label>Address </label>
-                                  <input
-                                    name="address"
-                                    type="text"
-                                    className="form-control"
-                                    value={shippingAddress.address}
-                                    onChange={(e) => setShippingAddress({ ...shippingAddress, address: e.target.value })}
-                                    readOnly={isSameAsBilling}
-                                  />
+                                  <input name="address" type="text" className="form-control" value={shippingAddress.address} onChange={handleShippingInputChange} />
                                 </div>
                                 <div className="col-md-6">
                                   <label>State </label>
-                                  <input
-                                    name="state"
-                                    type="text"
-                                    className="form-control"
-                                    value={shippingAddress.state}
-                                    onChange={(e) => setShippingAddress({ ...shippingAddress, state: e.target.value })}
-                                    readOnly={isSameAsBilling}
-                                  />
+                                  <input name="state" type="text" className="form-control" value={shippingAddress.state} onChange={handleShippingInputChange} />
                                 </div>
                               </div>
 
                               <div className="row mt-2">
                                 <div className="col-md-6">
                                   <label>GSTN </label>
-                                  <input
-                                    name="gstin"
-                                    type="text"
-                                    className="form-control"
-                                    value={shippingAddress.gstin}
-                                    onChange={(e) => setShippingAddress({ ...shippingAddress, gstin: e.target.value })}
-                                    readOnly={isSameAsBilling}
-                                  />
+                                  <input name="gstin" type="text" className="form-control" value={shippingAddress.gstin} onChange={handleShippingInputChange} />
                                 </div>
                                 <div className="col-md-6">
                                   <label>Phone </label>
-                                  <input
-                                    name="phone"
-                                    type="text"
-                                    className="form-control"
-                                    value={shippingAddress.phone}
-                                    onChange={(e) => setShippingAddress({ ...shippingAddress, phone: e.target.value })}
-                                    readOnly={isSameAsBilling}
-                                  />
+                                  <input name="phone" type="text" className="form-control" value={shippingAddress.phone} onChange={handleShippingInputChange} />
                                 </div>
                               </div>
                             </fieldset>
@@ -292,38 +312,53 @@ const AddInvoice = () => {
                             <div className="row">
                               <div className="col-md-6">
                                 <label>Invoice Number </label>
-                                <input name="invoice_number" type="text" className="form-control" />
+                                <input name="invoice_number" type="text" className="form-control" value={formData.invoice_number} readOnly/>
                               </div>
 
                               <div className="col-md-6">
                                 <label>Invoice Date </label>
-                                <input name="invoice_date" type="date" className="form-control" />
+                                <input
+                                  name="invoice_date"
+                                  type="date"
+                                  className="form-control"
+                                  value={!formData?.invoice_date ? currentDate : formData?.invoice_date}
+                                  max={currentDate}
+                                  onChange={handleInputChange}
+                                />
                               </div>
                             </div>
 
                             <div className="row mt-3">
                               <div className="col-md-6">
                                 <label>E-Way Bill Number </label>
-                                <input name="eway_number" type="text" className="form-control" />
+                                <input name="eway_number" type="text" className="form-control" value={formData.eway_number} onChange={handleInputChange} />
                               </div>
 
                               <div className="col-md-6">
                                 <label>Vehicle Number </label>
-                                <input name="vehicle_number" type="text" className="form-control" />
+                                <input name="vehicle_number" type="text" className="form-control" value={formData.vehicle_number} onChange={handleInputChange} />
+                              </div>
+                            </div>
+                            <div className="row mt-3">
+                              <div className="col-md-6">
+                                <label>PO Number </label>
+                                <input name="po_number" type="text" className="form-control" value={formData.po_number} onChange={handleInputChange} />
+                              </div>
+
+                              <div className="col-md-6">
                               </div>
                             </div>
                           </div>
 
                           <div className="col-md-6">
                             <label>Notes </label>
-                            <textarea className="form-control" rows="6" cols="70"></textarea>
+                            <textarea name="message" className="form-control" rows="6" cols="70" value={formData.message} onChange={handleInputChange}></textarea>
                           </div>
                         </div>
                       </div>
-                      {/* <button className="btn btn-primary" onClick={handleSubmit}>Submit</button> */}
                     </div>
                   </div>
-                  {/* here */} <InvoiceSecond />
+                  <InvoiceSecond onChildDataChange={setInvoiceSecond} onSubmit={handleSubmit}/>
                 </div>
               </div>
             </div>
