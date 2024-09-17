@@ -60,4 +60,9 @@ export const API_PATHS = {
   directorsEdit:"/directors/detail",
   directorsUpdate:"/directors/update",
 
+
+  // farmer
+  farmerlist :"/farmer/list",
+  farmerAdd :"/farmer/add",
+
 }

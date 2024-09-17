@@ -40,6 +40,10 @@ import DirectorsList from "./component/DirectorsList.jsx"
 import DirectorsAdd from "./component/DirectorsAdd.jsx"
 import DirectorsEdit from "./component/DirectorsEdit.jsx"
 
+// Farmer
+import  ListFarmer from "./component/ListFarmer.jsx"
+import  AddFarmer from "./component/AddFarmer.jsx"
+
 function App() {
 
   const navigate = useNavigate();
@@ -86,6 +90,11 @@ function App() {
             <Route exact path="/directors/list" element={<DirectorsList />} />
             <Route exact path="/director/create" element={<DirectorsAdd />} />
             <Route exact path="/director/edit/:id" element={<DirectorsEdit />} />
+
+            {/* Farmer */}
+            <Route exact path="/farmer/list" element={<ListFarmer />} />
+            <Route exact path="/farmer/create" element={<AddFarmer />} />
+
 
 
             <Route path="*" element={<Notfoundpage />} />
