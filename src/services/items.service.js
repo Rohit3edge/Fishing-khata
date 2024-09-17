@@ -64,6 +64,40 @@ class ItemsService {
       })
       .then((response) => response.data);
   }
+
+
+  static Edititems(item) {
+    const api = `${API_PATHS.edititems}`;
+    const formData = new FormData();
+
+    for (const key in item) {
+      if (item.hasOwnProperty(key)) {
+        formData.append(key, item[key]);
+      }
+    }
+
+    return axios
+      .post(api, formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      })
+      .then((response) => response.data);
+  }
+
+
+  static Updateitems(item) {
+    const api = `${API_PATHS.updateitems}`;
+
+    return axios
+      .post(api, item, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      })
+      .then((response) => response.data);
+  }
+
 }
 
 

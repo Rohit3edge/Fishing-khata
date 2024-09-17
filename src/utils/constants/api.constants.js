@@ -35,9 +35,14 @@ export const API_PATHS = {
   listcategories:"/items/list-categories",
   addcategory:"/items/add-category",
   additems:"/items/add",
+  updateitems:"/items/update",
   listitems:"/items/list",
+  edititems:"/items/get-detail",
+
   addparties:"/parties/add",
+  updateparties:"/parties/update",
   partieslist:"/parties/list",
+  partiesEdit:"/parties/get-detail",
   synctoledger:"/parties/sync-to-ledger",
   getsingledetail:"/items/get-detail",
   getinvoiceslistpayments: "invoice/list-payments",
@@ -48,4 +53,11 @@ export const API_PATHS = {
   addinvoicespayment:"/invoice/payment/add",
   addinvoices: "/invoices/add",
   getinvoicessingledetails:"/invoice/get",
+  getinvoicessingledetails:"/invoice/get",
+  // Directors 
+  directorslist:"/directors/list",
+  directorsStore:"/directors/add",
+  directorsEdit:"/directors/detail",
+  directorsUpdate:"/directors/update",
+
 }

@@ -1,13 +1,13 @@
 import React, { useState, useEffect ,useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ListParties } from '../store/slices/parties';
+import { ListDirectors } from '../store/slices/directors.js';
 import Navbarside from './Navbarside';
 import Loader from '../common/Loader';
 import Footer from './Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import Table from '../common/Table';
 
-const PartyMaster = () => {
+const DirectorsMaster = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const tableRef=useRef(null)
@@ -17,12 +17,13 @@ const PartyMaster = () => {
   const Name = user?.data?.company_name;
 
   const [isLoading, setIsLoading] = useState(false);
-  const [listParties, setListParties] = useState([]);
+  const [listDirectors, setListDirectors] = useState([]);
   const [columns, setcolumns] = useState([
     { header: 'Name', field: 'name' },
-    { header: 'Address', field: 'address' },
-    { header: 'GSTN', field: 'gstin' },
+    { header: 'Type', field: 'type' },
+    { header: 'Email', field: 'email' },
     { header: 'Phone', field: 'phone' },
+    { header: 'Date', field: 'date_added' },
     { 
       header: 'Actions', 
       field: 'actions', 
@@ -43,24 +44,23 @@ const PartyMaster = () => {
   };
 
   const handleEdit = (item) => {
-     navigate(`/editparty/${item.id ? item.id : null}`)
+      navigate(`/director/edit/${item.id ? item.id : null}`)
   };
 
-  const handleDelete = (item) => {
-    console.log('Deleting item:', item);
-    // Implement your delete logic here
-  };
+//   const handleDelete = (item) => {
+//     console.log('Deleting item:', item);
+//     // Implement your delete logic here
+//   };
 
 
 
   React.useEffect(() => {
     setIsLoading(true);
-    dispatch(ListParties({ profile_id: id }))
+    dispatch(ListDirectors({ profile_id: id }))
       .unwrap()
       .then((data) => {
         setIsLoading(false);
-        setListParties(data?.data);
-        console.log('party master',data.data);
+        setListDirectors(data?.data);
       })
       .catch(({ message }) => {
         setIsLoading(false);
@@ -74,11 +74,12 @@ const PartyMaster = () => {
   };
 
   // Filter data based on search query
-  const filteredParties = listParties?.filter(party => 
+  const filteredParties = listDirectors?.filter(party => 
     party?.name?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
-    party?.address?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
-    party?.gstin?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
-    party?.phone?.toLowerCase()?.includes(searchQuery?.toLowerCase())
+    party?.type?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
+    party?.email?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
+    party?.phone?.toLowerCase()?.includes(searchQuery?.toLowerCase())||
+    party?.date_added?.toLowerCase()?.includes(searchQuery?.toLowerCase())
   );
 
   return (
@@ -109,19 +110,19 @@ const PartyMaster = () => {
             <div className="container-fluid">
               <div className="page-header">
                 <div>
-                  <h2 className="main-content-title tx-24 mg-b-5">Party Master</h2>
+                  <h2 className="main-content-title tx-24 mg-b-5">Directors Master</h2>
                   <ol className="breadcrumb">
                     <li className="breadcrumb-item">
-                      <a href="#">Party Master</a>
+                      <a href="#">Directors Master</a>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                    Party List
+                    Directors List
                     </li>
                   </ol>
                 </div>
                 <div className="d-flex justify-content-end">
-                  <button className="btn ripple btn-default" onClick={() => navigate('/addparty')}>
-                    Add Party
+                  <button className="btn ripple btn-default" onClick={() => navigate('/director/create')}>
+                    Add Director
                   </button>
                 </div>
               </div>
@@ -152,4 +153,4 @@ const PartyMaster = () => {
   );
 };
 
-export default PartyMaster;
+export default DirectorsMaster;

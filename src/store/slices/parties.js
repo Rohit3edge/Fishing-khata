@@ -37,6 +37,44 @@ export const ListParties = createAsyncThunk(
     }
 );
 
+export const EditParties = createAsyncThunk(
+    "/post/editparties",
+    async (item,thunkAPI) => {
+        try {
+            const data = await PartiesService.EditParties(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+
+export const UpdateParties = createAsyncThunk(
+    "/post/updateparties",
+    async (item,thunkAPI) => {
+        try {
+            const data = await PartiesService.UpdateParties(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+
 
 export const SyncToledger = createAsyncThunk(
     "/post/synctoledger",

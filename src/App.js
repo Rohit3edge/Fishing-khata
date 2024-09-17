@@ -22,13 +22,23 @@ import AddCategory from "./component/AddCategory.jsx";
 import Categories from "./component/Categories.jsx";
 import Item from "./component/ItemList.jsx";
 import AddItem from "./component/AddItem.jsx"
+import EditItem from "./component/itemEdit.jsx"
 import PartyMaster from "./component/PartyMaster.jsx";
 import AddParty from "./component/AddParty.jsx";
+import EditParty from "./component/EditParty.jsx";
+
 import Invoice from "./component/Invoice.jsx";
 import Invoicepaymentlist from "./component/Invoicepaymentlist.jsx";
 import AddNewInvoicePayment from "./component/AddNewInvoicePayment.jsx"
 import InvoiceList from "./component/InvoiceList.jsx";
 import UpdateAddInvoice from "./component/UpdateInvoice.jsx";
+
+// Registers
+import Registers from "./component/Registers.jsx"
+// Directors
+import DirectorsList from "./component/DirectorsList.jsx"
+import DirectorsAdd from "./component/DirectorsAdd.jsx"
+import DirectorsEdit from "./component/DirectorsEdit.jsx"
 
 function App() {
 
@@ -61,14 +71,24 @@ function App() {
           <Route exact path="/categories" element={<Categories />} />
           <Route exact path="/item" element={<Item />} />
           <Route exact path="/add-item" element={<AddItem />} />
+          <Route exact path="/edit-item/:id" element={<EditItem />} />
           <Route exact path="/partymaster" element={<PartyMaster />} />
           <Route exact path="/addparty" element={<AddParty />} />
+          <Route exact path="/editparty/:id" element={<EditParty />} />
           <Route exact path="/invoice" element={<Invoice />} />
           <Route exact path="/invoicepaymentlist" element={<Invoicepaymentlist />} />
           <Route exact path="/addnewinvoicepayment" element={<AddNewInvoicePayment />} />
           <Route exact path="/invoicelist" element={<InvoiceList />} />
           <Route exact path="/Updateaddinvoice/:id" element={<UpdateAddInvoice />} />
-          <Route path="*" element={<Notfoundpage />} />
+          {/* registers */}
+          <Route exact path="/registers" element={<Registers />} />
+            {/*directors  */}
+            <Route exact path="/directors/list" element={<DirectorsList />} />
+            <Route exact path="/director/create" element={<DirectorsAdd />} />
+            <Route exact path="/director/edit/:id" element={<DirectorsEdit />} />
+
+
+            <Route path="*" element={<Notfoundpage />} />
         </Route>
 
         {/* PublicRoutes */}

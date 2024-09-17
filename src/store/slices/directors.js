@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import ItemsService from "../../services/items.service"
+import DirectorsService from "../../services/directors.service"
 
-export const ListCategories = createAsyncThunk(
-    "/post/listlategories",
+
+export const ListDirectors = createAsyncThunk(
+    "/post/listdirectors",
     async (item,thunkAPI) => {
         try {
-            const data = await ItemsService.ListCategories(item);
+            const data = await DirectorsService.ListDirectors(item);
             return data;
         } catch (error) {
             const message =
@@ -20,11 +21,11 @@ export const ListCategories = createAsyncThunk(
 );
 
 
-export const Addcategory = createAsyncThunk(
-    "/post/addcategory",
+export const AddDirector = createAsyncThunk(
+    "/post/directorsstore",
     async (item,thunkAPI) => {
         try {
-            const data = await ItemsService.AddCategory(item);
+            const data = await DirectorsService.AddDirector(item);
             return data;
         } catch (error) {
             const message =
@@ -38,11 +39,11 @@ export const Addcategory = createAsyncThunk(
     }
 );
 
-export const Additems = createAsyncThunk(
-    "/post/additems",
+export const EditDirectors = createAsyncThunk(
+    "/post/editdirector",
     async (item,thunkAPI) => {
         try {
-            const data = await ItemsService.AddItems(item);
+            const data = await DirectorsService.EditDirectors(item);
             return data;
         } catch (error) {
             const message =
@@ -56,32 +57,11 @@ export const Additems = createAsyncThunk(
     }
 );
 
-
-
-export const Listitems = createAsyncThunk(
-    "/post/listlategories",
+export const UpdateDirector = createAsyncThunk(
+    "/post/directorsupdate",
     async (item,thunkAPI) => {
         try {
-            const data = await ItemsService.ListItems(item);
-            return data;
-        } catch (error) {
-            const message =
-                (error.response &&
-                    error.response.data &&
-                    error.response.data.message) ||
-                error.message ||
-                error.toString();
-            return thunkAPI.rejectWithValue({ message });
-        }
-    }
-);
-
-
-export const Edititems = createAsyncThunk(
-    "/post/listlategories",
-    async (item,thunkAPI) => {
-        try {
-            const data = await ItemsService.Edititems(item);
+            const data = await DirectorsService.UpdateDirector(item);
             return data;
         } catch (error) {
             const message =
@@ -96,20 +76,7 @@ export const Edititems = createAsyncThunk(
 );
 
 
-export const Updateitems = createAsyncThunk(
-    "/post/updateitems",
-    async (item,thunkAPI) => {
-        try {
-            const data = await ItemsService.Updateitems(item);
-            return data;
-        } catch (error) {
-            const message =
-                (error.response &&
-                    error.response.data &&
-                    error.response.data.message) ||
-                error.message ||
-                error.toString();
-            return thunkAPI.rejectWithValue({ message });
-        }
-    }
-);
+
+
+
+

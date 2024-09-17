@@ -45,8 +45,8 @@ const Item = () => {
   };
 
   const handleEdit = (item) => {
-    console.log('Editing item:', item);
-    // Implement your edit logic here
+      navigate(`/edit-item/${item.id ? item.id : null}`)
+      // Implement your edit logic here
   };
 
   const handleDelete = (item) => {

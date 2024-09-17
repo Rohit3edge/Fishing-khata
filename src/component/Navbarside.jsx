@@ -252,7 +252,7 @@ const Navbarside = () => {
                 </NavLink>
               </li>
               <li className="nav_items">
-                <NavLink to="/Corporate" className="menu-title">
+                <NavLink to="/registers" className="menu-title">
                   <GiNotebook className="nav_icons" />
                   Registers
                 </NavLink>
