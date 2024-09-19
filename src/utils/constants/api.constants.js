@@ -59,5 +59,6 @@ export const API_PATHS = {
   directorsStore:"/directors/add",
   directorsEdit:"/directors/detail",
   directorsUpdate:"/directors/update",
+  invoiceUpdate:"/invoice/update",
 
 }

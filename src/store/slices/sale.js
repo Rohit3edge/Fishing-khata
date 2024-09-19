@@ -162,3 +162,21 @@ export const GetInvoicesSingleDetails = createAsyncThunk(
         }
     }
 );
+
+export const InvoiceUpdate = createAsyncThunk(
+    "/post/invoiceUpdate",
+    async (item,thunkAPI) => {
+        try {
+            const data = await SaleService.InvoiceUpdate(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);

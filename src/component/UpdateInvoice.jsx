@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ListParties } from '../store/slices/parties';
-import { GetInvoicesSingleDetails } from '../store/slices/sale';
+import { GetInvoicesSingleDetails,InvoiceUpdate } from '../store/slices/sale';
 import UpdateInvoiceSecond from './UpdateInvoiceSecond';
 import Select from 'react-select';
 import Navbarside from './Navbarside';
@@ -191,12 +191,23 @@ const UpdateAddInvoice = () => {
       vehicle_number: formData.vehicle_number,
       notes: formData.message,
     };
-    console.log(billingData)
-
+ 
     const mergedData = {
       ...billingData,
       items: invoiceSecond,
     };
+    console.log(mergedData)
+    // setIsLoading(true);
+    // dispatch(InvoiceUpdate(mergedData))
+    //   .unwrap()
+    //   .then((data) => {
+    //     setIsLoading(false);
+    //     navigate('/invoicelist');
+    //   })
+    //   .catch(({ message }) => {
+    //     setIsLoading(false);
+    //     console.log(message);
+    //   });
 
   };
 

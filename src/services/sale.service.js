@@ -163,6 +163,18 @@ class SaleService {
           })
           .then((response) => response.data);
       }
+      static InvoiceUpdate(item) {
+        const api = `${API_PATHS.invoiceUpdate}`;
+    
+        return axios
+          .post(api, item, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .then((response) => response.data);
+      }
+
 }
 
 export default SaleService;
