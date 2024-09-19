@@ -61,4 +61,11 @@ export const API_PATHS = {
   directorsUpdate:"/directors/update",
   invoiceUpdate:"/invoice/update",
 
+
+  // farmer
+  farmerlist :"/farmer/list",
+  farmerAdd :"/farmer/add",
+  farmerEdit :"/farmers/get-detail",
+  farmerUpdate :"/farmer/update",
+
 }
