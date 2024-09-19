@@ -44,7 +44,7 @@ const DirectorsMaster = () => {
   };
 
   const handleEdit = (item) => {
-      // navigate(`/director/edit/${item.id ? item.id : null}`)
+      navigate(`/farmer/edit/${item.id ? item.id : null}`)
   };
 
 //   const handleDelete = (item) => {
@@ -53,7 +53,7 @@ const DirectorsMaster = () => {
 //   };
 
 
-
+ 
   React.useEffect(() => {
     setIsLoading(true);
     dispatch(Listfarmer({ profile_id: id }))

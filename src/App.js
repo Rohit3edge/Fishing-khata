@@ -43,6 +43,7 @@ import DirectorsEdit from "./component/DirectorsEdit.jsx"
 // Farmer
 import  ListFarmer from "./component/ListFarmer.jsx"
 import  AddFarmer from "./component/AddFarmer.jsx"
+import  EditFarmer from "./component/EditFarmer.jsx"
 
 function App() {
 
@@ -94,6 +95,7 @@ function App() {
             {/* Farmer */}
             <Route exact path="/farmer/list" element={<ListFarmer />} />
             <Route exact path="/farmer/create" element={<AddFarmer />} />
+            <Route exact path="/farmer/edit/:id" element={<EditFarmer />} />
 
 
 

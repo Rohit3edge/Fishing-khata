@@ -39,3 +39,38 @@ export const Addfarmer  = createAsyncThunk(
 );
 
 
+export const Editfarmer = createAsyncThunk(
+    "/post/editfarmer",
+    async (item,thunkAPI) => {
+        try {
+            const data = await FarmersService.Editfarmer(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+export const Updatefarmer  = createAsyncThunk(
+    "/post/updatefarmer",
+    async (item,thunkAPI) => {
+        try {
+            const data = await FarmersService.Updatefarmer(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);

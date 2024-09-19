@@ -64,5 +64,7 @@ export const API_PATHS = {
   // farmer
   farmerlist :"/farmer/list",
   farmerAdd :"/farmer/add",
+  farmerEdit :"/farmers/get-detail",
+  farmerUpdate :"/farmer/update",
 
 }
