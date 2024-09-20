@@ -133,14 +133,14 @@ console.log(formData.ob_date)
             <div className="container">
               <div className="page-header">
                 <div>
-                  <h2 class="main-content-title tx-24 mg-b-5">Party Edit</h2>
+                  <h2 class="main-content-title tx-24 mg-b-5">Party Master Edit</h2>
                   <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                      <a href="#">Party Edit</a>
+                      <a href="#">Party Master List</a>
                     </li>
-                    {/* <li class="breadcrumb-item active" aria-current="page">
-                    Add Party
-                    </li> */}
+                    <li className="breadcrumb-item active" aria-current="page">
+                    Party Master Edit
+                    </li>
                   </ol>
                 </div>
               </div>

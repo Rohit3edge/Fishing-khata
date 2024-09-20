@@ -143,14 +143,14 @@ const AddParty = () => {
             <div className="container">
               <div className="page-header">
                 <div>
-                  <h2 class="main-content-title tx-24 mg-b-5">Party Master</h2>
+                  <h2 class="main-content-title tx-24 mg-b-5">Party Master Create</h2>
                   <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                      <a href="#">Party Master</a>
+                      <a href="#">Party Master List</a>
                     </li>
-                    {/* <li class="breadcrumb-item active" aria-current="page">
-                    Add Party
-                    </li> */}
+                    <li className="breadcrumb-item active" aria-current="page">
+                        Party Master Create
+                    </li>
                   </ol>
                 </div>
               </div>
@@ -255,8 +255,8 @@ const AddParty = () => {
                               Submit
                             </button>
                             &nbsp;
-                            <button type="submit" class="btn btn-cancel" onClick={handleDiscard}>
-                              Cancel
+                            <button type="submit" class="btn btn-cancel" onClick={() => navigate('/partymaster')}>
+                               Cancel
                             </button>
                             &nbsp;
                           </div>

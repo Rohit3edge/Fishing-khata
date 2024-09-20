@@ -60,6 +60,7 @@ const UpdateItem = () => {
         .then((data) => {
           setIsLoading(false);
           const item = data?.data;
+          console.log('item',item);
           setFormData({
                 id : id || '',
                 name: item?.name || '',
@@ -118,22 +119,9 @@ const UpdateItem = () => {
     }
   };
   
-
-  const validate = () => {
-    let newErrors = {};
-    if (!formData.name) newErrors.name = "Item Name is required.";
-    if (!formData.category_id) newErrors.category_id = "Category is required.";
-    if (!formData.sale_price || (parseFloat(formData.sale_price)<= 0))newErrors.sale_price = "Sale/Service Price is required.";    
-    if (!formData.tax) newErrors.tax = "Tax is required.";
-    if (formData.type === 'Product' && !formData.unit) newErrors.unit = "Unit is required for products.";
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
   
   const handleSubmit = () => {
     console.log(formData);
-    if (validate()) {
     setIsLoading(true);
     dispatch(Updateitems(formData))
       .unwrap()
@@ -171,7 +159,6 @@ const UpdateItem = () => {
         setIsLoading(false);
         console.log(message);
       });
-    }
   };
 
   React.useEffect(() => {
@@ -244,19 +231,19 @@ const UpdateItem = () => {
             <div className="container">
               <div className="page-header">
                 <div>
-                  <h2 className="main-content-title tx-24 mg-b-5">Item</h2>
+                  <h2 className="main-content-title tx-24 mg-b-5">Item Edit</h2>
                   <ol className="breadcrumb">
                     <li className="breadcrumb-item">
-                      <a href="#">Items</a>
+                      <a href="#">Items List</a>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Add Item
+                       Item Edit
                     </li>
                   </ol>
                 </div>
                 <div className="d-flex justify-content-end">
                   <button className="btn ripple btn-default" onClick={handleSubmit}>
-                       Save
+                       Update
                   </button>
                   <button class="btn btn-cancel"  onClick={() => navigate('/item')} >Cancel</button>
                 </div>

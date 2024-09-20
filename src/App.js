@@ -45,6 +45,21 @@ import  ListFarmer from "./component/ListFarmer.jsx"
 import  AddFarmer from "./component/AddFarmer.jsx"
 import  EditFarmer from "./component/EditFarmer.jsx"
 
+// Members
+import  ListMembers from "./component/listMembers.jsx"
+import  AddMembers from "./component/AddMembers.jsx"
+import  EditMembers from "./component/EditMembers.jsx"
+
+// Management Cost
+import  ListManagementCost from "./component/ListManagementCost.jsx"
+
+// share applications
+import  ListShareApplications from "./component/ListShareApplications.jsx"
+import  AddShareApplications from "./component/AddShareApplications.jsx"
+import  EditShareApplications from "./component/EditShareApplications.jsx"
+
+
+
 function App() {
 
   const navigate = useNavigate();
@@ -97,6 +112,18 @@ function App() {
             <Route exact path="/farmer/create" element={<AddFarmer />} />
             <Route exact path="/farmer/edit/:id" element={<EditFarmer />} />
 
+            {/* Merbers */}
+            <Route exact path="/members/list" element={<ListMembers/>} />
+            <Route exact path="/members/create" element={<AddMembers/>} />
+            <Route exact path="/members/edit/:id" element={<EditMembers/>} />
+
+            {/* Management Cost */}
+            <Route exact path="/management-cost/list" element={<ListManagementCost/>} />
+
+            {/* share-applications */}
+            <Route exact path="/share-applications/list" element={<ListShareApplications/>} />
+            <Route exact path="/share-applications/create" element={<AddShareApplications/>} />
+            <Route exact path="/share-applications/edit/:id" element={<EditShareApplications/>} />
 
 
             <Route path="*" element={<Notfoundpage />} />

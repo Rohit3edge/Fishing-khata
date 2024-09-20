@@ -72,4 +72,24 @@ export const API_PATHS = {
   farmerEdit :"/farmers/get-detail",
   farmerUpdate :"/farmer/update",
 
+  // Members
+  memberslist :"/members/list",
+  membersadd :"/members/add",
+  membersedit :"/members/get-detail",
+  membersupdate :"/members/update",
+
+  // Management Cost
+  Managementlist :"/members/list",
+
+  // Share Applications
+  ShareApplicationslist :"/share-applications/list",
+  ShareApplicationsadd :"/share-applications/add",
+  ShareApplicationsedit :"/share-applications/get-detail",
+  ShareApplicationsupdate :"/share-applications/update",
+
+
+
+
+  
+
 }
