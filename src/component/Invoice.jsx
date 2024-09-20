@@ -28,7 +28,8 @@ const AddInvoice = () => {
     gstin: '',
     phone: '',
     state: '',
-    ledger_id:""
+    ledger_id:"",
+    party_id:""
   });
   const [shippingAddress, setShippingAddress] = useState({
     address: '',
@@ -51,6 +52,7 @@ const AddInvoice = () => {
 
   // Fetch the next invoice number
   useEffect(() => {
+    
     setIsLoading(true);
     dispatch(Getinvoicesnextnumber())
       .unwrap()
@@ -99,7 +101,8 @@ const AddInvoice = () => {
         gstin: party.gstin,
         phone: party.phone,
         state: party.state,
-        ledger_id:party.ledger_id
+        ledger_id:party.ledger_id,
+        party_id:party.id
       });
 
       if (isSameAsBilling) {
@@ -152,7 +155,7 @@ const AddInvoice = () => {
 
     const billingData = {
       profile_id:Number(id),
-      party_id: Number(listParties.find((party) => party.address === selectedPartyDetails.address)?.id),
+      party_id: Number(selectedPartyDetails.party_id),
       ledger_id:Number(selectedPartyDetails.ledger_id),  // Assuming this is hardcoded for now
       invoice_number: formData.invoice_number,
       invoice_date: formData.invoice_date,

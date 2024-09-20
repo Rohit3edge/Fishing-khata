@@ -52,6 +52,7 @@ const UpdateAddInvoice = () => {
 
   // Fetch invoice details if editing
   useEffect(() => {
+    console.log(selectedPartyDetails)
     if (invoiceId && userId) {
       setIsLoading(true);
       dispatch(GetInvoicesSingleDetails({ profile_id: userId, invoice_id: invoiceId }))
@@ -93,6 +94,7 @@ const UpdateAddInvoice = () => {
 
   // Fetch the list of parties
   useEffect(() => {
+    
     setIsLoading(true);
     dispatch(ListParties({ profile_id: userId }))
       .unwrap()
@@ -167,15 +169,16 @@ const UpdateAddInvoice = () => {
       });
     }
   };
-
+// console.log(invoicedetails?.invoice?.id)
   // Form submission logic
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const billingData = {
-      profile_id: userId,
-      party_id: selectedPartyDetails.party_id,
-      ledger_id: selectedPartyDetails.ledger_id,
+      invoice_id: Number(invoicedetails?.invoice?.id),
+      profile_id: Number(userId),
+      party_id: Number(selectedPartyDetails.party_id),
+      ledger_id: Number(selectedPartyDetails.ledger_id),
       invoice_number: formData.invoice_number,
       invoice_date: formData.invoice_date,
       fin_year: '2024-2025',
@@ -194,20 +197,20 @@ const UpdateAddInvoice = () => {
  
     const mergedData = {
       ...billingData,
-      items: invoiceSecond,
+      ...invoiceSecond,
     };
     console.log(mergedData)
-    // setIsLoading(true);
-    // dispatch(InvoiceUpdate(mergedData))
-    //   .unwrap()
-    //   .then((data) => {
-    //     setIsLoading(false);
-    //     navigate('/invoicelist');
-    //   })
-    //   .catch(({ message }) => {
-    //     setIsLoading(false);
-    //     console.log(message);
-    //   });
+    setIsLoading(true);
+    dispatch(InvoiceUpdate(mergedData))
+      .unwrap()
+      .then((data) => {
+        setIsLoading(false);
+        navigate('/invoicelist');
+      })
+      .catch(({ message }) => {
+        setIsLoading(false);
+        console.log(message);
+      });
 
   };
 

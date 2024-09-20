@@ -63,7 +63,7 @@ const  Registers= () => {
                         <div className="card custom-card">
                             <div className="card-body">
                                 <div className="row">
-                                    <div className="col-md-4">
+                                    <div className="col-md-4 text-center">
                                         <a onClick={() => navigate('/directors/list')} className="btn register-link">Directors &amp; Key Members</a><br></br>
                                         <a onClick={() => navigate('/farmer/list')}  className="btn register-link">Farmer's Data</a><br></br>
                                         <a  className="btn register-link">Share Certificates</a><br></br>
@@ -71,14 +71,14 @@ const  Registers= () => {
                                         <a  className="btn register-link">Company Documents</a><br></br>
                                         <a  className="btn register-link">Management Cost</a><br></br>
                                     </div>
-                                    <div className="col-md-4">
+                                    <div className="col-md-4 text-center">
                                         <a  className="btn register-link">Share Application</a><br></br>
                                         <a  className="btn register-link">Members</a><br></br>
                                         <a  className="btn register-link">Share/Debenture Transfer</a><br></br>
                                         <a  className="btn register-link">Dividend</a><br></br>
                                         <a  className="btn register-link">Loans, Guarantee</a><br></br>
                                     </div>
-                                    <div className="col-md-4">
+                                    <div className="col-md-4 text-center">
                                         <a  className="btn register-link">Assets</a><br></br>
                                         <a  className="btn register-link">Deposits</a><br></br>
                                         <a  className="btn register-link">Seal Book</a><br></br>

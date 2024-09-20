@@ -450,3 +450,122 @@ legend {
 table.item-table{
   font-size: 0.8rem;
 }
+
+.tx-white {
+  color: #ffffff;
+}
+
+.tx-success {
+  color: #19b159;
+}
+
+.tx-warning {
+  color: #ff9b21;
+}
+
+.tx-danger {
+  color: #f16d75;
+}
+
+.tx-info {
+  color: #01b8ff;
+}
+
+.tx-inverse {
+  color: #3c4858;
+}
+
+.tx-teal {
+  color: #00cccc;
+}
+
+.tx-dark {
+  color: #38415a;
+}
+
+.tx-indigo {
+  color: #3F00FF;
+}
+
+.tx-purple {
+  color: #6f42c1;
+}
+
+.tx-orange {
+  color: #fd7e14;
+}
+
+.tx-pink {
+  color: #f10075;
+}
+
+.tx-gray-100 {
+  color: #f1f2f9;
+}
+
+.tx-gray-200,
+.tx-gray-300 {
+  color: #f0f0ff;
+}
+
+.tx-gray-400 {
+  color: #b4bdce;
+}
+
+.tx-gray-500,
+.tx-gray-600 {
+  color: #a8afc7;
+}
+
+.tx-gray-700 {
+  color: #3c4858;
+}
+
+.tx-gray-800 {
+  color: #3b4863;
+}
+
+.tx-gray-900 {
+  color: #8f9cc0;
+}
+
+.tx-white-2 {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.tx-white-3 {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.tx-white-4 {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.tx-white-5 {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.tx-white-6 {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.tx-white-7 {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.tx-white-8 {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.btn.register-link {
+background-color:  #5d6d7e;
+color: #FFF;
+margin-bottom: 15px;
+font-size: 0.9rem;
+min-width: 220px;
+padding: 12px;
+}
+
+.btn.register-link:hover {
+  background-color: #5499c7;
+}
