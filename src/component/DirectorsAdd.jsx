@@ -67,7 +67,7 @@ const DirectorStore = () => {
 
   const validate = () => {
     let newErrors = {};
-    if (!formData.type) newErrors.name = 'Type is required.';
+    if (!formData.type) newErrors.type = 'Type is required.';
     if (!formData.name) newErrors.name = 'Name is required.';
      
     setErrors(newErrors);

@@ -1,10 +1,10 @@
 import axios from "axios";
 import { API_PATHS } from "../utils/constants/api.constants";
 
-class FarmerService {
+class ShareApplicationsService {
    
-    static ListFarmer(item) {
-        const api = `${API_PATHS.farmerlist}`;
+    static ListShareApplications(item) {
+        const api = `${API_PATHS.ShareApplicationslist}`;
         const formData = new FormData();
     
         for (const key in item) {
@@ -23,9 +23,9 @@ class FarmerService {
       }
 
 
-      static AddFarmer(item) {
+      static AddShareApplications(item) {
 
-        const api = `${API_PATHS.farmerAdd}`;
+        const api = `${API_PATHS.ShareApplicationsadd}`;
         
         return axios
         .post(api,item,{
@@ -36,8 +36,8 @@ class FarmerService {
         .then((response) => response.data);
     }
 
-    static Editfarmer(item) {
-      const api = `${API_PATHS.farmerEdit}`;
+    static EditShareApplications(item) {
+      const api = `${API_PATHS.ShareApplicationsedit}`;
       const formData = new FormData();
   
       for (const key in item) {
@@ -55,9 +55,9 @@ class FarmerService {
         .then((response) => response.data);
     }
 
-    static Updatefarmer(item) {
+    static updateShareApplications(item) {
 
-      const api = `${API_PATHS.farmerUpdate}`;
+      const api = `${API_PATHS.ShareApplicationsupdate}`;
       
       return axios
       .post(api,item,{
@@ -73,4 +73,4 @@ class FarmerService {
 
 }
 
-export default FarmerService;
+export default ShareApplicationsService;

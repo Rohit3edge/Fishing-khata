@@ -41,6 +41,8 @@ const Table = ({ columns, data, tableRef, pageSize, setPageSize, currentPage, to
     switch (column.field) {
       case 'added_on':
         return Moment(row[column.field]).format('DD-MM-YYYY');
+        case 'date_added':
+        return Moment(row[column.field]).format('DD-MM-YYYY');
       case 'payment_date':
         return Moment(row[column.field]).format('DD-MM-YYYY');
         case 'invoice_date':

@@ -199,13 +199,13 @@ const AddItem = () => {
             <div className="container">
               <div className="page-header">
                 <div>
-                  <h2 className="main-content-title tx-24 mg-b-5">Item</h2>
+                  <h2 className="main-content-title tx-24 mg-b-5">Item Add</h2>
                   <ol className="breadcrumb">
                     <li className="breadcrumb-item">
-                      <a href="#">Items</a>
+                      <a href="#">Items List</a>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Add Item
+                       Item Add
                     </li>
                   </ol>
                 </div>
@@ -213,6 +213,7 @@ const AddItem = () => {
                   <button className="btn ripple btn-default" onClick={handleSubmit}>
                     Save
                   </button>
+                  <a class="btn btn-cancel" onClick={() => navigate('/item')}>Cancel</a>
                 </div>
               </div>
 
