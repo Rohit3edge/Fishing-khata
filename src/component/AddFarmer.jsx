@@ -32,13 +32,51 @@ const DirectorStore = () => {
         uaid: '',
         bankname: '',
         ifsc: '',
-        profile_image: '',
-        pan_card: '',
-        uaid_doc: '',
         share_amount: '',
   });
 
   const [errors, setErrors] = useState({});
+  const [files, setFiles] = useState({
+    profile_image: null,
+    pan_card: null,
+    uaid_doc: null
+});
+const [validationErrors, setValidationErrors] = useState({
+  profile_image: null,
+  pan_card: null,
+  uaid_doc: null,
+});
+
+
+const handleFileChange = (e) => {
+  const { name, files } = e.target;
+  const file = files[0];
+  let error = null;
+
+  if (file) {
+    const allowedExtensions = ['.jpg', '.png', '.jpeg', '.pdf', '.doc', '.docx'];
+    const fileExtension = file.name.split('.').pop().toLowerCase();
+    
+    if (!allowedExtensions.includes('.' + fileExtension)) {
+      error = 'Invalid file type.';
+    }
+  }
+
+  setFiles((prevFiles) => {
+    const updatedFiles = {
+      ...prevFiles,
+      [name]: file,
+    };
+    console.log("Updated files state:", updatedFiles); // Debugging line
+    return updatedFiles;
+  });
+  
+  setValidationErrors((prevErrors) => ({
+    ...prevErrors,
+    [name]: error,
+  }));
+};
+
 
 
   const handleInputChange = (e) => {
@@ -93,35 +131,52 @@ const DirectorStore = () => {
   };
   
   const handleSubmit = (e) => {
-    
     e.preventDefault();
     if (validate()) {
+      console.log("Form data before submission:", files); 
+      const submitData = new FormData();
+  
+      // Append the text data
+      for (let key in formData) {
+        submitData.append(key, formData[key]);
+      }
+  
+      // Append the files
+      for (let key in files) {
+        if (files[key]) {
+          submitData.append(key, files[key]);
+        }
+      }
+      console.log("Form data before submission:", submitData); 
       setIsLoading(true);
-      dispatch(Addfarmer(formData))
+      dispatch(Addfarmer(submitData))
         .unwrap()
         .then((data) => {
           setIsLoading(false);
+          // Reset form and files
           setFormData({
-                profile_id: '',
-                name: '',
-                gender: 'male',
-                dob: '',
-                father_name: '',
-                address: '',
-                phone: '',
-                email: '',
-                category: '',
-                product: '',
-                land_holding: '',
-                khasrano: '',
-                pan: '',
-                uaid: '',
-                bankname: '',
-                ifsc: '',
-                profile_image: '',
-                pan_card: '',
-                uaid_doc: '',
-                share_amount: '',
+            profile_id: '',
+            name: '',
+            gender: 'male',
+            dob: '',
+            father_name: '',
+            address: '',
+            phone: '',
+            email: '',
+            category: '',
+            product: '',
+            land_holding: '',
+            khasrano: '',
+            pan: '',
+            uaid: '',
+            bankname: '',
+            ifsc: '',
+            share_amount: '',
+          });
+          setFiles({
+            profile_image: null,
+            pan_card: null,
+            uaid_doc: null,
           });
           console.log('Form submitted successfully', data);
           navigate('/farmer/list');
@@ -132,6 +187,7 @@ const DirectorStore = () => {
         });
     }
   };
+  
 
   return (
     <div>
@@ -313,15 +369,18 @@ const DirectorStore = () => {
                                     <div className="row">
                                         <div className="col-md-4">
                                             <label>Profile Image</label>
-                                            <input name="profile_image" type="file" className="form-control" onChange={handleInputChange} value={formData.profile_image}/>
+                                            <input name="profile_image" type="file" className="form-control" accept=".jpeg, .png, .jpg, .webp, .svg, .pdf, .doc, .docx" onChange={handleFileChange} />
+                                            {validationErrors.profile_image && <p className="text-danger">{validationErrors.profile_image}</p>}
                                         </div>
                                         <div className="col-md-4">
                                             <label>PAN Card</label>
-                                            <input name="pan_card" type="file" className="form-control" onChange={handleInputChange} value={formData.pan_card}/>
+                                            <input name="pan_card" type="file" className="form-control" accept=".jpeg, .png, .jpg, .webp, .svg, .pdf, .doc, .docx" onChange={handleFileChange} />
+                                            {validationErrors.pan_card && <p className="text-danger">{validationErrors.pan_card}</p>}
                                         </div>
                                         <div className="col-md-4">
                                             <label>UIDAI</label>
-                                            <input name="uaid_doc" type="file" className="form-control" onChange={handleInputChange} value={formData.uaid_doc} />
+                                            <input name="uaid_doc" type="file" className="form-control" accept=".jpeg, .png, .jpg, .webp, .svg, .pdf, .doc, .docx" onChange={handleFileChange}  />
+                                            {validationErrors.uaid_doc && <p className="text-danger">{validationErrors.uaid_doc}</p>}
                                         </div>
                                     </div>
                                 </div>

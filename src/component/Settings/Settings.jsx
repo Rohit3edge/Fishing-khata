@@ -44,6 +44,7 @@ const Settings = () => {
   }, [dispatch]);
 
   const item = setting;
+  console.log("item",item)
 
   async function handleUpdatesettings() {
     try {

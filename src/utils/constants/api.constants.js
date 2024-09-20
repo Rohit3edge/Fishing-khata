@@ -2,6 +2,8 @@ export const API_BASE_URL =
   process.env.API_BASE_URL || "https://kisaan-khata-api.updateproject.com";
 
 export const X_API_KEY="z3rlamk8xyv4r79x5wb8t35x3ot49yzg"
+ // CommonImgUploadService
+export const CommonImgUploadService_BASE_URL="https://updateproject.com/kisaan-khata-api/uploads"
 
 
 export const API_PATHS = {
@@ -16,6 +18,8 @@ export const API_PATHS = {
   // uploadImage: API_BASE_URL_WM + "/upload",
   // multiUploadImage: API_BASE_URL + "/multiUpload",
 
+
+  //  /farmer_documents
 
   //authentication
   login: "/client/login",

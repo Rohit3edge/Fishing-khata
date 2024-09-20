@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ListParties } from '../store/slices/parties';
 import { Getinvoicesnextnumber, AddInvoices } from '../store/slices/sale';
+import { Getsettings} from "../store/slices/settings";
 import InvoiceSecond from './InvoiceSecond';
 import Select from 'react-select';
 import Navbarside from './Navbarside';
@@ -23,6 +24,7 @@ const AddInvoice = () => {
   const [getInvoicesNumber, setGetInvoicesNumber] = useState();
   const [isSameAsBilling, setIsSameAsBilling] = useState(false);
   const [invoiceSecond, setInvoiceSecond] = useState({});
+  const [invoicePrefix, setInvoicePrefix] = useState();
   const [selectedPartyDetails, setSelectedPartyDetails] = useState({
     address: '',
     gstin: '',
@@ -49,43 +51,49 @@ const AddInvoice = () => {
   });
 
 
+  const fetchInvoiceNumber = async () => {
+    try {
+      const data = await dispatch(Getinvoicesnextnumber()).unwrap();
+      setGetInvoicesNumber(data?.next_invoice_number);
+      setFormData((prevData) => ({
+        ...prevData,
+        invoice_number: data?.next_invoice_number,
+      }));
+    } catch (error) {
+      console.log('Error fetching invoice number:', error.message);
+    }
+  };
 
-  // Fetch the next invoice number
+  // Function to get list of parties
+  const fetchParties = async () => {
+    try {
+      const data = await dispatch(ListParties({ profile_id: id })).unwrap();
+      setListParties(data?.data);
+    } catch (error) {
+      console.log('Error fetching parties:', error.message);
+    }
+  };
+
+  // Function to get settings
+  const fetchSettings = async () => {
+    try {
+      const data = await dispatch(Getsettings()).unwrap();
+      setInvoicePrefix(data?.data?.invoice_prefix);
+    } catch (error) {
+      console.log('Error fetching settings:', error.message);
+    }
+  };
+
+  // useEffect to call all the three functions
   useEffect(() => {
-    
-    setIsLoading(true);
-    dispatch(Getinvoicesnextnumber())
-      .unwrap()
-      .then((data) => {
-        setIsLoading(false);
-        setGetInvoicesNumber(data?.next_invoice_number);
-        setFormData((prevData) => ({
-          ...prevData,
-          invoice_number: data?.next_invoice_number, 
-        }));
-      })
-      .catch(({ message }) => {
-        setIsLoading(false);
-        console.log(message);
-      });
-  }, [dispatch]);
+    const fetchData = async () => {
+      setIsLoading(true);
+      await Promise.all([fetchInvoiceNumber(), fetchParties(), fetchSettings()]);
+      setIsLoading(false);
+    };
 
-  // Fetch the list of parties
-  useEffect(() => {
-    setIsLoading(true);
-    dispatch(ListParties({ profile_id: id }))
-      .unwrap()
-      .then((data) => {
-        setIsLoading(false);
-        setListParties(data?.data);
-        console.log("party",listParties)
-
-      })
-      .catch(({ message }) => {
-        setIsLoading(false);
-        console.log(message);
-      });
-  }, [dispatch]);
+    fetchData();
+  }, [dispatch, id]);
 
   // Party selection logic
   const partyOptions = listParties.map((party) => ({
@@ -155,6 +163,7 @@ const AddInvoice = () => {
 
     const billingData = {
       profile_id:Number(id),
+      invoice_prefix:invoicePrefix,
       party_id: Number(selectedPartyDetails.party_id),
       ledger_id:Number(selectedPartyDetails.ledger_id),  // Assuming this is hardcoded for now
       invoice_number: formData.invoice_number,
@@ -313,10 +322,20 @@ const AddInvoice = () => {
                         <div className="row">
                           <div className="col-md-6">
                             <div className="row">
-                              <div className="col-md-6">
-                                <label>Invoice Number </label>
-                                <input name="invoice_number" type="text" className="form-control" value={formData.invoice_number} readOnly/>
-                              </div>
+                            <div className="col-md-6">
+  <label>Invoice Number</label>
+  <div className="d-flex align-items-center">
+    <span className="me-2 " style={{ paddingRight:"1rem" }}>{invoicePrefix}</span>
+    <input
+      name="invoice_number"
+      type="text"
+      className="form-control"
+      value={formData.invoice_number}
+      readOnly
+      style={{ width: '90%' }} // This ensures the input takes the remaining space
+    />
+  </div>
+</div>
 
                               <div className="col-md-6">
                                 <label>Invoice Date </label>

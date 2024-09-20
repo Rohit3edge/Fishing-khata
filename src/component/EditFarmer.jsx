@@ -13,6 +13,12 @@ const FarmerEdit = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const [files, setFiles] = useState({
+    profile_image: null,
+    pan_card: null,
+    uaid_doc: null
+});
+
 
   const user = JSON.parse(localStorage.getItem('user'));
   const currentDate = new Date().toISOString().split('T')[0];
@@ -83,6 +89,13 @@ const FarmerEdit = () => {
   }, [dispatch, farmerId]);
 
 
+  const handleFileChange = (e) => {
+    setFiles({
+        ...files,
+        [e.target.name]: e.target.files[0]
+    });
+};
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -137,10 +150,24 @@ const FarmerEdit = () => {
   };
   
   const handleSubmit = (e) => {
+
+    const submitData = new FormData();
+
+    // Append the text data
+    for (let key in formData) {
+        submitData.append(key, formData[key]);
+    }
+
+    // Append the files
+    for (let key in files) {
+        if (files[key]) { // Only append if a file is selected
+            submitData.append(key, files[key]);
+        }
+    }
     
     e.preventDefault();
       setIsLoading(true);
-      dispatch(Updatefarmer(formData))
+      dispatch(Updatefarmer(submitData))
         .unwrap()
         .then((data) => {
           setIsLoading(false);
@@ -162,9 +189,6 @@ const FarmerEdit = () => {
                 uaid: '',
                 bankname: '',
                 ifsc: '',
-                profile_image: '',
-                pan_card: '',
-                uaid_doc: '',
                 share_amount: '',
           });
           console.log('Form submitted successfully', data);
@@ -356,15 +380,15 @@ const FarmerEdit = () => {
                                     <div className="row">
                                         <div className="col-md-4">
                                             <label>Profile Image</label>
-                                            <input name="profile_image" type="file" className="form-control" accept="image/*" onChange={handleInputChange} value={formData?.profile_image}/>
+                                            <input name="profile_image" type="file" className="form-control" accept=".jpeg, .png, .jpg, .webp, .svg, .pdf, .doc, .docx"  onChange={handleFileChange} />
                                         </div>
                                         <div className="col-md-4">
                                             <label>PAN Card</label>
-                                            <input name="pan_card" type="file" className="form-control" accept="image/*" onChange={handleInputChange} value={formData?.pan_card}/>
+                                            <input name="pan_card" type="file" className="form-control" accept=".jpeg, .png, .jpg, .webp, .svg, .pdf, .doc, .docx"  onChange={handleFileChange} />
                                         </div>
                                         <div className="col-md-4">
                                             <label>UIDAI</label>
-                                            <input name="uaid_doc" type="file" className="form-control" accept="image/*" onChange={handleInputChange} value={formData?.uaid_doc} />
+                                            <input name="uaid_doc" type="file" className="form-control" accept=".jpeg, .png, .jpg, .webp, .svg, .pdf, .doc, .docx"  onChange={handleFileChange}  />
                                         </div>
                                     </div>
                                 </div>

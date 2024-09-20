@@ -48,6 +48,7 @@ const UpdateAddInvoice = () => {
     message: '',
     invoice_number: '',
     po_number: '',
+    invoice_prefix:""
   });
 
   // Fetch invoice details if editing
@@ -68,6 +69,7 @@ const UpdateAddInvoice = () => {
             message: invoice?.notes || '',
             invoice_number: invoice?.invoice_number || '',
             po_number: invoice?.po_number || '',
+            invoice_prefix:invoice?.invoice_prefix
           });
           setSelectedPartyDetails({
             address: invoice?.billing_address || '',
@@ -175,6 +177,7 @@ const UpdateAddInvoice = () => {
     e.preventDefault();
 
     const billingData = {
+      invoice_prefix:formData.invoice_prefix,
       invoice_id: Number(invoicedetails?.invoice?.id),
       profile_id: Number(userId),
       party_id: Number(selectedPartyDetails.party_id),
@@ -340,10 +343,24 @@ const UpdateAddInvoice = () => {
                         <div className="row">
                           <div className="col-md-6">
                             <div className="row">
-                              <div className="col-md-6">
+                              {/* <div className="col-md-6">
                                 <label>Invoice Number </label>
                                 <input name="invoice_number" type="text" className="form-control" value={formData.invoice_number || ''} onChange={handleInputChange} readOnly/>
-                              </div>
+                              </div> */}
+                              <div className="col-md-6">
+  <label>Invoice Number</label>
+  <div className="d-flex align-items-center">
+    <span className="me-2 " style={{ paddingRight:"1rem" }}>{formData.invoice_prefix }</span>
+    <input
+      name="invoice_number"
+      type="text"
+      className="form-control"
+      value={formData.invoice_number}
+      readOnly
+      style={{ width: '90%' }} // This ensures the input takes the remaining space
+    />
+  </div>
+</div>
 
                               <div className="col-md-6">
                                 <label>Invoice Date </label>

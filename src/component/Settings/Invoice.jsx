@@ -5,7 +5,7 @@ const Invoice = ({ data }) => {
   const dispatch = useDispatch();
   const setting = useSelector((state) => state?.settings?.updatesettings);
   // const { data, loading, error } = useSelector((state) => state.settings);
-
+console.log("data",data)
   return (
     <div class="">
       <div class="container">
@@ -13,6 +13,30 @@ const Invoice = ({ data }) => {
           <div class="col-12 pt-1">
             <div class="row">
               <div class="col-md-8">
+              <div class="form-group row my-2">
+                  <label class="col-sm-6 col-form-label">
+                    Set Invoice Prefix
+                  </label>
+                  <div class="col-sm-6">
+                    <input
+                      name="invoice_prefix"
+                      type="text"
+                      class="form-control form-control-sm"
+                      value={
+                        setting?.invoice_prefix ??
+                        data?.invoice_prefix
+                      }
+                      onChange={(e) => {
+                        dispatch(
+                          updateSettingsField({
+                            invoice_prefix: e.target.value,
+                          })
+                        );
+                      }}
+                    />
+                  </div>
+                  {/* INV- */}
+                </div>
                 <div class="form-group row my-2">
                   <label class="col-sm-6 col-form-label">
                     Set Invoice Account Type
