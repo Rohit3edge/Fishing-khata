@@ -67,6 +67,11 @@ import Loanandguarantee from "./component/Loanandguarantee.jsx"
 
 import AddPurchaseOrder from "./component/AddPurchaseOrder.jsx"
 
+// share Debenture
+
+import ListShareTransfer from "./component/ListShareTransfer.jsx"
+import EditShareTransfer from "./component/EditShareTransfer.jsx"
+
 
 
 
@@ -137,12 +142,17 @@ function App() {
             <Route exact path="/share-applications/create" element={<AddShareApplications/>} />
             <Route exact path="/share-applications/edit/:id" element={<EditShareApplications/>} />
 
-            <Route exact path="/registers/debanturetransfer" element={<DebantureTransfer/>} />
+            
             <Route exact path="/registers/dividendregister" element={<DividendRegister/>} />
             <Route exact path="/registers/loanandguarantee" element={<Loanandguarantee/>} />
 
             {/* PurchaseOrder */}
-            <Route exact path="/purchase/addpurchaseorder" element={<AddPurchaseOrder/>} />
+            <Route exact path="/purchase/addpurchaseorder" element={<AddPurchaseOrder/>} />            {/* share-transfer */}
+            <Route exact path="/registers/debanturetransfer" element={<DebantureTransfer/>} />
+            <Route exact path="/share-transfer/list" element={<ListShareTransfer/>} />
+            <Route exact path="/share-transfer/edit/:id" element={<EditShareTransfer/>} />
+
+
 
             <Route path="*" element={<Notfoundpage />} />
         </Route>

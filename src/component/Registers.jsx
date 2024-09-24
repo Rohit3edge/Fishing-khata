@@ -69,12 +69,12 @@ const  Registers= () => {
                                         <a  className="btn register-link">Share Certificates</a><br></br>
                                         <a  className="btn register-link">Compliance</a><br></br>
                                         <a  className="btn register-link">Company Documents</a><br></br>
-                                        <a  className="btn register-link" >Management Cost</a><br></br>
+                                        <a  onClick={() => navigate('/management-cost/list')} className="btn register-link" >Management Cost</a><br></br>
                                     </div>
                                     <div className="col-md-4 text-center">
                                         <a  onClick={() => navigate('/share-applications/list')} className="btn register-link">Share Application</a><br></br>
                                         <a  onClick={() => navigate('/members/list')} className="btn register-link">Members</a><br></br>
-                                        <a  className="btn register-link" onClick={() => navigate('/registers/debanturetransfer')} >Share/Debenture Transfer</a><br></br>
+                                        <a  className="btn register-link" onClick={() => navigate('/share-transfer/list')} >Share/Debenture Transfer</a><br></br>
                                         <a  className="btn register-link" onClick={() => navigate('/registers/dividendregister')}>Dividend</a><br></br>
                                         <a  className="btn register-link" onClick={() => navigate('/registers/loanandguarantee')}>Loans, Guarantee</a><br></br>
                                     </div>

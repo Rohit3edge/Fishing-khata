@@ -83,7 +83,8 @@ export const API_PATHS = {
   membersupdate :"/members/update",
 
   // Management Cost
-  Managementlist :"/members/list",
+  Managementedit :"/client/get-management-cost",
+  Managementupdate :"/client/update-management-cost",
 
   // Share Applications
   ShareApplicationslist :"/share-applications/list",
@@ -91,7 +92,12 @@ export const API_PATHS = {
   ShareApplicationsedit :"/share-applications/get-detail",
   ShareApplicationsupdate :"/share-applications/update",
 
+  // Share Transfer
 
+  ShareTransferList :"/share-transfer/list",
+  ShareTransferAdd :"/share-transfer/add",
+  ShareTransferEdit :"/share-transfer/detail",
+  ShareTransferUpdate :"/share-transfer/update",
 
 
   
