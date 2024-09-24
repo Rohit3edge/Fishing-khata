@@ -144,7 +144,7 @@ const Navbarside = () => {
                       </NavLink>
                     </li>
                     <li className="submenu-item">
-                      <NavLink to="/Sale/Submenu2" className="menu-title">
+                      <NavLink to="/purchase/addpurchaseorder" className="menu-title">
                         Purchase Order (PO)
                       </NavLink>
                     </li>

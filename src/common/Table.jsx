@@ -3,7 +3,6 @@ import Pagination from './Pagination';
 import Moment from 'moment';
 
 const Table = ({ columns, data, tableRef, pageSize, setPageSize, currentPage, totalCount, onPageChange, handleSearchChange, closing_balance,handleEdit }) => {
-  console.log(closing_balance);
   const handlePageSizeChange = (e) => {
     setPageSize(Number(e.target.value));
   };

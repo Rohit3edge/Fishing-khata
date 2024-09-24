@@ -81,13 +81,27 @@ const BankBook = () => {
   };
 
   // Filter data based on search query
-  const filteredledgerEntires = ledgerEntires?.filter(party => 
-    party?.description?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
-    party?.added_on?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
-    party?.dr?.toLowerCase()?.includes(searchQuery?.toLowerCase())||
-    party?.cr?.toLowerCase()?.includes(searchQuery?.toLowerCase())||
-    party?.closing_balance?.toLowerCase()?.includes(searchQuery?.toLowerCase())
-  );
+  // const filteredledgerEntires = ledgerEntires?.filter(party => 
+  //   party?.description?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
+  //   party?.added_on?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
+  //   party?.dr?.toLowerCase()?.includes(searchQuery?.toLowerCase())||
+  //   party?.cr?.toLowerCase()?.includes(searchQuery?.toLowerCase())||
+  //   party?.closing_balance?.toLowerCase()?.includes(searchQuery?.toLowerCase())
+  // );
+
+
+  const filteredledgerEntires = (ledgerEntires || [])?.filter(party => {
+    const search = searchQuery?.toLowerCase() || '';
+    return (
+      party?.description?.toLowerCase()?.includes(search) ||
+      party?.added_on?.toLowerCase()?.includes(search) ||
+      String(party?.dr || '').toLowerCase().includes(search) || // Safely convert to string
+      String(party?.cr || '').toLowerCase().includes(search) || // Safely convert to string
+      String(party?.closing_balance || '').toLowerCase().includes(search) // Safely convert to string
+    );
+  });
+
+  
   return (
     <>
       <div>

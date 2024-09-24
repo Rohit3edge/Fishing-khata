@@ -38,7 +38,9 @@ const EditInvoicePayment = () => {
     transaction_number: '',
     notes: '',
     pay_mode:'',
-    payment_id:""
+    payment_id:"",
+    bank_name: "",
+    ledger_id: "",
   });
 
 
@@ -73,11 +75,12 @@ const EditInvoicePayment = () => {
               ref_id: data.data.ref_id || '', 
               amount_received: data.data.amount || '', 
               payment_date: data.data.payment_date || '', 
-              payment_mode: data.data.bank_ledger_id || '', 
+              payment_mode: data.data.pay_mode || '', 
               transaction_number: data.data.transaction_id || '', 
               notes: data.data.remark || '',
               pay_mode: data.data.pay_mode,
-              payment_id:data.data.id
+              payment_id:data.data.id,
+              ledger_id:data.data.ledger_id
             });
             
           }
@@ -87,7 +90,7 @@ const EditInvoicePayment = () => {
           console.log(message);
         });
     }, [Id,listParties]);
-    
+    console.log(formData)
 
   // Fetch parties
   useEffect(() => {
@@ -149,9 +152,26 @@ const EditInvoicePayment = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    
+    // Check if the name is payment_mode
+    if (name === "payment_mode") {
+      // Find the ledger based on the selected value
+      const PaymentMethods = paymentMethods?.find((p) => p.id === value)?.ledger;
+      const uPaymentMethods= PaymentMethods=="Cash" ?"Cash":"Bank"
+      const bankname =PaymentMethods=="Cash" ? " ":PaymentMethods
+      setFormData((prevData) => ({
+        ...prevData,
+        payment_mode: uPaymentMethods, 
+        ledger_id: value, 
+        bank_name:bankname,            
+      }));
+      
+      console.log("Payment Mode (Ledger):", PaymentMethods);
+      console.log("Ledger ID:", value);
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
-
   // Date validation to prevent future dates
   const validateDate = (date) => {
     const selectedDate = new Date(date);
@@ -164,7 +184,7 @@ const EditInvoicePayment = () => {
     if (!formData.customer_id) newErrors.customer_id = 'Customer is required.';
     if (!formData.amount_received || isNaN(formData.amount_received) || formData.amount_received <= 0) newErrors.amount_received = 'Valid amount is required.';
     if (!formData.payment_date || !validateDate(formData.payment_date)) newErrors.payment_date = 'Please select a valid date (not in the future).';
-    if (!formData.payment_mode) newErrors.payment_mode = 'Payment mode is required.';
+    // if (!formData.payment_mode) newErrors.payment_mode = 'Payment mode is required.';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -179,9 +199,11 @@ const EditInvoicePayment = () => {
       ref_id:Number(formData.ref_id ),
       amount_received:Number(formData.amount_received),
       payment_date:formData.payment_date ,
-      payment_mode:Number(formData.payment_mode),
+      payment_mode:formData.payment_mode,
       transaction_number:formData.transaction_number ,
-      notes:formData.notes 
+      notes:formData.notes ,
+      ledger_id: formData.ledger_id, 
+      bank_name:formData.bank_name,      
     }
     console.log("data",subdata)
     if (validateForm()) {
@@ -319,7 +341,7 @@ const EditInvoicePayment = () => {
                           <div class="col-md-6">
                             <label>Payment Mode</label>
 
-                            <select name="payment_mode" class="form-control" value={formData.payment_mode } onChange={handleInputChange}>
+                            <select name="payment_mode" class="form-control" value={formData.ledger_id} onChange={handleInputChange}>
 
                               <option value="">--Payment Mode--</option>
                               {paymentMethods?.map((option, index) => (

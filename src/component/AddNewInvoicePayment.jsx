@@ -28,9 +28,11 @@ const AddNewInvoicePayment = () => {
     ref_id: '',
     amount_received: '',
     payment_date: '',
+    ledger_id: "",
     payment_mode: '',
     transaction_number: '',
     notes: '',
+    bank_name: ""
   });
 
 
@@ -86,7 +88,7 @@ const AddNewInvoicePayment = () => {
   const handlePartyChange = (selectedOption) => {
     setSelectedParty(selectedOption);
     const partyId = selectedOption.value;
-    setFormData({ ...formData, customer_id: partyId });
+    setFormData({ ...formData, customer_id: partyId});
     handleGetCustomer(partyId);
   };
 
@@ -100,8 +102,27 @@ const AddNewInvoicePayment = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    
+    // Check if the name is payment_mode
+    if (name === "payment_mode") {
+      // Find the ledger based on the selected value
+      const PaymentMethods = paymentMethods?.find((p) => p.id === value)?.ledger;
+      const uPaymentMethods= PaymentMethods=="Cash" ?"Cash":"Bank"
+      const bankname =PaymentMethods=="Cash" ? " ":PaymentMethods
+      setFormData((prevData) => ({
+        ...prevData,
+        payment_mode: uPaymentMethods, 
+        ledger_id: value, 
+        bank_name:bankname,            
+      }));
+      
+      console.log("Payment Mode (Ledger):", PaymentMethods);
+      console.log("Ledger ID:", value);
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
+  
 
   // Date validation to prevent future dates
   const validateDate = (date) => {
@@ -245,7 +266,7 @@ const AddNewInvoicePayment = () => {
                               Payment Mode  <span class="required">*</span>
                               </label>
 
-                            <select name="payment_mode" class="form-control" value={formData.payment_mode} onChange={handleInputChange}>
+                            <select name="payment_mode" class="form-control" value={formData.ledger_id} onChange={handleInputChange}>
                               <option value="">--Payment Mode--</option>
                               {paymentMethods?.map((option, index) => (
                                 <option key={index} value={option?.id}>

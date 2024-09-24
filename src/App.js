@@ -65,6 +65,8 @@ import DebantureTransfer from "./component/DebantureTransfer.jsx"
 import DividendRegister from "./component/DividendRegister.jsx"
 import Loanandguarantee from "./component/Loanandguarantee.jsx"
 
+import AddPurchaseOrder from "./component/AddPurchaseOrder.jsx"
+
 
 
 
@@ -139,7 +141,8 @@ function App() {
             <Route exact path="/registers/dividendregister" element={<DividendRegister/>} />
             <Route exact path="/registers/loanandguarantee" element={<Loanandguarantee/>} />
 
-
+            {/* PurchaseOrder */}
+            <Route exact path="/purchase/addpurchaseorder" element={<AddPurchaseOrder/>} />
 
             <Route path="*" element={<Notfoundpage />} />
         </Route>

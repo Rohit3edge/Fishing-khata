@@ -24,6 +24,9 @@ const Ledger = () => {
   const [pageSize, setPageSize] = useState(25);
   const [searchQuery, setSearchQuery] = useState('');
 
+  const [fromDate, setFromDate] = useState(''); // State for from_date
+  const [toDate, setToDate] = useState(''); // State for to_date
+
   const user = JSON.parse(localStorage.getItem('user'));
   const Name = user?.data?.company_name;
   const profile_id = user?.data?.id;
@@ -31,6 +34,8 @@ const Ledger = () => {
   const [item, setItem] = useState({
     profile_id: profile_id,
     ledger_id: ledgerList[0]?.id,
+    from_date: fromDate, 
+    to_date: toDate, 
   });
 
   const [columns, setcolumns] = useState([
@@ -63,8 +68,14 @@ const Ledger = () => {
 
   const handleLedgerClick = async (id, index) => {
     setActiveIndex(index);
-    
-    const newItem = { ...item, ledger_id: id };
+    console.log("hiii")
+    const newItem = {
+      ...item,
+      ledger_id: id,
+      from_date: fromDate, // Ensure from_date is sent
+      to_date: toDate, // Ensure to_date is sent
+    };
+    console.log("Nwew",newItem)
     setItem(newItem);
   
     const requestId = Date.now();
@@ -77,8 +88,8 @@ const Ledger = () => {
       if (currentRequestId === requestId) {
         setLedgerEntires(data?.data?.entries || []);
         setClosingBalance(data?.data?.closing_balance || "");
-        console.log("entries", data?.data?.entries)
-        console.log("closing_balance",data?.data?.closing_balance)
+        setFromDate("")
+        setToDate("")
       }
     } catch (error) {
       console.log(error.message);
@@ -109,15 +120,17 @@ const Ledger = () => {
   );
 
   // Filter data based on search query
-  const filteredledgerEntires = (ledgerEntires || [])?.filter(party => 
-    party?.type?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
-    party?.description?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
-    party?.added_on?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
-    party?.dr?.toLowerCase()?.includes(searchQuery?.toLowerCase())||
-    party?.cr?.toLowerCase()?.includes(searchQuery?.toLowerCase())||
-    party?.balance?.toLowerCase()?.includes(searchQuery?.toLowerCase())
-  );
-
+  const filteredledgerEntires = (ledgerEntires || [])?.filter(party => {
+    const search = searchQuery?.toLowerCase() || '';
+    return (
+      party?.type?.toLowerCase()?.includes(search) ||
+      party?.description?.toLowerCase()?.includes(search) ||
+      party?.added_on?.toLowerCase()?.includes(search) ||
+      String(party?.dr || '').toLowerCase().includes(search) || // Safely convert to string
+      String(party?.cr || '').toLowerCase().includes(search) || // Safely convert to string
+      String(party?.balance || '').toLowerCase().includes(search) // Safely convert to string
+    );
+  });
   return (
     <div>
       <div class="row" style={{ marginLeft: '0', marginRight: '0' }}>
@@ -196,18 +209,20 @@ const Ledger = () => {
                             <div class="col-md-4 form-inline">
                               <div class="form-group">
                                 <label class="">From Date</label>
-                                <input class="form-control" required="" type="date" />
+                                <input class="form-control" type="date" value={fromDate}
+                                  onChange={(e) => setFromDate(e.target.value)} />
                               </div>
                             </div>
                             <div class="col-md-4 form-inline">
                               <div class="form-group">
                                 <label class="">To Date</label>
-                                <input class="form-control" required="" type="date" />
+                                <input class="form-control" type="date" value={toDate}
+                                  onChange={(e) => setToDate(e.target.value)} />
                               </div>
                             </div>
                             <div class="col-md-3 form-inline">
                               <div class="form-group">
-                                <button type="submit" class="btn btn-default">
+                                <button type="submit" class="btn btn-default"   onClick={() => handleLedgerClick(item.ledger_id, activeIndex)}>
                                   Submit
                                 </button>
                               </div>
