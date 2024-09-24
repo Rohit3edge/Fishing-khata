@@ -65,6 +65,11 @@ import DebantureTransfer from "./component/DebantureTransfer.jsx"
 import DividendRegister from "./component/DividendRegister.jsx"
 import Loanandguarantee from "./component/Loanandguarantee.jsx"
 
+// share Debenture
+
+import ListShareTransfer from "./component/ListShareTransfer.jsx"
+import EditShareTransfer from "./component/EditShareTransfer.jsx"
+
 
 
 
@@ -135,9 +140,14 @@ function App() {
             <Route exact path="/share-applications/create" element={<AddShareApplications/>} />
             <Route exact path="/share-applications/edit/:id" element={<EditShareApplications/>} />
 
-            <Route exact path="/registers/debanturetransfer" element={<DebantureTransfer/>} />
+            
             <Route exact path="/registers/dividendregister" element={<DividendRegister/>} />
             <Route exact path="/registers/loanandguarantee" element={<Loanandguarantee/>} />
+
+            {/* share-transfer */}
+            <Route exact path="/registers/debanturetransfer" element={<DebantureTransfer/>} />
+            <Route exact path="/share-transfer/list" element={<ListShareTransfer/>} />
+            <Route exact path="/share-transfer/edit/:id" element={<EditShareTransfer/>} />
 
 
 
