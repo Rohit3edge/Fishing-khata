@@ -39,6 +39,9 @@ const Table = ({ columns, data, tableRef, pageSize, setPageSize, currentPage, to
     }
   
     switch (column.field) {
+      case 'invoice_combined':
+        if (row.invoice_prefix==null)return`${row.invoice_number}`
+      return `${row.invoice_prefix}${row.invoice_number}`;
       case 'added_on':
         return Moment(row[column.field]).format('DD-MM-YYYY');
         case 'date_added':
@@ -52,6 +55,8 @@ const Table = ({ columns, data, tableRef, pageSize, setPageSize, currentPage, to
       case 'cr':
         return Number(row[column.field]) === 0 ? '' : <span className="text-success">{formatAmount(row[column.field])}</span>;
       case 'amount': 
+        return formatAmount(row[column.field]);
+        case 'grand_total': 
         return formatAmount(row[column.field]);
       case 'balance':
         return formatAmount(row[column.field]);

@@ -46,8 +46,11 @@ const Invoicepaymentlist = () => {
   };
 
   const handleEdit = (item) => {
-    console.log('Editing item:', item);
-    // Implement your edit logic here
+    if (item && item.id) {
+      navigate(`/invoicepayment/edit/${item.id}`);
+    } else {
+      console.log("Item or item.id is undefined");
+    }
   };
 
   const handleDelete = (item) => {
@@ -64,7 +67,6 @@ const Invoicepaymentlist = () => {
       .then((data) => {
         setIsLoading(false);
         setInvoicepaymentlist(data?.data);
-        console.log(data.data);
       })
       .catch(({ message }) => {
         setIsLoading(false);

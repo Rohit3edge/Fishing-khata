@@ -180,3 +180,40 @@ export const InvoiceUpdate = createAsyncThunk(
         }
     }
 );
+
+
+export const GetSinglePaymentDetail = createAsyncThunk(
+    "/post/getsinglepaymentdetail",
+    async (item,thunkAPI) => {
+        try {
+            const data = await SaleService.GetSinglePaymentDetail(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+export const UpdatePayment = createAsyncThunk(
+    "/post/updatepayment",
+    async (item,thunkAPI) => {
+        try {
+            const data = await SaleService.UpdatePayment(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);

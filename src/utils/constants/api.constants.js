@@ -58,6 +58,10 @@ export const API_PATHS = {
   addinvoices: "/invoices/add",
   getinvoicessingledetails:"/invoice/get",
   getinvoicessingledetails:"/invoice/get",
+
+  getsinglepaymentdetail:"/invoice/payment-detail",
+  updatepayment:"/invoice/update-payment",
+  
   // Directors 
   directorslist:"/directors/list",
   directorsStore:"/directors/add",

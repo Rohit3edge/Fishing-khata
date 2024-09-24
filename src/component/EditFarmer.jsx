@@ -18,6 +18,12 @@ const FarmerEdit = () => {
     pan_card: null,
     uaid_doc: null
 });
+const [validationErrors, setValidationErrors] = useState({
+  profile_image: null,
+  pan_card: null,
+  uaid_doc: null,
+});
+
 
 
   const user = JSON.parse(localStorage.getItem('user'));
@@ -90,11 +96,33 @@ const FarmerEdit = () => {
 
 
   const handleFileChange = (e) => {
-    setFiles({
-        ...files,
-        [e.target.name]: e.target.files[0]
+    const { name, files } = e.target;
+    const file = files[0];
+    let error = null;
+  
+    if (file) {
+      const allowedExtensions = ['.jpg', '.png', '.jpeg', '.pdf', '.doc', '.docx'];
+      const fileExtension = file.name.split('.').pop().toLowerCase();
+      
+      if (!allowedExtensions.includes('.' + fileExtension)) {
+        error = 'Invalid file type.';
+      }
+    }
+  
+    setFiles((prevFiles) => {
+      const updatedFiles = {
+        ...prevFiles,
+        [name]: file,
+      };
+      console.log("Updated files state:", updatedFiles); // Debugging line
+      return updatedFiles;
     });
-};
+    
+    setValidationErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: error,
+    }));
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -381,14 +409,17 @@ const FarmerEdit = () => {
                                         <div className="col-md-4">
                                             <label>Profile Image</label>
                                             <input name="profile_image" type="file" className="form-control" accept=".jpeg, .png, .jpg, .webp, .svg, .pdf, .doc, .docx"  onChange={handleFileChange} />
+                                            {validationErrors.profile_image && <p className="text-danger">{validationErrors.profile_image}</p>}
                                         </div>
                                         <div className="col-md-4">
                                             <label>PAN Card</label>
                                             <input name="pan_card" type="file" className="form-control" accept=".jpeg, .png, .jpg, .webp, .svg, .pdf, .doc, .docx"  onChange={handleFileChange} />
+                                            {validationErrors.pan_card && <p className="text-danger">{validationErrors.pan_card}</p>}
                                         </div>
                                         <div className="col-md-4">
                                             <label>UIDAI</label>
                                             <input name="uaid_doc" type="file" className="form-control" accept=".jpeg, .png, .jpg, .webp, .svg, .pdf, .doc, .docx"  onChange={handleFileChange}  />
+                                            {validationErrors.uaid_doc && <p className="text-danger">{validationErrors.uaid_doc}</p>}
                                         </div>
                                     </div>
                                 </div>

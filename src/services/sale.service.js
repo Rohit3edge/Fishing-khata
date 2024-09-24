@@ -175,6 +175,38 @@ class SaleService {
           .then((response) => response.data);
       }
 
+
+      
+      static GetSinglePaymentDetail(item) {
+        const api = `${API_PATHS.getsinglepaymentdetail}`;
+        const formData = new FormData();
+    
+        for (const key in item) {
+          if (item.hasOwnProperty(key)) {
+            formData.append(key, item[key]);
+          }
+        }
+    
+        return axios
+          .post(api, formData, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .then((response) => response.data);
+      }
+
+      static UpdatePayment(item) {
+        const api = `${API_PATHS.updatepayment}`;
+    
+        return axios
+          .post(api, item, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .then((response) => response.data);
+      }
 }
 
 export default SaleService;

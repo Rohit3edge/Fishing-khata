@@ -59,6 +59,14 @@ import  AddShareApplications from "./component/AddShareApplications.jsx"
 import  EditShareApplications from "./component/EditShareApplications.jsx"
 
 
+import EditInvoicePayment from "./component/EditInvoicePayment.jsx"
+
+import DebantureTransfer from "./component/DebantureTransfer.jsx"
+import DividendRegister from "./component/DividendRegister.jsx"
+import Loanandguarantee from "./component/Loanandguarantee.jsx"
+
+
+
 
 function App() {
 
@@ -100,6 +108,8 @@ function App() {
           <Route exact path="/addnewinvoicepayment" element={<AddNewInvoicePayment />} />
           <Route exact path="/invoicelist" element={<InvoiceList />} />
           <Route exact path="/Updateaddinvoice/:id" element={<UpdateAddInvoice />} />
+          <Route exact path="/invoicepayment/edit/:id" element={<EditInvoicePayment/>} />
+
           {/* registers */}
           <Route exact path="/registers" element={<Registers />} />
             {/*directors  */}
@@ -124,6 +134,11 @@ function App() {
             <Route exact path="/share-applications/list" element={<ListShareApplications/>} />
             <Route exact path="/share-applications/create" element={<AddShareApplications/>} />
             <Route exact path="/share-applications/edit/:id" element={<EditShareApplications/>} />
+
+            <Route exact path="/registers/debanturetransfer" element={<DebantureTransfer/>} />
+            <Route exact path="/registers/dividendregister" element={<DividendRegister/>} />
+            <Route exact path="/registers/loanandguarantee" element={<Loanandguarantee/>} />
+
 
 
             <Route path="*" element={<Notfoundpage />} />

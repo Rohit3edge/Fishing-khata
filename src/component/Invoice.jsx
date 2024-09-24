@@ -50,6 +50,8 @@ const AddInvoice = () => {
     po_number: '',
   });
 
+  const [errors, setErrors] = useState({});
+
 
   const fetchInvoiceNumber = async () => {
     try {
@@ -157,10 +159,34 @@ const AddInvoice = () => {
     }
   };
 
-  // Form submission
+ 
+const validateForm = () => {
+  let newErrors = {};
+  if (!selectedPartyDetails.party_id) {
+    newErrors.customer = 'Customer is required.';
+  }
+  if (!selectedPartyDetails.state) {
+    newErrors.selectedPartyState = 'Billing state is required.';
+  }
+  if (!shippingAddress.state) {
+    newErrors.shippingState = 'Shipping state is required.';
+  }
+  if (!invoiceSecond.invoice_items) {
+    // newErrors.invoice_items = 'Invoice items is required.';
+    alert("Invoice items is required.")
+  }
+
+  setErrors(newErrors);
+  // If there are no errors, return true. Otherwise, return false.
+  return Object.keys(newErrors).length === 0;
+};
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (!validateForm()) {
+      return;
+    }
     const billingData = {
       profile_id:Number(id),
       invoice_prefix:invoicePrefix,
@@ -191,6 +217,7 @@ const AddInvoice = () => {
 
     // Call API to submit invoice (replace comment with actual API call)
     setIsLoading(true);
+  
     dispatch(AddInvoices(mergedData))
       .unwrap()
       .then((data) => {
@@ -254,6 +281,7 @@ const AddInvoice = () => {
                                   Customer <span className="required">*</span>
                                 </label>
                                 <Select options={partyOptions} placeholder="--Select Customer--" onChange={handlePartyChange} />
+                                {errors.customer && <p className="text-danger">{errors.customer}</p>}
                               </div>
                             </div>
                             <fieldset className="form-group border p-2 mt-3">
@@ -264,8 +292,11 @@ const AddInvoice = () => {
                                   <input name="address" type="text" className="form-control" value={selectedPartyDetails?.address} onChange={handleInputChange} />
                                 </div>
                                 <div className="col-md-6">
-                                  <label>State </label>
+                                  <label>
+                                    State <span className="required">*</span>
+                                    </label>
                                   <input name="state" type="text" className="form-control" value={selectedPartyDetails?.state} onChange={handleInputChange} />
+                                  {errors.selectedPartyState && <p className="text-danger">{errors.selectedPartyState}</p>}
                                 </div>
                               </div>
 
@@ -300,8 +331,11 @@ const AddInvoice = () => {
                                   <input name="address" type="text" className="form-control" value={shippingAddress.address} onChange={handleShippingInputChange} />
                                 </div>
                                 <div className="col-md-6">
-                                  <label>State </label>
-                                  <input name="state" type="text" className="form-control" value={shippingAddress.state} onChange={handleShippingInputChange} />
+                                  <label>
+                                    State <span className="required">*</span>
+                                     </label>
+                                  <input name="state" type="text" className="form-control" value={shippingAddress.state} onChange={handleShippingInputChange} required />
+                                  {errors.shippingState && <p className="text-danger">{errors.shippingState}</p>}
                                 </div>
                               </div>
 

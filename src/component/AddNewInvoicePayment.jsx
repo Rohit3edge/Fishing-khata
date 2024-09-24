@@ -25,7 +25,7 @@ const AddNewInvoicePayment = () => {
   const [formData, setFormData] = useState({
     profile_id: id,
     customer_id: '',
-    invoice_id: '',
+    ref_id: '',
     amount_received: '',
     payment_date: '',
     payment_mode: '',
@@ -93,8 +93,9 @@ const AddNewInvoicePayment = () => {
   const handleInvoiceChange = (e) => {
     const invoiceNumber = e.target.value;
     const invoice = byCustomer.find((inv) => inv.invoice_number === invoiceNumber);
+    console.log(invoice)
     setSelectedInvoice(invoice);
-    setFormData({ ...formData, invoice_id: invoiceNumber });
+    setFormData({ ...formData, ref_id: invoiceNumber });
   };
 
   const handleInputChange = (e) => {
@@ -112,7 +113,7 @@ const AddNewInvoicePayment = () => {
   const validateForm = () => {
     let newErrors = {};
     if (!formData.customer_id) newErrors.customer_id = 'Customer is required.';
-    if (!formData.invoice_id) newErrors.invoice_id = 'Invoice is required.';
+    // if (!formData.invoice_id) newErrors.invoice_id = 'Invoice is required.';
     if (!formData.amount_received || isNaN(formData.amount_received) || formData.amount_received <= 0) newErrors.amount_received = 'Valid amount is required.';
     if (!formData.payment_date || !validateDate(formData.payment_date)) newErrors.payment_date = 'Please select a valid date (not in the future).';
     if (!formData.payment_mode) newErrors.payment_mode = 'Payment mode is required.';
@@ -138,17 +139,7 @@ const AddNewInvoicePayment = () => {
     }
   };
   const handleDiscard = () => {
-    setFormData({
-      profile_id: id,
-      customer_id: '',
-      invoice_id: '',
-      amount_received: '',
-      payment_date: '',
-      payment_mode: '',
-      transaction_number: '',
-      notes: '',
-      
-    });
+    navigate('/invoicepaymentlist');
   };
   return (
     <div>
@@ -207,9 +198,9 @@ const AddNewInvoicePayment = () => {
 
                           <div class="col-md-6">
                             <label>
-                              Invoice <span class="required">*</span>
+                              Invoice
                             </label>
-                            <select name="party" class="form-control" onChange={handleInvoiceChange} value={selectedInvoice?.invoice_number}>
+                            <select name="ref_id" class="form-control" onChange={handleInvoiceChange} value={selectedInvoice?.ref_id}>
                               <option value="">--Select Invoice--</option>
                               {byCustomer?.map((option, index) => (
                                 <option key={index} value={option?.invoice_number}>
@@ -218,7 +209,6 @@ const AddNewInvoicePayment = () => {
                               ))}
                             
                             </select>
-                            {errors.invoice_id && <p className="text-danger">{errors.invoice_id}</p>}
                           </div>
                         </div>
                       </div>
@@ -226,7 +216,9 @@ const AddNewInvoicePayment = () => {
                       <div class="form-group">
                         <div class="row">
                           <div class="col-md-6">
-                            <label>Amount Received</label>
+                            <label> 
+                              Amount Received  <span class="required">*</span>
+                              </label>
                             <div class="input-group">
                               <span class="input-group-text" id="basic-addon1">
                                 ₹
@@ -249,7 +241,9 @@ const AddNewInvoicePayment = () => {
                       <div class="form-group">
                         <div class="row">
                           <div class="col-md-6">
-                            <label>Payment Mode</label>
+                            <label>
+                              Payment Mode  <span class="required">*</span>
+                              </label>
 
                             <select name="payment_mode" class="form-control" value={formData.payment_mode} onChange={handleInputChange}>
                               <option value="">--Payment Mode--</option>

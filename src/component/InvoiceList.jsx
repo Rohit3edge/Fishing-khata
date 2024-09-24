@@ -19,7 +19,7 @@ const InvoiceList = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [invoicelist, setInvoicelist] = useState([]);
   const [columns, setcolumns] = useState([
-    { header: 'Invoice Number', field: 'invoice_number' },
+    { header: 'Invoice Number',field: 'invoice_combined'},
     {header: 'Date', field: 'invoice_date' },
     { header: 'Party', field: 'party_name' },
     { header: 'State', field: 'billing_state' },
@@ -34,6 +34,8 @@ const InvoiceList = () => {
       ]
     }
   ]);
+
+  
  
 
   const [pageSize, setPageSize] = useState(25);
