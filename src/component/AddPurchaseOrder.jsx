@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ListParties } from '../store/slices/parties';
-import AddPurchaseOrderSec from "./AddPurchaseOrderSec"
+import {AddPurchaseorder} from '../store/slices/purchase'
+import AddPurchaseOrderSec from './AddPurchaseOrderSec';
 import Select from 'react-select';
 import Navbarside from './Navbarside';
 import Loader from '../common/Loader';
@@ -15,7 +16,7 @@ const AddPurchaseOrder = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id; // profile_id
   const Name = user?.data?.company_name;
-  const currentDate = new Date().toISOString().split('T')[0];
+  // const currentDate = new Date().toISOString().split('T')[0];
 
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState({});
@@ -30,8 +31,16 @@ const AddPurchaseOrder = () => {
   });
   // State for form data
   const [formData, setFormData] = useState({
+    profile_id:id ,
+    po_prefix:"",
+    party_id: '',
+    ledger_id:'',
+    fin_year:'2024-2025',
+    roundoff:"",
+    tcs_amount:"",
+    party_gstn: '',
     po_number: '',
-    po_date: currentDate,
+    po_date: "",
     quotation_number: '',
     quotation_date: '',
     notes: '',
@@ -45,6 +54,7 @@ const AddPurchaseOrder = () => {
     shipping_city: '',
     shipping_state: '',
     shipping_phone: '',
+
   });
 
   const [errors, setErrors] = useState({});
@@ -101,6 +111,12 @@ const AddPurchaseOrder = () => {
         ledger_id: party.ledger_id,
         party_id: party.id,
       });
+      setFormData((prevData) => ({
+        ...prevData,
+        party_id:party.id,
+        ledger_id:party.ledger_id,
+        party_gstn:party.gstin,
+      }));
     }
   };
 
@@ -126,14 +142,27 @@ const AddPurchaseOrder = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
+ 
   // Submit and show the form data
   const handleSubmit = (e) => {
     e.preventDefault();
+    const mergedData = {
+      ...formData,
+      ...data
+    };
+      console.log('Form Data:', mergedData);
     if (validateForm()) {
-      console.log('Form Data:', formData);
-      // Show data or perform save operation here
-      // navigate to the next page or show confirmation
+
+      dispatch(AddPurchaseorder(mergedData))
+      .unwrap()
+      .then((data) => {
+        setIsLoading(false);
+        navigate('/purchase/purchaseorderlist');
+      })
+      .catch(({ message }) => {
+        setIsLoading(false);
+        console.log(message);
+      });
     }
   };
 
@@ -159,6 +188,7 @@ const AddPurchaseOrder = () => {
                   Purchase
                 </button>
               </div>
+              
             </div>
           </div>
           <div className="row content-body">
@@ -175,6 +205,9 @@ const AddPurchaseOrder = () => {
                     </li>
                   </ol>
                 </div>
+                <div class="d-flex justify-content-end">
+                <button class="btn ripple btn-default" onClick={handleSubmit}>Save</button>
+              </div>
               </div>
               <div class="row">
                 <div class="col-md-12">
@@ -199,10 +232,15 @@ const AddPurchaseOrder = () => {
                                 <p>
                                   <strong>Supplier/Vendor Billing Address</strong>
                                 </p>
-                                {selectedPartyDetails?.address},<br />
-                                {selectedPartyDetails?.state}
-                                <br />
-                                GSTN: {selectedPartyDetails?.gstin}
+                                {selectedPartyDetails && (
+                                  <>
+                                    {selectedPartyDetails?.address}
+                                    <br />
+                                    {selectedPartyDetails?.state}
+                                    <br />
+                                    GSTN: {selectedPartyDetails?.gstin}
+                                  </>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -291,7 +329,7 @@ const AddPurchaseOrder = () => {
                               <div class="row mt-2">
                                 <div class="col-md-6">
                                   <label>Address </label>
-                                  <input name="shipping_address" type="text" class="form-control" onChange={handleInputChange} value={formData.billing_address} />
+                                  <input name="shipping_address" type="text" class="form-control" onChange={handleInputChange} value={formData.shipping_address} />
                                 </div>
                                 <div class="col-md-6">
                                   <label>City </label>
@@ -315,7 +353,7 @@ const AddPurchaseOrder = () => {
                       </div>
                     </div>
                   </div>
-                  <AddPurchaseOrderSec onChildDataChange={setData} onSubmit={handleSubmit}/>
+                  <AddPurchaseOrderSec onChildDataChange={setData} onSubmit={handleSubmit} />
                 </div>
               </div>
             </div>

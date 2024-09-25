@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { Getunits } from '../store/slices/settings';
 import { Listitems } from '../store/slices/items';
 import { Getsingledetail } from '../store/slices/sale';
 
-
-const AddPurchaseOrderSec = ({ onChildDataChange, onSubmit }) => {
+const AddPurchaseOrderSec = ({ onChildDataChange, handleSubmit }) => {
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id;
@@ -14,20 +13,13 @@ const AddPurchaseOrderSec = ({ onChildDataChange, onSubmit }) => {
     units: [],
     itemList: [],
     singleDetail: {},
-    selectedProduct: null,
+    selectedProduct: '',
     quantity: 1,
-    unit_id: null,
-    discount: 0,
+    unit_id: '',
     price: 0,
-    discount_type: 'Fixed',
     shippingCost: 0,
     addedItems: [],
-    tax: 0,
-    price_tax_type: 'Excluding Tax',
-    subtotal: 0,
-    taxAmounts: {},
-    hsn: null,
-    shippingGst: 0,
+    hsn: '',
   });
 
   const fetchUnits = useCallback(async () => {
@@ -54,10 +46,11 @@ const AddPurchaseOrderSec = ({ onChildDataChange, onSubmit }) => {
   }, [fetchUnits, fetchItemList]);
 
   const handleProductChange = useCallback(
-    async (productId) => {
+    async (e) => {
+      const productId = e.target.value;
       setState((prevState) => ({
         ...prevState,
-        selectedProduct: productId ? productId : null,
+        selectedProduct: productId,
       }));
 
       if (productId) {
@@ -66,263 +59,253 @@ const AddPurchaseOrderSec = ({ onChildDataChange, onSubmit }) => {
           setState((prevState) => ({
             ...prevState,
             singleDetail: data?.data,
+            price: data?.data?.sale_price || 0,
+            hsn: data?.data?.hsn || '',
             unit_id: data?.data?.unit || '',
           }));
         } catch (error) {
           console.error(error.message);
         }
-      } else {
-        // Optionally clear product details if no product is selected
-        setState((prevState) => ({
-          ...prevState,
-          singleDetail: {},
-          selectedUnit: '',
-        }));
       }
     },
     [dispatch, id]
   );
 
   const handleInputChange = (field, value) => {
-      // For other fields, update state normally
-      setState((prevState) => ({ ...prevState, [field]: value }));
-
+    setState((prevState) => ({ ...prevState, [field]: value }));
   };
 
+  const handleAddItem = () => {
+    const { selectedProduct, quantity, unit_id, price, hsn } = state;
 
+    if (!selectedProduct || quantity <= 0 || !unit_id || price <= 0) {
+      alert('Please fill out all fields correctly.');
+      return;
+    }
 
+    // Find the unit name based on the unit_id
+    const unitName = state.units.find((unit) => unit.id === unit_id)?.unit || '';
 
-//   const handleAddItem = () => {
-//     const { unit_id, singleDetail, price_tax_type, tax, discount, discount_type } = state;
+    const newItem = {
+      item_id: selectedProduct,
+      quantity: parseFloat(quantity),
+      unit_id,
+      unit_name: unitName,
+      price: parseFloat(price),
+      hsn,
+      sub_total: (price * quantity).toFixed(2),
+    };
 
-//     // Find the unit name based on the unit_id
-//     const unitName = state.units.find((unit) => unit.id === unit_id)?.unit || '';
-
-    // Calculate the total for the current item
-    // const newItem = {
-    //   hsn: singleDetail.hsn,
-    //   item_id: state.selectedProduct,
-    //   quantity: state.quantity,
-    //   unit_id: unit_id,
-    //   unit_name: unitName, // Use the unitName here
-    //   price: singleDetail?.sale_price,
-    //   total_amount: calculateTotal.finalTotal.toFixed(2),
-    // };
-
-//     setState((prevState) => ({
-//       ...prevState,
-//       addedItems: [...prevState.addedItems, newItem],
-//     }));
-
-//     clearInputs(); 
-//   };
-
-  const clearInputs = () => {
     setState((prevState) => ({
       ...prevState,
-      selectedProduct: null,
+      addedItems: [...prevState.addedItems, newItem],
+      selectedProduct: '', // Reset fields
       quantity: 1,
-      selectedUnit: '',
-      singleDetail: {},
       unit_id: '',
+      price: 0,
+      hsn: '',
+      // Ensure itemList remains intact
     }));
   };
-  const handleItemChange = useCallback(
-    (field, value, index) => {
-      // Create a copy of the items
-      const updatedItems = [...state.addedItems];
 
-      // Update the item at the specific index
-      updatedItems[index] = { ...updatedItems[index], [field]: value };
+  const handleItemChange = (index, field, value) => {
+    const updatedItems = [...state.addedItems];
+    updatedItems[index][field] = value;
 
-      // Get the item price and quantity
-      const itemPrice = parseFloat(updatedItems[index].price) || 0;
-      const itemQuantity = parseFloat(updatedItems[index].quantity) || 0;
-      let itemTotalWithoutTax = itemPrice * itemQuantity;
+    // If the item_id (product) is changed, update the price, unit, and hsn accordingly
+    if (field === 'item_id') {
+      const selectedProduct = state.itemList.find((item) => item.id === value);
+      updatedItems[index].price = selectedProduct?.sale_price || 0;
+      updatedItems[index].hsn = selectedProduct?.hsn || '';
+      updatedItems[index].unit_id = selectedProduct?.unit || '';
+    }
 
-      setState((prevState) => ({
-        ...prevState,
-        addedItems: updatedItems,
-      }));
+    // Update total amount for the item
+    if (field === 'price' || field === 'quantity') {
+      updatedItems[index].sub_total = (updatedItems[index].price * updatedItems[index].quantity).toFixed(2);
+    }
 
+    setState((prevState) => ({
+      ...prevState,
+      addedItems: updatedItems,
+    }));
+  };
 
-    },
-    [state.addedItems]
-  );
+  const handleRemoveItem = (index) => {
+    const updatedItems = [...state.addedItems];
+    updatedItems.splice(index, 1);
+    setState((prevState) => ({
+      ...prevState,
+      addedItems: updatedItems,
+    }));
+  };
 
-  const handleRemoveItem = useCallback(
-    (index) => {
-      const updatedItems = [...state.addedItems];
-      const item = updatedItems[index];
+  useEffect(() => {
+    const subTotal = state.addedItems.reduce((sum, item) => sum + parseFloat(item.sub_total), 0);
+    const shippingCost = parseFloat(state.shippingCost) || 0;
+    const grandTotal = (subTotal + shippingCost).toFixed(2);
 
-      // Recalculate the tax for the item being removed
-      const gst = parseFloat(item.tax) || 0;
-      const price = parseFloat(item.price) || 0;
-      const itemQuantity = parseFloat(item.quantity) || 0;
-      let taxAmount = 0;
+    const orderData = {
+      sub_total: subTotal.toFixed(2),
+      shipping_cost: shippingCost,
+      grand_total: grandTotal,
+      purchase_order_items: state?.addedItems?.map((item) => ({
+        item_id:item.item_id,
+        price:item.price ,
+        quantity:item.quantity ,
+        sub_total:item.sub_total ,
+        unit_id:item.unit_id ,
+        unit_name:item.unit_name ,
+      })),
+    };
 
+    // Pass the formatted data to the parent component
+    onChildDataChange(orderData);
+  }, [state.addedItems, state.shippingCost, onChildDataChange]);
 
-      // Update the state with the new addedItems and tax amounts
-      setState((prevState) => ({
-        ...prevState,
-        addedItems: updatedItems,
-      }));
-    },
-    [state.addedItems]
-  );
-
-//   const grandTotal = useMemo(() => {
-//     // Calculate total of all items and shipping
-//     const itemsTotal = state.addedItems.reduce((sum, item) => sum + Number(item.total_amount), 0);
-//     // Final grand total
-//     return (itemsTotal + shipping ).toFixed(2);
-//   }, [state.addedItems, state.shippingCost]);
-
-//   useEffect(() => {
-//     // Prepare the final invoice data to send back
-//     const gstTotal = state?.addedItems
-//       ?.reduce((sum, item) => {
-//         const itemSubTotal = isNaN(Number(item.tax_amount)) ? 0 : Number(item.tax_amount);
-//         return sum + itemSubTotal;
-//       }, 0)
-//       ?.toFixed(2);
-//     console.log(gstTotal);
-//     const invoiceData = {
-//       sub_total: state.addedItems.reduce((sum, item) => sum + Number(item.sub_total), 0).toFixed(2),
-//       shipping_cost: Number(state.shippingCost)?.toFixed(2),
-//       grand_total: grandTotal,
-//       total_gst: gstTotal,
-//       invoice_items: state?.addedItems?.map((item) => ({
-//         item_id: item.item_id,
-//         quantity: item.quantity,
-//         unit_id: item.unit_id,
-//         unit_name: item.unit_name, // Use the unitName here
-//         price: item.price,
-//         price_tax_type: item.price_tax_type,
-//         tax_amount: item.tax_amount,
-//         tax: item.tax,
-//         tax_type: 'GST',
-//         discount: item.discount,
-//         discount_type: item.discount_type,
-//         sub_total: item.sub_total,
-//         total_amount: item.total_amount,
-//       })),
-//     };
-//     onChildDataChange(invoiceData);
-//   }, [state.addedItems, state.shippingCost, grandTotal, onChildDataChange]);
- 
   return (
-    <div class="row my-3">
-    <div class="col-md-12">
-        <div class="card custom-card">
-            <div class="card-body">
+    <div className="row my-3">
+      <div className="col-md-12">
+        <div className="card custom-card">
+          <div className="card-body">
+            <div className="row">
+              <div className="col-md-12">
+                <table className="table item-table">
+                  <thead>
+                    <tr>
+                      <th>Item</th>
+                      <th>HSN/SAC</th>
+                      <th>Quantity</th>
+                      <th>Price</th>
+                      <th>Total Amount</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="align-middle">
+                        <select className="form-control" onChange={handleProductChange} value={state.selectedProduct}>
+                          <option value="">--Select Product--</option>
+                          {state.itemList?.map((option, index) => (
+                            <option key={index} value={option?.id}>
+                              {option?.name}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="align-middle">{state.hsn}</td>
+                      <td className="align-middle">
+                        <div className="input-group">
+                          <input
+                            className="form-control"
+                            type="number"
+                            value={state.quantity}
+                            onChange={(e) => handleInputChange('quantity', e.target.value)}
+                            style={{ width: '40px', padding: '0.4rem' }}
+                          />
+                          <select className="form-control" value={state.unit_id} onChange={(e) => handleInputChange('unit_id', e.target.value)}>
+                            <option value="">--Select Unit--</option>
+                            {state?.units?.map((unit, index) => (
+                              <option key={index} value={unit?.id}>
+                                {unit?.unit}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </td>
+                      <td className="align-middle">
+                        <input type="number" className="form-control" value={state.price} onChange={(e) => handleInputChange('price', e.target.value)} style={{ width: '80px', padding: '0.4rem' }} />
+                      </td>
+                      <td className="align-middle">₹{(state.price * state.quantity).toFixed(2)}</td>
+                      <td className="align-middle">
+                        <button className="btn-sm btn-success" onClick={handleAddItem}>
+                          Add
+                        </button>
+                      </td>
+                    </tr>
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <table class="table item-table">
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>HSN/SAC</th>
-                                    <th>Quantity</th>
-                                    <th>Price</th>
-                                    <th>Total Amount</th>
-                                    <th>&nbsp;</th>
-                                </tr>
-                            </thead>
+                    {/* Render the added items dynamically */}
+                    {state.addedItems?.map((item, index) => (
+                      <tr key={index}>
+                        <td className="align-middle">
+                          <select className="form-control" value={item.item_id} onChange={(e) => handleItemChange(index, 'item_id', e.target.value)}>
+                            <option value="">--Select Product--</option>
+                            {state.itemList?.map((option, idx) => (
+                              <option key={idx} value={option.id}>
+                                {option.name}
+                              </option>
+                            ))}
+                          </select>
+                        </td>
+                        <td className="align-middle">{item.hsn}</td>
+                        <td className="align-middle">
+                          <div className="input-group">
+                            <input
+                              className="form-control"
+                              type="number"
+                              value={item.quantity}
+                              onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
+                              style={{ width: '40px', padding: '0.4rem' }}
+                            />
+                            <select className="form-control" value={item.unit_id} onChange={(e) => handleItemChange(index, 'unit_id', e.target.value)}>
+                              <option value="">--Select Unit--</option>
+                              {state?.units?.map((unit, idx) => (
+                                <option key={idx} value={unit?.id}>
+                                  {unit?.unit}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </td>
+                        <td className="align-middle">
+                          <input
+                            type="number"
+                            className="form-control"
+                            value={item.price}
+                            onChange={(e) => handleItemChange(index, 'price', e.target.value)}
+                            style={{ width: '80px', padding: '0.4rem' }}
+                          />
+                        </td>
+                        <td className="align-middle">₹{item.sub_total}</td>
+                        <td className="align-middle">
+                          <button className="btn-sm btn-danger" onClick={() => handleRemoveItem(index)}>
+                            Remove
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
 
-                            <tbody>
-                                <tr>
-                                    <td class="align-middle">
-                                        <select class="form-control" name="item[]">
-                                            <option value="">--Select Product--</option>
-                                            {state.itemList?.map((option, index) => (
-              <option key={index} value={option?.id}>
-                {option?.name}
-              </option>
-            ))}
-                                        </select>
-                                    </td>
-                                    <td class="align-middle">8320836</td>
-                                    <td class="align-middle">
-                                        <div class="input-group">
-                                            <input class="form-control" type="text"   style={{width:"40px",padding:" 0.4rem"}}/>
-                                            <select class="form-control" name="unit[]">
-                                                <option value="">--Select Unit--</option>
-                                                {state?.units?.map((unit, index) => (
-                                               <option key={index} value={unit?.id}>
-                                                  {unit?.unit}
-                                                   </option>
-                                                     ))}
-                                            </select>
-                                        </div>
-                                    </td>
-                                    <td class="align-middle">
-                                        <input type="text" class="form-control" name="price"  style={{width:"40px",padding:" 0.4rem"}}/>
-                                    </td>
-                                    <td class="align-middle">₹4,739.00</td>
-                                    <td class="align-middle">
-                                        <button class="btn-sm btn-success">Add</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="align-middle">
-                                        <select class="form-control" name="item[]">
-                                            <option value="">--Select Product--</option>
-                                            <option value="product1">Aquarium Starter Kit</option>
-                                            <option value="product2">Premium Fish Food</option>
-                                            <option value="product3">Aquarium Heater</option>
-                                            <option value="product4">Water Filtration System</option>
-                                            <option value="product5">Decorative Aquarium Plants</option>
-                                            <option value="product6">Aquarium LED Lighting</option>
-                                            <option value="product7">Fish Tank Cleaning Tools</option>
-                                        </select>
-                                    </td>
-                                    <td class="align-middle">8320836</td>
-                                    <td class="align-middle">
-                                        <div class="input-group">
-                                            <input class="form-control" type="text"  style={{width:"40px",padding:" 0.4rem"}}/>
-                                            <select class="form-control" name="unit[]">
-                                                <option value="">--Select Unit--</option>
-                                                <option value="pieces">Pieces</option>
-                                                <option value="kg">Kilograms (kg)</option>
-                                                <option value="g">Grams (g)</option>
-                                                <option value="liters">Liters (L)</option>
-                                                <option value="ml">Milliliters (mL)</option>
-                                                <option value="pack">Pack</option>
-                                                <option value="box">Box</option>
-                                                <option value="set">Set</option>
-                                            </select>
-                                        </div>
-                                    </td>
-                                    <td class="align-middle">
-                                        <input type="text" class="form-control" name="price"  style={{width:"40px",padding:" 0.4rem"}}/>
-                                    </td>
-                                    <td class="align-middle">₹4,739.00</td>
-                                    <td class="align-middle">
-                                        <button class="btn-sm btn-danger">Remove</button>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td colspan="4" class="text-right align-middle"><strong>Shipping Cost:</strong></td>
-                                    <td colspan="2" class="align-middle"><input type="text" class="form-control" name="shipping_cost"/></td>
-                                </tr>
-
-                                <tr>
-                                    <td colspan="4" class="text-right align-middle"><strong>Grand Total:</strong></td>
-                                    <td colspan="2" class="align-middle">₹75,836.00</td>
-                                </tr>
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
+                    <tr>
+                      <td colSpan="4" className="text-right align-middle">
+                        <strong>Shipping Cost:</strong>
+                      </td>
+                      <td colSpan="2" className="align-middle">
+                        <input type="number" className="form-control" value={state.shippingCost} onChange={(e) => handleInputChange('shippingCost', e.target.value)} />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan="4" className="text-right align-middle">
+                        <strong>Grand Total:</strong>
+                      </td>
+                      <td colSpan="2" className="align-middle">
+                        ₹{(state.addedItems.reduce((sum, item) => sum + parseFloat(item.sub_total), 0) + parseFloat(state.shippingCost || 0)).toFixed(2)}
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tr>
+                    {/* <td colspan="10" className="text-right align-middle">
+                  <button type="button" className="btn btn-default" onClick={handleSubmit}>
+                  Save
+                  </button>
+                </td> */}
+                  </tr>
+                </table>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
   );
 };
 

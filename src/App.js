@@ -66,6 +66,8 @@ import DividendRegister from "./component/DividendRegister.jsx"
 import Loanandguarantee from "./component/Loanandguarantee.jsx"
 
 import AddPurchaseOrder from "./component/AddPurchaseOrder.jsx"
+import PurchaseOrderList from "./component/PurchaseOrderList.jsx"
+import EditPurchaseOrder from "./component/EditPurchaseOrder.jsx"
 
 // share Debenture
 
@@ -147,7 +149,12 @@ function App() {
             <Route exact path="/registers/loanandguarantee" element={<Loanandguarantee/>} />
 
             {/* PurchaseOrder */}
-            <Route exact path="/purchase/addpurchaseorder" element={<AddPurchaseOrder/>} />            {/* share-transfer */}
+            <Route exact path="/purchase/addpurchaseorder" element={<AddPurchaseOrder/>} />
+            <Route exact path="/purchase/purchaseorderlist" element={<PurchaseOrderList/>} />
+            <Route exact path="/purchase/editpurchaseorder/:id" element={<EditPurchaseOrder/>} />
+
+
+           {/* share-transfer */}
             <Route exact path="/registers/debanturetransfer" element={<DebantureTransfer/>} />
             <Route exact path="/share-transfer/list" element={<ListShareTransfer/>} />
             <Route exact path="/share-transfer/edit/:id" element={<EditShareTransfer/>} />
