@@ -68,7 +68,7 @@ const  Registers= () => {
                                         <a onClick={() => navigate('/farmer/list')}  className="btn register-link">Farmer's Data</a><br></br>
                                         <a  className="btn register-link">Share Certificates</a><br></br>
                                         <a  className="btn register-link">Compliance</a><br></br>
-                                        <a  className="btn register-link">Company Documents</a><br></br>
+                                        <a   onClick={() => navigate('/company/ducuments')} className="btn register-link">Company Documents</a><br></br>
                                         <a  onClick={() => navigate('/management-cost/list')} className="btn register-link" >Management Cost</a><br></br>
                                     </div>
                                     <div className="col-md-4 text-center">

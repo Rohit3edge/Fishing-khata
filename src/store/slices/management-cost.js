@@ -38,3 +38,21 @@ export const UpdateManagementCost = createAsyncThunk(
         }
     }
 );
+
+export const EditComapnyDucuments = createAsyncThunk(
+    "/post/editcomapnyducuments",
+    async (item,thunkAPI) => {
+        try {
+            const data = await ManagementCostService.EditComapnyDucuments(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);

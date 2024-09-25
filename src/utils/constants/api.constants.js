@@ -99,8 +99,11 @@ export const API_PATHS = {
   ShareTransferEdit :"/share-transfer/detail",
   ShareTransferUpdate :"/share-transfer/update",
 
-  // PurchaseService
+ // ComapnyDucuments
+  ComapnyDucumentsedit :"/client/documents",
 
+
+  // PurchaseService 
  addpurchaseorders: "/purchase-orders/add",
  purchaseorderslist:"/purchase-orders/list",
  singledetailspurchaseorders:"/purchase-orders/get",
