@@ -99,6 +99,9 @@ export const API_PATHS = {
   ShareTransferEdit :"/share-transfer/detail",
   ShareTransferUpdate :"/share-transfer/update",
 
+  // ComapnyDucuments
+  ComapnyDucumentsedit :"/client/documents",
+
 
   
 

@@ -73,6 +73,13 @@ import ListShareTransfer from "./component/ListShareTransfer.jsx"
 import EditShareTransfer from "./component/EditShareTransfer.jsx"
 
 
+// Company Ducuments
+import CompanyDucuments from "./component/CompanyDucuments.jsx"
+
+
+
+
+
 
 
 function App() {
@@ -150,7 +157,10 @@ function App() {
             <Route exact path="/purchase/addpurchaseorder" element={<AddPurchaseOrder/>} />            {/* share-transfer */}
             <Route exact path="/registers/debanturetransfer" element={<DebantureTransfer/>} />
             <Route exact path="/share-transfer/list" element={<ListShareTransfer/>} />
-            <Route exact path="/share-transfer/edit/:id" element={<EditShareTransfer/>} />
+            <Route exact path="/share-transfer/edit/:id" element={<EditShareTransfer/>} /> 
+            {/* Company Ducuments */} 
+            <Route exact path="/company/ducuments" element={<CompanyDucuments/>} />
+
 
 
 
