@@ -21,7 +21,7 @@ class ListManagementCost {
         .then((response) => response.data);
     }
 
-    static UpdateManagementCost(item) {
+  static UpdateManagementCost(item) {
         const api = `${API_PATHS.Managementupdate}`;
         return axios
         .post(api,item,{
@@ -50,6 +50,24 @@ class ListManagementCost {
       })
       .then((response) => response.data);
   }
+
+  static UpdateComapnyDucuments(item) {
+    const api = `${API_PATHS.ComapnyDucumentsUpdate}`;
+      const formData = new FormData();
+  
+      for (const key in item) {
+        if (item.hasOwnProperty(key)) {
+          formData.append(key, item[key]);
+        }
+      }
+      return axios
+        .post(api, formData, {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        })
+        .then((response) => response.data);
+}
 
 
       

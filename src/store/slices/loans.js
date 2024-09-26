@@ -1,13 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import  ManagementCostService from "../../services/management-cost.servics"
+import LoansService from "../../services/loans.service"
 
 
-
-export const EditManagementCost = createAsyncThunk(
-    "/post/editmanagementcost",
+export const ListLoans = createAsyncThunk(
+    "/post/listloans",
     async (item,thunkAPI) => {
         try {
-            const data = await ManagementCostService.EditManagementCost(item);
+            const data = await LoansService.ListLoans(item);
             return data;
         } catch (error) {
             const message =
@@ -21,11 +20,12 @@ export const EditManagementCost = createAsyncThunk(
     }
 );
 
-export const UpdateManagementCost = createAsyncThunk(
-    "/post/updatemanagementcost",
+
+export const AddLoans = createAsyncThunk(
+    "/post/addloans",
     async (item,thunkAPI) => {
         try {
-            const data = await ManagementCostService.UpdateManagementCost(item);
+            const data = await LoansService.AddLoans(item);
             return data;
         } catch (error) {
             const message =
@@ -39,11 +39,11 @@ export const UpdateManagementCost = createAsyncThunk(
     }
 );
 
-export const EditComapnyDucuments = createAsyncThunk(
-    "/post/editcomapnyducuments",
+export const EditLoans = createAsyncThunk(
+    "/post/editloans",
     async (item,thunkAPI) => {
         try {
-            const data = await ManagementCostService.EditComapnyDucuments(item);
+            const data = await LoansService.EditLoans(item);
             return data;
         } catch (error) {
             const message =
@@ -57,11 +57,11 @@ export const EditComapnyDucuments = createAsyncThunk(
     }
 );
 
-export const UpdateComapnyDucuments = createAsyncThunk(
-    "/post/updatecomapnyducuments",
+export const UpdateLoans = createAsyncThunk(
+    "/post/updateloans",
     async (item,thunkAPI) => {
         try {
-            const data = await ManagementCostService.UpdateComapnyDucuments(item);
+            const data = await LoansService.UpdateLoans(item);
             return data;
         } catch (error) {
             const message =

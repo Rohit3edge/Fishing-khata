@@ -76,6 +76,15 @@ import EditShareTransfer from "./component/EditShareTransfer.jsx"
 // Company Ducuments
 import CompanyDucuments from "./component/CompanyDucuments.jsx"
 
+// Dividend
+import ListDividend from "./component/ListDividend.jsx"
+import EditDividend from "./component/EditDividend.jsx"
+
+// Loans
+import ListLoans from "./component/ListLoans.jsx"
+import EditLoans from "./component/EditLoans.jsx"
+
+
 
 
 
@@ -160,6 +169,16 @@ function App() {
             <Route exact path="/share-transfer/edit/:id" element={<EditShareTransfer/>} /> 
             {/* Company Ducuments */} 
             <Route exact path="/company/ducuments" element={<CompanyDucuments/>} />
+
+            {/* Dividend */}
+            <Route exact path="/dividend/list" element={<ListDividend/>} />
+            <Route exact path="/dividend/edit/:id" element={<EditDividend/>} />
+
+            {/* Loans */}
+            <Route exact path="/loans/list" element={<ListLoans/>} />
+            <Route exact path="/loans/edit/:id" element={<EditLoans/>} />
+
+
 
 
 

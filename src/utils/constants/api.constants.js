@@ -101,6 +101,21 @@ export const API_PATHS = {
 
   // ComapnyDucuments
   ComapnyDucumentsedit :"/client/documents",
+  ComapnyDucumentsUpdate :"/client/upload-documents",
+
+  // dividend
+   DividendList :"/dividend/list",
+   DividendAdd :"/dividend/add",
+   DividendEdit :"/dividend/detail",
+   DividendUpdate :"/dividend/update",
+
+  //  loads
+  LoansList :"/loans/list",
+  LoansAdd :"/loans/add",
+  LoansEdit :"/loans/detail",
+  LoansUpdate :"/loans/update",
+
+
 
 
   

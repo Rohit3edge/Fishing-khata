@@ -1,22 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Navbarside from './Navbarside';
 import Footer from './Footer';
 import { useDispatch, useSelector } from 'react-redux';
-import { AddDividend } from '../store/slices/dividend';
+import { UpdateDividend ,EditDividend } from '../store/slices/dividend';
 import Loader from '../common/Loader';
 
-const DividendRegister = () => {
+const DividendRegisterEdit = () => {
+const { id } = useParams();
+  const dividendId = id;
+  
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
   const user = JSON.parse(localStorage.getItem('user'));
-  const id = user?.data?.id;
+  const currentDate = new Date().toISOString().split('T')[0];
+  const User_id = user?.data?.id;
   const Name = user?.data?.company_name;
 
   const [formData, setFormData] = useState({
-    profile_id: id || '',
+    profile_id: User_id || '',
+    id:dividendId || '',
     name: '',
     folio: '',
     name_address: '',
@@ -35,17 +40,58 @@ const DividendRegister = () => {
 
   const [errors, setErrors] = useState({});
 
+  useEffect(() => {
+    if (dividendId && User_id) {
+      setIsLoading(true);
+      dispatch(EditDividend({ profile_id: User_id, id: dividendId }))
+        .unwrap()
+        .then((data) => {
+          setIsLoading(false);
+          const dividend = data?.data;
+          setFormData({
+                name: dividend?.name || '',
+                profile_id: User_id || '',
+                id: dividend?.id || '',
+                folio: dividend?.folio || '',
+                name_address: dividend?.name_address || '',
+                pan: dividend?.pan || '',
+                amount_paid_on_share: dividend?.amount_paid_on_share || '',
+                dividend_amount_paid: dividend?.dividend_amount_paid || '',
+                period: dividend?.period || '',
+                declaration_date: dividend?.declaration_date || '',
+                gross_dividend: dividend?.gross_dividend || '',
+                tds: dividend?.tds || '',
+                payable_amount: dividend?.payable_amount || '',
+                warrant_no: dividend?.warrant_no || '',
+                payment_date: dividend?.payment_date || '',
+                remarks:dividend?.remarks || '',
+            });
+        })
+        .catch(({ message }) => {
+          setIsLoading(false);
+          console.log(message);
+        });
+    }
+  }, [dispatch, dividendId]);
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
+    if (name === 'opening_blance') {
+      if (/^\d*\.?\d{0,2}$/.test(value)) {
+        setFormData((prevState) => ({
+          ...prevState,
+          [name]: value,
+        }));
+      }
+    } else {
       setFormData((prevState) => ({
         ...prevState,
         [name]: value,
       }));
+    }
   };
-
-
 
   const validate = () => {
     let newErrors = {};
@@ -60,12 +106,12 @@ const DividendRegister = () => {
     e.preventDefault();
     if (validate()) {
       setIsLoading(true);
-      dispatch(AddDividend(formData))
+      dispatch(UpdateDividend(formData))
         .unwrap()
         .then((data) => {
           setIsLoading(false);
           setFormData({
-            profile_id: '',
+            profile_id:User_id,
             name: '',
             folio: '',
             name_address: '',
@@ -119,19 +165,19 @@ const DividendRegister = () => {
             <div className="container">
             <div className="page-header">
                 <div>
-                  <h2 className="main-content-title tx-24 mg-b-5">Dividend Create</h2>
+                  <h2 className="main-content-title tx-24 mg-b-5">Dividend Edit</h2>
                   <ol className="breadcrumb">
                     <li className="breadcrumb-item">
                       <a href="#">Dividend List</a>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                        Dividend Create
+                        Dividend Edit
                     </li>
                   </ol>
                 </div>
 
                 <div class="d-flex justify-content-end">
-                  <button className="btn ripple btn-default"  onClick={handleSubmit}>Save</button>
+                  <button className="btn ripple btn-default"  onClick={handleSubmit}>Update</button>
                   <button className="btn btn-cancel" onClick={() => navigate('/dividend/list')}>Cancel</button>
                 </div>
               </div>
@@ -236,4 +282,4 @@ const DividendRegister = () => {
   );
 };
 
-export default DividendRegister ;
+export default DividendRegisterEdit ;

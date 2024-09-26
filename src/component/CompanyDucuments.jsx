@@ -1,6 +1,6 @@
 import React, { useState ,useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { EditComapnyDucuments,UpdateManagementCost } from '../store/slices/management-cost';
+import { EditComapnyDucuments,UpdateComapnyDucuments } from '../store/slices/management-cost';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../common/Loader';
 import Navbarside from './Navbarside';
@@ -8,7 +8,6 @@ import Footer from './Footer';
 
 const ListManagement = () => {
   
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -21,12 +20,12 @@ const ListManagement = () => {
   const currentDate = new Date().toISOString().split('T')[0];
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
-    profile_id: UserID,
-    registration_certificate: '',
-    memorandum: '',
-    association_articles: '',
-    pan_file: '',
-    tan_file: '',
+      id:UserID || '' ,
+      registration_certificate: '',
+      memorandum: '',
+      association_articles: '',
+      pan_file: '',
+      tan_file: '',
   });
 
   const [showProductDetails, setShowProductDetails] = useState(true);
@@ -35,21 +34,19 @@ const ListManagement = () => {
   useEffect(() => {
     if (UserID) {
       setIsLoading(true);
-      dispatch(EditComapnyDucuments({ profile_id: UserID})) 
+      dispatch(EditComapnyDucuments({ profile_id: UserID}))
         .unwrap()
         .then((data) => {
           setIsLoading(false);
           const item = data?.documents;
           console.log('item',item);
           setFormData({
-                id : item?.id || '',
-                profile_id : UserID|| '',
-                cost1_name:item?.cost1_name || '',
-                registration_certificate: item?.registration_certificate || '',
-                memorandum: item?.memorandum || '',
-                association_articles: item?.association_articles || '',
-                pan_file: item?.pan_file || '',
-                tan_file: item?.tan_file || '',
+              id : UserID  || '',
+              registration_certificate: item?.registration_certificate || '',
+              memorandum: item?.memorandum || '',
+              association_articles: item?.association_articles || '',
+              pan_file: item?.pan_file || '',
+              tan_file: item?.tan_file || '',
           });
         })
         .catch(({ message }) => {
@@ -60,45 +57,75 @@ const ListManagement = () => {
   }, [dispatch, UserID]);
   
 
-  const handleRadioChange = (e) => {
-    const { value } = e.target;
-    setFormData({ ...formData, type: value });
-    setShowProductDetails(value === 'Product');
-  };
+  const [files, setFiles] = useState({
+    registration_certificate: null,
+    memorandum: null,
+    association_articles: null,
+    pan_file: null,
+    tan_file: null,
+  });
+  const [validationErrors, setValidationErrors] = useState({
+    registration_certificate: null,
+    memorandum: null,
+    association_articles: null,
+    pan_file: null,
+    tan_file: null,
+  });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-  
-    if (name === 'sale_price' || name === 'purchase_price') {
-      if (/^\d*\.?\d{0,2}$/.test(value)) {
-        setFormData(prevState => ({
-          ...prevState,
-          [name]: value
-        }));
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    const file = files[0];
+    let error = null;
+
+    if (file) {
+      const allowedExtensions = ['.jpg', '.png', '.jpeg', '.pdf', '.doc', '.docx'];
+      const fileExtension = file.name.split('.').pop().toLowerCase();
+
+      if (!allowedExtensions.includes('.' + fileExtension)) {
+        error = 'Invalid file type.';
       }
-    } else {
-      setFormData(prevState => ({
-        ...prevState,
-        [name]: value
-      }));
     }
+
+    setFiles((prevFiles) => {
+      const updatedFiles = {
+        ...prevFiles,
+        [name]: file,
+      };
+      console.log('Updated files state:', updatedFiles); // Debugging line
+      return updatedFiles;
+    });
+
+    setValidationErrors((prevErrors) => ({
+       ...prevErrors,
+       [name]: error,
+    }));
   };
   
-  
+  console.log('file',files);
+
   const handleSubmit = () => {
+    const submitData = new FormData();
+
+    for (let key in files) {
+      if (files[key]) {
+        // Only append if a file is selected
+        submitData.append(key, files[key]);
+      }
+    }
+    
     console.log(formData);
     setIsLoading(true);
-    dispatch(UpdateManagementCost(formData))
+    dispatch(UpdateComapnyDucuments(formData))
       .unwrap()
       .then((data) => {
         setIsLoading(false);
         setFormData({
-          profile_id: UserID,
+          id: UserID,
           registration_certificate: '',
-            memorandum: '',
-            association_articles: '',
-            pan_file: '',
-            tan_file: '',
+          memorandum: '',
+          association_articles: '',
+          pan_file: '',
+          tan_file: '',
         });
         navigate('/management-cost/list');
       })
@@ -161,7 +188,8 @@ const ListManagement = () => {
                           <div class="row">
                               <div class="col-md-8">
                                   <label>Certificate of Registration</label>
-                                  <input name="registration_certificate" type="file" class="form-control" onChange={handleInputChange} ></input>
+                                  <input name="registration_certificate" type="file" accept=".jpeg, .png, .jpg, .webp, .svg, .pdf, .doc, .docx" class="form-control" onChange={handleFileChange} ></input>
+                                  {validationErrors.registration_certificate && <p className="text-danger">{validationErrors.registration_certificate}</p>}
                               </div>
                               <div className="col-sm-4 my-4">
                               {formData.registration_certificate &&
@@ -179,7 +207,7 @@ const ListManagement = () => {
                           <div class="row">
                               <div class="col-md-8">
                                   <label>Memorandum</label>
-                                  <input name="memorandum" type="file" class="form-control" onChange={handleInputChange} ></input>
+                                  <input name="memorandum" type="file" accept=".jpeg, .png, .jpg, .webp, .svg, .pdf, .doc, .docx" class="form-control" onChange={handleFileChange} ></input>
                               </div>
                               <div className="col-sm-4 my-4">
                                 {formData.memorandum &&
@@ -197,7 +225,7 @@ const ListManagement = () => {
                           <div class="row">
                               <div class="col-md-8">
                                   <label>Articles of Association</label>
-                                  <input name="association_articles" type="file" class="form-control" onChange={handleInputChange} ></input>
+                                  <input name="association_articles" type="file" accept=".jpeg, .png, .jpg, .webp, .svg, .pdf, .doc, .docx" class="form-control" onChange={handleFileChange} ></input>
                               </div>
                               <div className="col-sm-4 my-4">
                                    {formData.association_articles &&
@@ -215,7 +243,7 @@ const ListManagement = () => {
                           <div class="row">
                               <div class="col-md-8">
                                   <label>Company PAN</label>
-                                  <input name="pan_file" type="file" class="form-control" onChange={handleInputChange} ></input>
+                                  <input name="pan_file" type="file" accept=".jpeg, .png, .jpg, .webp, .svg, .pdf, .doc, .docx" class="form-control" onChange={handleFileChange} ></input>
                               </div>
                               <div className="col-sm-4 my-4">
                                    {formData.pan_file &&
@@ -233,7 +261,7 @@ const ListManagement = () => {
                           <div class="row">
                               <div class="col-md-8">
                                   <label>Company TAN</label>
-                                  <input name="tan_file" type="file" class="form-control" onChange={handleInputChange} ></input>
+                                  <input name="tan_file" type="file" accept=".jpeg, .png, .jpg, .webp, .svg, .pdf, .doc, .docx" class="form-control" onChange={handleFileChange} ></input>
 
                               </div>
                               <div className="col-sm-4 my-4">
