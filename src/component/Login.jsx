@@ -60,7 +60,7 @@ const Login = () => {
         .then((data) => {
           console.log(data?.user?.data);
           const loginTime = new Date();
-          loginTime.setMinutes(loginTime.getMinutes() + 40); // Add 10 minutes to the login time
+          loginTime.setMinutes(loginTime.getMinutes() +100); // Add 10 minutes to the login time
           Cookies.set('user', JSON.stringify(data?.user?.data), { expires: loginTime });
           setAlertEmail('');
           setPassword('');

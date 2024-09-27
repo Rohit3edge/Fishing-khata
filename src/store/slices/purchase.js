@@ -71,3 +71,100 @@ export const GetSingleDetailsPurchaseorders = createAsyncThunk(
         }
     }
 );
+
+export const GetAdditionalTax = createAsyncThunk(
+    "/post/addtax",
+    async (item,thunkAPI) => {
+        try {
+            const data = await PurchaseService.GetAdditionalTax(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+
+ // purchasevouche
+
+ export const CreatePurchaseVoucher = createAsyncThunk(
+    "/post/createpurchasevoucher",
+    async (item,thunkAPI) => {
+        try {
+            const data = await PurchaseService.CreatePurchaseVoucher(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+
+export const CreatePurchaseVoucherList = createAsyncThunk(
+    "/post/createpurchasevoucherlist",
+    async (item,thunkAPI) => {
+        try {
+            const data = await PurchaseService.CreatePurchaseVoucherList(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+
+export const UpdatePurchaseVoucher = createAsyncThunk(
+    "/post/updatepurchasevoucher",
+    async (item,thunkAPI) => {
+        try {
+            const data = await PurchaseService.UpdatePurchaseVoucher(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+
+export const GetPurchaseVoucherDetail = createAsyncThunk(
+    "/post/getpurchasevoucherdetail",
+    async (item,thunkAPI) => {
+        try {
+            const data = await PurchaseService.GetPurchaseVoucherDetail(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+

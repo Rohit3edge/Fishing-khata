@@ -139,8 +139,8 @@ const Navbarside = () => {
                 {show === "Purchase" && (
                   <ul className="submenu">
                     <li className="submenu-item">
-                      <NavLink to="/Sale/Submenu1" className="menu-title">
-                        Purchase Bill
+                      <NavLink to="/purchase/purchasevoucherlist" className="menu-title">
+                        Purchase Voucher
                       </NavLink>
                     </li>
                     <li className="submenu-item">

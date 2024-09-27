@@ -1,5 +1,5 @@
 import React from 'react';
-const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, state, handleItemChange }) => (
+const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, state, handleItemChange,isPurchase }) => (
   <>
     {addedItems?.map((item, index) => (
       <tr key={index}>
@@ -56,6 +56,16 @@ const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, 
             </select>
           </div>
         </td>
+        {isPurchase && (
+          <td class="align-middle">
+            <div class="input-group">
+              <select class="form-control" name="add_tax" value={item?.add_tax} onChange={(e) => handleItemChange('add_tax', e.target.value,index)} >
+                <option value="0">None</option>
+                <option value="2@Cess">2@Cess</option>
+              </select>
+            </div>
+          </td>
+        )}
         <td>₹{Number(item.total_amount || 0).toFixed(2)}</td>
         <td>
           <button className="btn-sm btn-danger" onClick={() => handleRemoveItem(index)}>

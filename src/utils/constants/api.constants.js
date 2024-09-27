@@ -107,6 +107,12 @@ export const API_PATHS = {
  addpurchaseorders: "/purchase-orders/add",
  purchaseorderslist:"/purchase-orders/list",
  singledetailspurchaseorders:"/purchase-orders/get",
- updatepurchaseorders :"/purchase-orders/update"
+ updatepurchaseorders :"/purchase-orders/update",
+ add_tax:"/tax/list",
+
+ createpurchasevoucher: "/purchase-invoice/add",
+ purchasevouchelist:"/purchase-invoice/list",
+ updatepurchasevoucher:"/invoice/update",
+ GetPurchaseVoucherDetail:"/purchase-invoice/get"
 
 }

@@ -68,6 +68,9 @@ import Loanandguarantee from "./component/Loanandguarantee.jsx"
 import AddPurchaseOrder from "./component/AddPurchaseOrder.jsx"
 import PurchaseOrderList from "./component/PurchaseOrderList.jsx"
 import EditPurchaseOrder from "./component/EditPurchaseOrder.jsx"
+import PurchaseBillList from "./component/PurchaseBillList.jsx"
+import AddPurchaseBill from "./component/AddPurchaseBill.jsx"
+import EditPurchaseBill from "./component/EditPurchaseBill.jsx"
 
 // share Debenture
 
@@ -159,6 +162,9 @@ function App() {
             <Route exact path="/purchase/addpurchaseorder" element={<AddPurchaseOrder/>} />
             <Route exact path="/purchase/purchaseorderlist" element={<PurchaseOrderList/>} />
             <Route exact path="/purchase/editpurchaseorder/:id" element={<EditPurchaseOrder/>} />
+            <Route exact path="/purchase/purchasevoucherlist" element={<PurchaseBillList/>} />
+            <Route exact path="/purchase/addpurchasevoucher" element={<AddPurchaseBill/>} />
+            <Route exact path="/purchase/editpurchasevoucher/:id" element={<EditPurchaseBill/>} />
 
 
            {/* share-transfer */}

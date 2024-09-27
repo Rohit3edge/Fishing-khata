@@ -472,6 +472,7 @@ const UpdateInvoiceSecond = ({ onChildDataChange, onSubmit,data }) => {
                 state={state}
                 calculateTotal={calculateTotal}
                 handleAddItem={handleAddItem}
+                isPurchase={false}
               />
               <tbody>
                 <ItemRow
@@ -482,6 +483,7 @@ const UpdateInvoiceSecond = ({ onChildDataChange, onSubmit,data }) => {
                   state={state}
                   handleItemChange={handleItemChange}
                   handleRemoveItem={handleRemoveItem}
+                  isPurchase={false}
                 />
               </tbody>
               <tr>
