@@ -1,13 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import  ManagementCostService from "../../services/management-cost.servics"
+import DividendService from "../../services/dividend.service"
 
 
-
-export const EditManagementCost = createAsyncThunk(
-    "/post/editmanagementcost",
+export const ListDividend = createAsyncThunk(
+    "/post/listdividend",
     async (item,thunkAPI) => {
         try {
-            const data = await ManagementCostService.EditManagementCost(item);
+            const data = await DividendService.ListDividend(item);
             return data;
         } catch (error) {
             const message =
@@ -21,11 +20,12 @@ export const EditManagementCost = createAsyncThunk(
     }
 );
 
-export const UpdateManagementCost = createAsyncThunk(
-    "/post/updatemanagementcost",
+
+export const AddDividend = createAsyncThunk(
+    "/post/adddividend",
     async (item,thunkAPI) => {
         try {
-            const data = await ManagementCostService.UpdateManagementCost(item);
+            const data = await DividendService.AddDividend(item);
             return data;
         } catch (error) {
             const message =
@@ -39,11 +39,11 @@ export const UpdateManagementCost = createAsyncThunk(
     }
 );
 
-export const EditComapnyDucuments = createAsyncThunk(
-    "/post/editcomapnyducuments",
+export const EditDividend = createAsyncThunk(
+    "/post/editdividend",
     async (item,thunkAPI) => {
         try {
-            const data = await ManagementCostService.EditComapnyDucuments(item);
+            const data = await DividendService.EditDividend(item);
             return data;
         } catch (error) {
             const message =
@@ -57,11 +57,11 @@ export const EditComapnyDucuments = createAsyncThunk(
     }
 );
 
-export const UpdateComapnyDucuments = createAsyncThunk(
-    "/post/updatecomapnyducuments",
+export const UpdateDividend = createAsyncThunk(
+    "/post/updatedividend",
     async (item,thunkAPI) => {
         try {
-            const data = await ManagementCostService.UpdateComapnyDucuments(item);
+            const data = await DividendService.UpdateDividend(item);
             return data;
         } catch (error) {
             const message =
