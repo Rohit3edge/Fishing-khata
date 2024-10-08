@@ -207,6 +207,74 @@ class SaleService {
           })
           .then((response) => response.data);
       }
+
+      // creditnote
+      static GetCreditNotelist(item) {
+        const api = `${API_PATHS.creditnotelist}`;
+        const formData = new FormData();
+    
+        for (const key in item) {
+          if (item.hasOwnProperty(key)) {
+            formData.append(key, item[key]);
+          }
+        }
+    
+        return axios
+          .post(api, formData, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .then((response) => response.data);
+      }
+
+
+      static AddCreditnote(item) {
+        const api = `${API_PATHS.addcreditnote}`;
+    
+        return axios
+          .post(api, item, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .then((response) => response.data);
+      }
+
+
+
+      static UpdateCreditnote(item) {
+        const api = `${API_PATHS.updatecreditnote}`;
+    
+        return axios
+          .post(api, item, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .then((response) => response.data);
+      }
+
+      static GetSingleCreditnote(item) {
+        const api = `${API_PATHS.getsinglecreditnote}`;
+        const formData = new FormData();
+    
+        for (const key in item) {
+          if (item.hasOwnProperty(key)) {
+            formData.append(key, item[key]);
+          }
+        }
+    
+        return axios
+          .post(api, formData, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .then((response) => response.data);
+      }
+
+
 }
 
 export default SaleService;

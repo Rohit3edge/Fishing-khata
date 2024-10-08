@@ -39,7 +39,7 @@ const AddPurchaseBillSec = ({ onChildDataChange,data }) => {
       const data = await dispatch(Getunits()).unwrap();
       setState((prevState) => ({ ...prevState, units: data.data }));
     } catch (error) {
-      alert(error.message);
+      console.log(error.message);
     }
   }, [dispatch]);
 
@@ -58,7 +58,7 @@ const AddPurchaseBillSec = ({ onChildDataChange,data }) => {
       console.log( data?.data )
       setState((prevState) => ({ ...prevState, additionaltax: data?.data }));
     } catch (error) {
-      alert(error.message);
+      console.log(error.message);
     }
   }, [dispatch]);
 
@@ -129,7 +129,6 @@ const AddPurchaseBillSec = ({ onChildDataChange,data }) => {
         addedItems: initializedItems,
         taxAmounts: initialTaxAmounts,
         shippingCost: Number(data?.purchase_order?.shipping_cost) || 0,
-
       }));
     }
   }, [data]);
@@ -147,10 +146,13 @@ const AddPurchaseBillSec = ({ onChildDataChange,data }) => {
           const data = await dispatch(Getsingledetail({ profile_id: id, item_id: productId })).unwrap();
           setState((prevState) => ({
             ...prevState,
+            price:data?.data?.purchase_price,
             singleDetail: data?.data,
             unit_id: data?.data?.unit || '',
             tax: data?.data?.tax || 0,
-            price_tax_type: data?.data?.sale_price_tax_type || 'Excluding Tax',
+            price_tax_type: data?.data?.purchase_price_tax_type || 'Excluding Tax',
+            discount_type: data?.data?.discount_type || "Fixed",
+            discount:Number(data?.data?.discount).toFixed(2)||0,
           }));
         } catch (error) {
           console.error(error.message);
@@ -212,8 +214,9 @@ const AddPurchaseBillSec = ({ onChildDataChange,data }) => {
   
 
   const calculateTotal = useMemo(() => {
-    const { singleDetail, quantity, discount, discount_type, tax, price_tax_type, add_tax } = state; // Include add_tax in destructuring
-    let price = Number(singleDetail?.sale_price) || 0;
+    const { quantity, discount, discount_type, tax, price_tax_type, add_tax } = state; // Include add_tax in destructuring
+    console.log("state",state)
+    let price = Number(state.price) || 0;
     let quantityTotal = price * quantity || 0;
     let taxAmount = 0;
     let totalBeforeTax = quantityTotal;
@@ -256,7 +259,12 @@ const AddPurchaseBillSec = ({ onChildDataChange,data }) => {
   
 
   const handleAddItem = () => {
-    const { unit_id, singleDetail, price_tax_type, tax, discount, discount_type, add_tax } = state;
+    const {selectedProduct,quantity, price, unit_id, singleDetail, price_tax_type, tax, discount, discount_type, add_tax } = state;
+    console.log("Please fill",selectedProduct,quantity, price)
+    if (!selectedProduct || quantity <= 0 || price <= 0) {
+      alert('Please fill out all fields correctly.');
+      return;
+    }
   
     // Find the unit name
     const unitName = state.units.find((unit) => unit.id === unit_id)?.unit || '';
@@ -271,7 +279,7 @@ const AddPurchaseBillSec = ({ onChildDataChange,data }) => {
       quantity: state.quantity,
       unit_id: unit_id,
       unit_name: unitName,
-      price: singleDetail?.sale_price,
+      price: state.price,
       price_tax_type: price_tax_type,
       tax: tax,
       tax_type: 'GST',
@@ -343,7 +351,8 @@ const AddPurchaseBillSec = ({ onChildDataChange,data }) => {
       price_tax_type: 'Excluding Tax',
       singleDetail: {},
       unit_id: '',
-      add_tax:''
+      add_tax:'',
+      price:0
     }));
   };
 
@@ -606,6 +615,7 @@ const AddPurchaseBillSec = ({ onChildDataChange,data }) => {
                 calculateTotal={calculateTotal}
                 handleAddItem={handleAddItem}
                 isPurchase={false}
+                isDiscount={true}
               />
               <tbody>
                 <ItemRow
@@ -617,6 +627,7 @@ const AddPurchaseBillSec = ({ onChildDataChange,data }) => {
                   handleItemChange={handleItemChange}
                   handleRemoveItem={handleRemoveItem}
                   isPurchase={false}
+                  isDiscount={true}
                 />
               </tbody>
               {/* <tr>

@@ -121,7 +121,7 @@ const AddParty = () => {
             type: '',
           });
           console.log('Form submitted successfully', data);
-          navigate('/');
+          navigate('/ledger');
         })
         .catch(({ message }) => {
           setIsLoading(false);

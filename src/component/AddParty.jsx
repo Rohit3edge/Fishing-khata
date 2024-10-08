@@ -69,16 +69,17 @@ const AddParty = () => {
 
   const validate = () => {
     let newErrors = {};
+    const phoneNumberPattern = /^[0-9]{10}$/;
     if (!formData.name) newErrors.name = 'Name is required.';
     if (!formData.address) newErrors.address = 'Address is required.';
     if (!formData.email) newErrors.email = 'Email is required.';
-    if (!formData.phone) newErrors.phone = 'Phone number is required.';
+
+    if (!formData.phone || !phoneNumberPattern.test(formData.phone)) {
+      newErrors.phone = 'Please enter a valid 10-digit phone number';
+    }
+  
     if (!formData.state) newErrors.state = 'State is required.';
     if (!formData.gstin) newErrors.gstin = 'GSTIN is required.';
-    if (!formData.opening_blance || parseFloat(formData.opening_blance) <= 0) {
-      newErrors.opening_balance = 'Please enter a valid amount greater than 0.';
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -206,7 +207,7 @@ const AddParty = () => {
                         <div class="row">
                           <div class="col-md-6">
                             <label>Phone Number</label>
-                            <input name="phone" type="text" className="form-control" value={formData.phone} onChange={handleInputChange} />
+                            <input name="phone" type="text"  className={`form-control ${errors.phone ? 'is-invalid' : ''}`} value={formData.phone} onChange={handleInputChange} />
                             {errors.phone && <span className="text-danger">{errors.phone}</span>}
                           </div>
                           <div class="col-md-6">

@@ -113,7 +113,7 @@ const UpdateAddInvoice = () => {
   // Party selection logic
   const partyOptions = listParties.map((party) => ({
     value: party.id,
-    label: party.name,
+    label: party.ledger,
   }));
 
   const handlePartyChange = (selectedOption) => {
@@ -121,17 +121,16 @@ const UpdateAddInvoice = () => {
     if (party) {
       setSelectedPartyDetails({
         address: party.address,
-        gstin: party.gstin,
+        gstin: party.gstn,
         phone: party.phone,
         state: party.state,
-        ledger_id: party.ledger_id,
-        party_id: party.id,
+        ledger_id: party.id,
       });
 
       if (isSameAsBilling) {
         setShippingAddress({
           address: party.address,
-          gstin: party.gstin,
+          gstin: party.gstn,
           phone: party.phone,
           state: party.state,
         });
@@ -180,7 +179,6 @@ const UpdateAddInvoice = () => {
       invoice_prefix:formData.invoice_prefix,
       invoice_id: Number(invoicedetails?.invoice?.id),
       profile_id: Number(userId),
-      party_id: Number(selectedPartyDetails.party_id),
       ledger_id: Number(selectedPartyDetails.ledger_id),
       invoice_number: formData.invoice_number,
       invoice_date: formData.invoice_date,
@@ -273,7 +271,7 @@ const UpdateAddInvoice = () => {
                                   options={partyOptions}
                                   placeholder="--Select Customer--"
                                   onChange={handlePartyChange}
-                                  value={partyOptions.find((option) => option.value === selectedPartyDetails.party_id) || null}
+                                  value={partyOptions.find((option) => option.value === selectedPartyDetails.ledger_id) || null}
                                 />
                               </div>
                             </div>

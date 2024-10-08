@@ -21,6 +21,26 @@ export const login = createAsyncThunk(
 });
 
 
+export const GetClientsDetail = createAsyncThunk(
+    "auth/getclientsdetail",
+    async(item, thunkAPI) => {
+        try {
+            const data = await AuthService.GetClientsDetail(item);
+            return { user: data };
+        } catch (error) {
+            const message = 
+            (error.response &&
+                error.response.data &&
+                error.response.data.messages &&
+                error.response.data.messages.error) || 
+            error.message ||
+            error.toString();
+
+        return thunkAPI.rejectWithValue({ message })
+    }
+});
+
+
 
 
 const initialState = {

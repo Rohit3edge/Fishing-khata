@@ -34,9 +34,9 @@ const InvoiceSecond = ({ onChildDataChange, onSubmit }) => {
   const fetchUnits = useCallback(async () => {
     try {
       const data = await dispatch(Getunits()).unwrap();
-      setState((prevState) => ({ ...prevState, units: data.data }));
+      setState((prevState) => ({ ...prevState, units: data?.data }));
     } catch (error) {
-      alert(error.message);
+      console.log(error.message);
     }
   }, [dispatch]);
 
@@ -66,10 +66,13 @@ const InvoiceSecond = ({ onChildDataChange, onSubmit }) => {
           const data = await dispatch(Getsingledetail({ profile_id: id, item_id: productId })).unwrap();
           setState((prevState) => ({
             ...prevState,
+            price:data?.data?.sale_price,
             singleDetail: data?.data,
             unit_id: data?.data?.unit || '',
             tax: data?.data?.tax || 0,
             price_tax_type: data?.data?.sale_price_tax_type || 'Excluding Tax',
+            discount_type: data?.data?.discount_type || "Fixed",
+            discount:Number(data?.data?.discount).toFixed(2)||0,
           }));
         } catch (error) {
           console.error(error.message);
@@ -129,8 +132,8 @@ const InvoiceSecond = ({ onChildDataChange, onSubmit }) => {
   };
 
   const calculateTotal = useMemo(() => {
-    const { singleDetail, quantity, discount, discount_type, tax, price_tax_type } = state;
-    let price = Number(singleDetail?.sale_price) || 0;
+    const { quantity, discount, discount_type, tax, price_tax_type } = state;
+    let price = Number(state.price) || 0;
     let quantityTotal = price * quantity || 0;
     let taxAmount = 0;
     let totalBeforeTax = quantityTotal;
@@ -171,10 +174,14 @@ const InvoiceSecond = ({ onChildDataChange, onSubmit }) => {
   }, [state]);
 
   const handleAddItem = () => {
-    const { unit_id, singleDetail, price_tax_type, tax, discount, discount_type } = state;
-
+    const { selectedProduct,quantity, price,unit_id, singleDetail, price_tax_type, tax, discount, discount_type } = state;
+    
+    if (!selectedProduct || quantity <= 0 || price <= 0) {
+      alert('Please fill out all fields correctly.');
+      return;
+    }
     // Find the unit name based on the unit_id
-    const unitName = state.units.find((unit) => unit.id === unit_id)?.unit || '';
+    const unitName = state?.units?.find((unit) => unit.id === unit_id)?.unit || '';
 
     // Calculate the total for the current item
     const newItem = {
@@ -183,7 +190,7 @@ const InvoiceSecond = ({ onChildDataChange, onSubmit }) => {
       quantity: state.quantity,
       unit_id: unit_id,
       unit_name: unitName, // Use the unitName here
-      price: singleDetail?.sale_price,
+      price: state.price,
       price_tax_type: price_tax_type,
       tax: tax,
       tax_type: 'GST',
@@ -232,6 +239,7 @@ const InvoiceSecond = ({ onChildDataChange, onSubmit }) => {
       price_tax_type: 'Excluding Tax',
       singleDetail: {},
       unit_id: '',
+      price:0
     }));
   };
   const handleItemChange = useCallback(
@@ -389,8 +397,8 @@ const InvoiceSecond = ({ onChildDataChange, onSubmit }) => {
       ?.toFixed(2);
     console.log(gstTotal);
     const invoiceData = {
-      sub_total: state.addedItems.reduce((sum, item) => sum + Number(item.sub_total), 0).toFixed(2),
-      shipping_cost: Number(state.shippingCost)?.toFixed(2),
+      sub_total: state?.addedItems?.reduce((sum, item) => sum + Number(item.sub_total), 0).toFixed(2),
+      shipping_cost: Number(state?.shippingCost)?.toFixed(2),
       grand_total: grandTotal,
       total_gst: gstTotal,
       invoice_items: state?.addedItems?.map((item) => ({
@@ -427,6 +435,7 @@ const InvoiceSecond = ({ onChildDataChange, onSubmit }) => {
                 state={state}
                 calculateTotal={calculateTotal}
                 handleAddItem={handleAddItem}
+                isDiscount={true}
               />
               <tbody>
                 <ItemRow
@@ -437,6 +446,7 @@ const InvoiceSecond = ({ onChildDataChange, onSubmit }) => {
                   state={state}
                   handleItemChange={handleItemChange}
                   handleRemoveItem={handleRemoveItem}
+                  isDiscount={true}
                 />
               </tbody>
               <tr>

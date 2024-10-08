@@ -21,8 +21,8 @@ const PurchaseOrderList = () => {
   const [columns, setcolumns] = useState([
     { header: 'PO Number', field: 'po_number' },
     {header: 'Date', field: 'added_on' },
-    { header: 'Party', field: 'billing_name' },  
-    { header: 'Date', field: 'billing_state' },
+    { header: 'Party', field: 'party_name' },  
+    { header: 'State', field: 'billing_state' },
     { header: 'Amount', field: 'grand_total' },
    
     { 
@@ -116,13 +116,13 @@ const PurchaseOrderList = () => {
             <div className="container-fluid">
               <div className="page-header">
                 <div>
-                  <h2 className="main-content-title tx-24 mg-b-5">Payments</h2>
+                  <h2 className="main-content-title tx-24 mg-b-5">Purchase</h2>
                   <ol className="breadcrumb">
                     <li className="breadcrumb-item">
-                      <a href="#">Sale</a>
+                      <a href="#">Purchase</a>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Payment List
+                      Purchase Order List
                     </li>
                   </ol>
                 </div>

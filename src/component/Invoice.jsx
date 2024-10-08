@@ -31,7 +31,6 @@ const AddInvoice = () => {
     phone: '',
     state: '',
     ledger_id:"",
-    party_id:""
   });
   const [shippingAddress, setShippingAddress] = useState({
     address: '',
@@ -71,6 +70,7 @@ const AddInvoice = () => {
     try {
       const data = await dispatch(ListParties({ profile_id: id })).unwrap();
       setListParties(data?.data);
+      console.log(data.data)
     } catch (error) {
       console.log('Error fetching parties:', error.message);
     }
@@ -100,7 +100,7 @@ const AddInvoice = () => {
   // Party selection logic
   const partyOptions = listParties.map((party) => ({
     value: party.id,
-    label: party.name,
+    label: party.ledger,
   }));
 
   const handlePartyChange = (selectedOption) => {
@@ -108,17 +108,16 @@ const AddInvoice = () => {
     if (party) {
       setSelectedPartyDetails({
         address: party.address,
-        gstin: party.gstin,
+        gstin: party.gstn,
         phone: party.phone,
         state: party.state,
-        ledger_id:party.ledger_id,
-        party_id:party.id
+        ledger_id:party.id,
       });
 
       if (isSameAsBilling) {
         setShippingAddress({
           address: party.address,
-          gstin: party.gstin,
+          gstin: party.gstn,
           phone: party.phone,
           state: party.state,
         });
@@ -162,7 +161,7 @@ const AddInvoice = () => {
  
 const validateForm = () => {
   let newErrors = {};
-  if (!selectedPartyDetails.party_id) {
+  if (!selectedPartyDetails.ledger_id) {
     newErrors.customer = 'Customer is required.';
   }
   if (!selectedPartyDetails.state) {
@@ -181,54 +180,54 @@ const validateForm = () => {
   return Object.keys(newErrors).length === 0;
 };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!validateForm()) {
-      return;
-    }
-    const billingData = {
-      profile_id:Number(id),
-      invoice_prefix:invoicePrefix,
-      party_id: Number(selectedPartyDetails.party_id),
-      ledger_id:Number(selectedPartyDetails.ledger_id),  // Assuming this is hardcoded for now
-      invoice_number: formData.invoice_number,
-      invoice_date: formData.invoice_date,
-      fin_year: '2024-2025',
-      po_number: formData.po_number,
-      billing_address: selectedPartyDetails.address,
-      billing_state: selectedPartyDetails.state,
-      billing_phone: selectedPartyDetails.phone,
-      party_gstn: selectedPartyDetails.gstin,
-      shipping_address: shippingAddress.address,
-      shipping_state: shippingAddress.state,
-      shipping_phone: shippingAddress.phone,
-      eway_bill: formData.eway_number,
-      vehicle_number: formData.vehicle_number,
-      notes: formData.message,
-    };
+  if (!validateForm()) {
+    return;
+  }
 
-
-    const mergedData = {
-      ...billingData,
-      ...invoiceSecond
-    };
-    console.log('Data to be sent:', mergedData);
-
-    // Call API to submit invoice (replace comment with actual API call)
-    setIsLoading(true);
-  
-    dispatch(AddInvoices(mergedData))
-      .unwrap()
-      .then((data) => {
-        setIsLoading(false);
-        navigate('/invoicelist');
-      })
-      .catch(({ message }) => {
-        setIsLoading(false);
-        console.log(message);
-      });
+  const billingData = {
+    profile_id: Number(id),
+    invoice_prefix: invoicePrefix,
+    ledger_id: Number(selectedPartyDetails.ledger_id), // Assuming this is hardcoded for now
+    invoice_number: formData.invoice_number,
+    invoice_date: formData.invoice_date,
+    fin_year: '2024-2025',
+    po_number: formData.po_number,
+    billing_address: selectedPartyDetails.address,
+    billing_state: selectedPartyDetails.state,
+    billing_phone: selectedPartyDetails.phone || null,
+    party_gstn: selectedPartyDetails.gstin || null ,
+    shipping_address: shippingAddress.address,
+    shipping_state: shippingAddress.state,
+    shipping_phone: shippingAddress.phone || null,
+    eway_bill: formData.eway_number,
+    vehicle_number: formData.vehicle_number,
+    notes: formData.message,
   };
+
+  const mergedData = {
+    ...billingData,
+    ...invoiceSecond,
+  };
+
+  console.log('Data to be sent:', mergedData);
+
+  setIsLoading(true);
+
+  try {
+    // Use await to wait for the dispatch to finish
+    await dispatch(AddInvoices(mergedData)).unwrap();
+    setIsLoading(false);
+    navigate('/invoicelist');
+  } catch (error) {
+    // Handle the error if the API call fails
+    setIsLoading(false);
+    console.log(error.message);
+  }
+};
+
   return (
     <div>
       <div className="row" style={{ marginLeft: '0', marginRight: '0' }}>

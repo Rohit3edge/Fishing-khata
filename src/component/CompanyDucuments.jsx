@@ -15,6 +15,9 @@ const ListManagement = () => {
   const UserID = user?.data?.id;
   const Name = user?.data?.company_name;
 
+  console.log("formData.id",UserID)
+
+  const imgBaseUrl = 'https://updateproject.com/kisaan-khata-api/public/uploads/farmer_documents/';
   const [units, setUnits] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const currentDate = new Date().toISOString().split('T')[0];
@@ -30,8 +33,7 @@ const ListManagement = () => {
 
   const [showProductDetails, setShowProductDetails] = useState(true);
 
-
-  useEffect(() => {
+  const fetchComapnyDucuments = async () => {
     if (UserID) {
       setIsLoading(true);
       dispatch(EditComapnyDucuments({ profile_id: UserID}))
@@ -40,20 +42,23 @@ const ListManagement = () => {
           setIsLoading(false);
           const item = data?.documents;
           console.log('item',item);
-          setFormData({
-              id : UserID  || '',
+          setFormData((prevState) =>( {
+             ...prevState, 
               registration_certificate: item?.registration_certificate || '',
               memorandum: item?.memorandum || '',
               association_articles: item?.association_articles || '',
               pan_file: item?.pan_file || '',
               tan_file: item?.tan_file || '',
-          });
+          }));
         })
         .catch(({ message }) => {
           setIsLoading(false);
           console.log(message);
         });
     }
+  };
+  useEffect(() => {
+    fetchComapnyDucuments()
   }, [dispatch, UserID]);
   
 
@@ -101,39 +106,53 @@ const ListManagement = () => {
     }));
   };
   
-  console.log('file',files);
+
 
   const handleSubmit = () => {
     const submitData = new FormData();
-
-    for (let key in files) {
-      if (files[key]) {
-        // Only append if a file is selected
-        submitData.append(key, files[key]);
-      }
-    }
     
-    console.log(formData);
+  console.log("formData.id",formData.id)
+  // Append the text data
+  for (let key in formData) {
+    submitData.append(key, formData[key]);
+  }
+
+  // Append the files
+  for (let key in files) {
+    if (files[key]) {
+      // Only append if a file is selected
+      submitData.append(key, files[key]);
+    }
+  }
+  
+    // Submit the form data
     setIsLoading(true);
-    dispatch(UpdateComapnyDucuments(formData))
+    dispatch(UpdateComapnyDucuments(submitData))  // Using FormData directly here
       .unwrap()
       .then((data) => {
         setIsLoading(false);
         setFormData({
-          id: UserID,
           registration_certificate: '',
           memorandum: '',
           association_articles: '',
           pan_file: '',
           tan_file: '',
         });
-        navigate('/management-cost/list');
+        setFiles({
+          registration_certificate: null,
+          memorandum: null,
+          association_articles: null,
+          pan_file: null,
+          tan_file: null,
+        })
+        fetchComapnyDucuments()
       })
       .catch(({ message }) => {
         setIsLoading(false);
         console.log(message);
       });
   };
+  
 
   return (
     <div>
@@ -194,9 +213,9 @@ const ListManagement = () => {
                               <div className="col-sm-4 my-4">
                               {formData.registration_certificate &&
                                 (/\.(jpeg|jpg|png|webp|svg)$/i.test(formData.registration_certificate) ? (
-                                    <img src={formData.registration_certificate} alt="registration_certificate" style={{ width: '200px' }} />
+                                    <img src={ formData.registration_certificate} alt="registration_certificate" style={{ width: '100px' }} />
                                 ) : (
-                                    <a href={formData.registration_certificate} download target='_blank'>
+                                    <a href={ formData.registration_certificate} download target='_blank'>
                                        Download Certificate of Registration
                                     </a>
                                 ))}
@@ -212,7 +231,7 @@ const ListManagement = () => {
                               <div className="col-sm-4 my-4">
                                 {formData.memorandum &&
                                 (/\.(jpeg|jpg|png|webp|svg)$/i.test(formData.memorandum) ? (
-                                    <img src={formData.memorandum} alt="memorandum" style={{ width: '200px' }} />
+                                    <img src={formData.memorandum} alt="memorandum" style={{ width: '100px' }} />
                                 ) : (
                                     <a href={formData.memorandum} download target='_blank'>
                                        Download Memorandum
@@ -230,7 +249,7 @@ const ListManagement = () => {
                               <div className="col-sm-4 my-4">
                                    {formData.association_articles &&
                                         (/\.(jpeg|jpg|png|webp|svg)$/i.test(formData.association_articles) ? (
-                                            <img src={formData.association_articles} alt="association_articles" style={{ width: '200px' }} />
+                                            <img src={formData.association_articles} alt="association_articles" style={{ width: '100px' }} />
                                         ) : (
                                             <a href={formData.association_articles} download target='_blank'>
                                             Download Articles of Association
@@ -248,7 +267,7 @@ const ListManagement = () => {
                               <div className="col-sm-4 my-4">
                                    {formData.pan_file &&
                                         (/\.(jpeg|jpg|png|webp|svg)$/i.test(formData.pan_file) ? (
-                                            <img src={formData.pan_file} alt="pan_file" style={{ width: '200px' }} />
+                                            <img src={formData.pan_file} alt="pan_file" style={{ width: '100px' }} />
                                         ) : (
                                             <a href={formData.pan_file} download target='_blank'>
                                             Download Company PAN
@@ -267,9 +286,9 @@ const ListManagement = () => {
                               <div className="col-sm-4 my-4">
                                    {formData.tan_file &&
                                         (/\.(jpeg|jpg|png|webp|svg)$/i.test(formData.tan_file) ? (
-                                            <img src={formData.tan_file} alt="tan_file" style={{ width: '200px' }} />
+                                            <img src={formData.tan_file} alt="tan_file" style={{ width: '100px' }} />
                                         ) : (
-                                            <a href={formData.tan_file} download target='_blank'>
+                                            <a href={ formData.tan_file} download target='_blank'>
                                             Download Company PAN
                                             </a>
                                     ))}

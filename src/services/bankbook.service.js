@@ -67,6 +67,19 @@ class BankBookService {
         .then((response) => response.data);
     }
 
+    static UpdateCashOpeningBalance(item) {
+
+        const api = `${API_PATHS.updatecashopeningbalance}`;
+        
+        return axios
+        .post(api,item,{
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+        })
+        .then((response) => response.data);
+    }
+
 }
 
 export default BankBookService;

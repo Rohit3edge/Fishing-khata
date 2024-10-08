@@ -27,7 +27,7 @@ const EditPurchaseOrderSec = ({ onChildDataChange, data }) => {
       const data = await dispatch(Getunits()).unwrap();
       setState((prevState) => ({ ...prevState, units: data.data }));
     } catch (error) {
-      alert(error.message);
+      console.log(error.message);
     }
   }, [dispatch]);
 
@@ -79,9 +79,10 @@ const EditPurchaseOrderSec = ({ onChildDataChange, data }) => {
           setState((prevState) => ({
             ...prevState,
             singleDetail: data?.data,
-            price: data?.data?.sale_price || 0,
+            price: data?.data?.purchase_price || 0,
             hsn: data?.data?.hsn || '',
             unit_id: data?.data?.unit || '',
+            
           }));
         } catch (error) {
           console.error(error.message);
@@ -135,7 +136,7 @@ const EditPurchaseOrderSec = ({ onChildDataChange, data }) => {
     // If the item_id (product) is changed, update the price, unit, and hsn accordingly
     if (field === 'item_id') {
       const selectedProduct = state.itemList.find((item) => item.id === value);
-      updatedItems[index].price = selectedProduct?.sale_price || 0;
+      updatedItems[index].price = selectedProduct?.purchase_price || 0;
       updatedItems[index].hsn = selectedProduct?.hsn || '';
       updatedItems[index].unit_id = selectedProduct?.unit || '';
     }
@@ -299,7 +300,7 @@ const EditPurchaseOrderSec = ({ onChildDataChange, data }) => {
 
                     <tr>
                       <td colSpan="4" className="text-right align-middle">
-                        <strong>Shipping Cost:</strong>
+                        <strong>Shipment Amount:</strong>
                       </td>
                       <td colSpan="2" className="align-middle">
                         <input type="number" className="form-control" value={state?.shippingCost} onChange={(e) => handleInputChange('shippingCost', e.target.value)} />

@@ -1,5 +1,5 @@
 import React from 'react';
-const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, state, handleItemChange,isPurchase }) => (
+const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, state, handleItemChange,isPurchase,isDiscount }) => (
   <>
     {addedItems?.map((item, index) => (
       <tr key={index}>
@@ -47,6 +47,7 @@ const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, 
             </select>
           </div>
         </td>
+        {isDiscount && (
         <td className="align-middle">
           <div className="input-group">
             <input type="text" className="form-control" name="discount" value={item?.discount} onChange={(e) => handleItemChange('discount', e.target.value, index)} />
@@ -55,7 +56,7 @@ const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, 
               <option value="Percentage">Percentage</option>
             </select>
           </div>
-        </td>
+        </td>)}
         {isPurchase && (
           <td class="align-middle">
             <div class="input-group">
@@ -76,7 +77,7 @@ const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, 
     ))}
     <tr>
       <td colSpan="7" className="text-right align-middle">
-        <strong>Shipping Cost:</strong>
+        <strong>Shipment Amount:</strong>
         <span className="fw-normal text-muted">(12% GST applicable)</span>
       </td>
       <td colSpan="2">

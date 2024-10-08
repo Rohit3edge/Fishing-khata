@@ -257,12 +257,12 @@ const UpdateItem = () => {
                         <div className="row">
                           <div className="col-md-2">
                             <label className="rdiobox">
-                              <input name="type" type="radio" value="Product" checked={formData.type === 'Product'} onChange={handleRadioChange} /> <span>Product</span>
+                              <input name="type" type="radio" value="Product" checked={formData?.type === 'Product'} onChange={handleRadioChange} /> <span>Product</span>
                             </label>
                           </div>
                           <div className="col-md-2">
                             <label className="rdiobox">
-                              <input name="type" type="radio" value="Service" checked={formData.type === 'Service'} onChange={handleRadioChange} /> <span>Service</span>
+                              <input name="type" type="radio" value="Service" checked={formData?.type === 'Service'} onChange={handleRadioChange} /> <span>Service</span>
                             </label>
                           </div>
                         </div>
@@ -278,18 +278,18 @@ const UpdateItem = () => {
                                     <label>
                                       Item Name <span className="required">*</span>
                                     </label>
-                                    <input name="name" type="text" className="form-control" onChange={handleInputChange} value={formData.name} />
-                                    {errors.name && <p className="alert-message">{errors.name}</p>}
+                                    <input name="name" type="text" className="form-control" onChange={handleInputChange} value={formData?.name} />
+                                    {errors.name && <p className="alert-message">{errors?.name}</p>}
                                   </div>
                                   <div className="col-md-6">
                                     <label>
                                       Category <span className="required">*</span>
                                     </label>
-                                    <select name="category_id" className="form-control" onChange={handleInputChange} value={formData.category_id}>
+                                    <select name="category_id" className="form-control" onChange={handleInputChange} value={formData?.category_id}>
                                       <option value="">Select Category</option>
                                       {renderCategoryOptions(listCategories)}
                                     </select>
-                                    {errors.category_id && <p className="alert-message">{errors.category_id}</p>}
+                                    {errors?.category_id && <p className="alert-message">{errors?.category_id}</p>}
                                   </div>
                                 </div>
                               </div>
@@ -304,12 +304,12 @@ const UpdateItem = () => {
                                       <span className="input-group-text" id="basic-addon1">
                                         ₹
                                       </span>
-                                      <input name="sale_price" type="text" className="form-control" onChange={handleInputChange} value={formData.sale_price} />
-                                      <select name="sale_price_tax_type" className="form-control" onChange={handleInputChange} value={formData.sale_price_tax_type}>
+                                      <input name="sale_price" type="text" className="form-control" onChange={handleInputChange} value={formData?.sale_price} />
+                                      <select name="sale_price_tax_type" className="form-control" onChange={handleInputChange} value={formData?.sale_price_tax_type}>
                                         <option value="Excluding Tax">Excluding Tax</option>
                                         <option value="Including Tax">Including Tax</option>
                                       </select>
-                                      {errors.sale_price && <p className="alert-message">{errors.sale_price}</p>}
+                                      {errors.sale_price && <p className="alert-message">{errors?.sale_price}</p>}
                                     </div>
                                   </div>
 
@@ -317,20 +317,20 @@ const UpdateItem = () => {
                                     <label>
                                       Tax <span className="required">*</span>
                                     </label>
-                                    <select name="tax" className="form-control" onChange={handleInputChange} value={formData.tax}>
+                                    <select name="tax" className="form-control" onChange={handleInputChange} value={`GST@${Number(formData?.tax).toFixed(2)}%`}>
                                       <option value="NONE">NONE</option>
-                                      <option value="GST@0%">GST@0%</option>
+                                      <option value="GST@0.00%">GST@0%</option>
                                       <option value="GST@0.25%">GST@0.25%</option>
-                                      <option value="GST@3%">GST@3%</option>
-                                      <option value="GST@5%">GST@5%</option>
-                                      <option selected="selected" value="GST@12%">
+                                      <option value="GST@3.00%">GST@3%</option>
+                                      <option value="GST@5.00%">GST@5%</option>
+                                      <option selected="selected" value="GST@12.00%">
                                         GST@12%
                                       </option>
-                                      <option value="GST@18%">GST@18%</option>
-                                      <option value="GST@28%">GST@28%</option>
+                                      <option value="GST@18.00%">GST@18%</option>
+                                      <option value="GST@28.00%">GST@28%</option>
                                       <option value="Exempted">Exempted</option>
                                     </select>
-                                    {errors.tax && <p className="alert-message">{errors.tax}</p>}
+                                    {errors.tax && <p className="alert-message">{errors?.tax}</p>}
                                   </div>
                                 </div>
                               </div>
@@ -341,7 +341,7 @@ const UpdateItem = () => {
                                     <label>
                                       HSN/SAC 
                                     </label>
-                                    <input name="hsn" type="text" className="form-control" onChange={handleInputChange} value={formData.hsn} />
+                                    <input name="hsn" type="text" className="form-control" onChange={handleInputChange} value={formData?.hsn} />
                                     
                                   </div>
                                 </div>
@@ -359,8 +359,8 @@ const UpdateItem = () => {
                                     <div className="col-md-6">
                                       <label>Opening Quantity </label>
                                       <div className="input-group">
-                                        <input name="opening_quantity" type="text" className="form-control" onChange={handleInputChange} value={formData.opening_quantity} />
-                                        <select name="unit" className="form-control" style={{ maxWidth: '40%' }} onChange={handleInputChange} value={formData.unit}>
+                                        <input name="opening_quantity" type="text" className="form-control" onChange={handleInputChange} value={formData?.opening_quantity} />
+                                        <select name="unit" className="form-control" style={{ maxWidth: '40%' }} onChange={handleInputChange} value={formData?.unit}>
                                           <option value="">Unit</option>
                                           {units?.map((option, index) => (
                                             <option key={index} value={option?.id}>
@@ -369,12 +369,12 @@ const UpdateItem = () => {
                                           ))}
                                         </select>
                                       </div>
-                                      {errors.unit && <p className="alert-message">{errors.unit}</p>}
+                                      {errors?.unit && <p className="alert-message">{errors?.unit}</p>}
                                     </div>
 
                                     <div className="col-md-6">
                                       <label>Opening Stock Date</label>
-                                      <input name="opening_stock_date" type="date" className="form-control" onChange={handleInputChange} value={formData.opening_stock_date} />
+                                      <input name="opening_stock_date" type="date" className="form-control" onChange={handleInputChange} value={formData?.opening_stock_date} />
                                     </div>
                                   </div>
                                 </div>
@@ -387,8 +387,8 @@ const UpdateItem = () => {
                                         <span className="input-group-text" id="basic-addon1">
                                           ₹
                                         </span>
-                                        <input name="purchase_price" type="text" className="form-control" onChange={handleInputChange} value={formData.purchase_price} />
-                                        <select name="purchase_price_tax_type" className="form-control" onChange={handleInputChange} value={formData.purchase_price_tax_type}>
+                                        <input name="purchase_price" type="text" className="form-control" onChange={handleInputChange} value={formData?.purchase_price} />
+                                        <select name="purchase_price_tax_type" className="form-control" onChange={handleInputChange} value={formData?.purchase_price_tax_type}>
                                           <option value="Excluding Tax">Excluding Tax</option>
                                           <option value="Including Tax">Including Tax</option>
                                         </select>
@@ -397,10 +397,10 @@ const UpdateItem = () => {
                                     <div class="col-md-6">
                                       <label>Discount on Sale</label>
                                       <div class="input-group">
-                                        <input name="discount" class="form-control" type="text" onChange={handleInputChange} value={formData.discount} />
-                                        <select name="discount_type" class="form-control" onChange={handleInputChange} value={formData.discount_type}>
-                                          <option value="Percentage">Percentage</option>
-                                          <option value="Amount">Amount</option>
+                                        <input name="discount" class="form-control" type="text" onChange={handleInputChange} value={formData?.discount} />
+                                        <select name="discount_type" class="form-control" onChange={handleInputChange} value={formData?.discount_type}>
+                                        <option value="Fixed">Fixed</option>
+                                        <option value="Percentage">Percentage</option>
                                         </select>
                                       </div>
                                     </div>
@@ -411,12 +411,12 @@ const UpdateItem = () => {
                                   <div class="row">
                                     <div class="col-md-6">
                                       <label>Mfg. Date</label>
-                                      <input type="date" name="mfg_date" class="form-control" onChange={handleInputChange} value={formData.mfg_date} />
+                                      <input type="date" name="mfg_date" class="form-control" onChange={handleInputChange} value={formData?.mfg_date} />
                                     </div>
 
                                     <div class="col-md-6">
                                       <label>Exp. Date</label>
-                                      <input type="date" name="exp_date" class="form-control" onChange={handleInputChange} value={formData.exp_date} />
+                                      <input type="date" name="exp_date" class="form-control" onChange={handleInputChange} value={formData?.exp_date} />
                                     </div>
                                   </div>
                                 </div>
@@ -425,7 +425,7 @@ const UpdateItem = () => {
                                   <div class="row">
                                     <div class="col-md-6">
                                       <label>Barcode/Serial No</label>
-                                      <input type="text" name="serial_no" class="form-control" onChange={handleInputChange} value={formData.serial_no} />
+                                      <input type="text" name="serial_no" class="form-control" onChange={handleInputChange} value={formData?.serial_no} />
                                     </div>
                                   </div>
                                 </div>

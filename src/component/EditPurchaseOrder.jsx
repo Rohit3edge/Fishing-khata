@@ -237,7 +237,7 @@ const EditPurchaseOrder = () => {
                       <a href="#">Purchase</a>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Create Purchase Order
+                      Edit Purchase Order
                     </li>
                   </ol>
                 </div>

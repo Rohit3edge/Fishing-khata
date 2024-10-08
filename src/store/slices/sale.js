@@ -217,3 +217,75 @@ export const UpdatePayment = createAsyncThunk(
         }
     }
 );
+
+export const GetCreditNotelist = createAsyncThunk(
+    "/post/creditnotelist",
+    async (item,thunkAPI) => {
+        try {
+            const data = await SaleService.GetCreditNotelist(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+export const AddCreditnote = createAsyncThunk(
+    "/post/addcreditnote",
+    async (item,thunkAPI) => {
+        try {
+            const data = await SaleService.AddCreditnote(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+export const GetSingleCreditnote = createAsyncThunk(
+    "/post/getsinglecreditnote",
+    async (item,thunkAPI) => {
+        try {
+            const data = await SaleService.GetSingleCreditnote(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+export const UpdateCreditnote = createAsyncThunk(
+    "/post/updatecreditnote",
+    async (item,thunkAPI) => {
+        try {
+            const data = await SaleService.UpdateCreditnote(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);

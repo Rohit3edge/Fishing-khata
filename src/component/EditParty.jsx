@@ -56,7 +56,7 @@ const PartyForm = () => {
             gstin: parties?.gstin || '',
             opening_blance: parties?.opening_blance || '',
             isactive: '1',
-            ob_date:Moment(parties?.ob_date).format('DD-MM-YYYY')  || '',
+            ob_date: parties?.ob_date ? Moment(parties?.ob_date).format('YYYY-MM-DD') : '',
             party_type: parties?.party_type || 'Customer',
             ledger_id: parties?.ledger_id || ''
           });
@@ -229,7 +229,7 @@ console.log(formData.ob_date)
                           </div>
                           <div class="col-md-6">
                             <label>As of Date</label>
-                            <input name="ob_date" type="date" class="form-control"  value={formData.ob_date ? Moment(formData.ob_date, 'DD-MM-YYYY').format('YYYY-MM-DD') : ''} onChange={handleInputChange} />
+                            <input name="ob_date" type="date" class="form-control"  value={formData.ob_date} onChange={handleInputChange} />
                           </div>
                         </div>
                       </div>

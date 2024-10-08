@@ -25,6 +25,8 @@ export const API_PATHS = {
   login: "/client/login",
 
   getledgergroups: "/common/getledgergroups",
+  getledgerdetail:"/ledger/get-ledger-detail",
+  updateledger:"/ledger/update",
   getsettings:"/client/getsettings",
   getunits: "/common/getunits",
   updatesettings:"client/updatesettings/",
@@ -45,7 +47,7 @@ export const API_PATHS = {
 
   addparties:"/parties/add",
   updateparties:"/parties/update",
-  partieslist:"/parties/list",
+  partieslist:"/ledger/get-party-ledger-list",
   partiesEdit:"/parties/get-detail",
   synctoledger:"/parties/sync-to-ledger",
   getsingledetail:"/items/get-detail",
@@ -127,7 +129,34 @@ export const API_PATHS = {
 
  createpurchasevoucher: "/purchase-invoice/add",
  purchasevouchelist:"/purchase-invoice/list",
- updatepurchasevoucher:"/invoice/update",
- GetPurchaseVoucherDetail:"/purchase-invoice/get"
+ updatepurchasevoucher:"/purchase-invoice/update",
+ GetPurchaseVoucherDetail:"/purchase-invoice/get",
 
+
+ PaymentOutgetbycustomer:"/purchase-invoice/get-by-customer",
+ addpaymentout:"/purchase-invoice/payment/add",
+ paymentoutlist:"/purchase-invoice/list-payments",
+ updatepaymentout:"/purchase-invoice/update-payment",
+ getpaymentdetail:"/purchase-invoice/payment-detail",
+
+//  debit Note
+
+debitnotelist:"/debit-note/list",
+adddebitnote:"/debit-note/add",
+updatedebitnote:"/debit-note/update",
+getsingledebitnote:"/debit-note/get",
+
+creditnotelist:"/credit-note/list",
+addcreditnote:"/credit-note/add",
+updatecreditnote:"/credit-note/update",
+getsinglecreditnote:"/credit-note/get",
+
+updatecashopeningbalance:"/client/update-cash-opening-balance",
+getdetailclients:"/clients/get-detail",
+
+getstate:"/common/getstatelist",
+Addjournalvoucher :"/journal-voucher/add",
+journalvoucherlist:"/journal-voucher/list",
+Updatejournalvoucher:"/journal-voucher/update",
+getdetailjournalvoucher:"/journal-voucher/get-detail"
 }

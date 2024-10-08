@@ -36,7 +36,7 @@ const UpdateInvoiceSecond = ({ onChildDataChange, onSubmit,data }) => {
       const data = await dispatch(Getunits()).unwrap();
       setState((prevState) => ({ ...prevState, units: data.data }));
     } catch (error) {
-      alert(error.message);
+      console.log(error.message);
     }
   }, [dispatch]);
 
@@ -130,10 +130,13 @@ const UpdateInvoiceSecond = ({ onChildDataChange, onSubmit,data }) => {
           const data = await dispatch(Getsingledetail({ profile_id: id, item_id: productId })).unwrap();
           setState((prevState) => ({
             ...prevState,
+            price:data?.data?.sale_price,
             singleDetail: data?.data,
             unit_id: data?.data?.unit || '',
             tax: data?.data?.tax || 0,
             price_tax_type: data?.data?.sale_price_tax_type || 'Excluding Tax',
+            discount_type: data?.data?.discount_type || "Fixed",
+            discount:Number(data?.data?.discount).toFixed(2)||0,
           }));
         } catch (error) {
           console.error(error.message);
@@ -196,8 +199,8 @@ const UpdateInvoiceSecond = ({ onChildDataChange, onSubmit,data }) => {
   
 
   const calculateTotal = useMemo(() => {
-    const { singleDetail, quantity, discount, discount_type, tax, price_tax_type } = state;
-    let price = Number(singleDetail?.sale_price) || 0;
+    const {quantity, discount, discount_type, tax, price_tax_type } = state;
+    let price = Number(state.price) || 0;
     let quantityTotal = price * quantity || 0;
     let taxAmount = 0;
     let totalBeforeTax = quantityTotal;
@@ -234,7 +237,12 @@ const UpdateInvoiceSecond = ({ onChildDataChange, onSubmit,data }) => {
   }, [state]);
 
   const handleAddItem = () => {
-    const { unit_id, singleDetail, price_tax_type, tax, discount, discount_type } = state;
+    const {selectedProduct, unit_id, singleDetail, price_tax_type, tax, discount, discount_type,price,quantity } = state;
+
+    if (!selectedProduct || quantity <= 0  || price <= 0) {
+      alert('Please fill out all fields correctly.');
+      return;
+    }
 
     const unitName = state.units.find((unit) => unit.id === unit_id)?.unit || '';
 
@@ -244,7 +252,7 @@ const UpdateInvoiceSecond = ({ onChildDataChange, onSubmit,data }) => {
       quantity: state.quantity,
       unit_id: unit_id,
       unit_name: unitName,
-      price: singleDetail?.sale_price,
+      price: state.price,
       price_tax_type: price_tax_type,
       tax: tax,
       tax_type: 'GST',
@@ -289,6 +297,7 @@ const UpdateInvoiceSecond = ({ onChildDataChange, onSubmit,data }) => {
       price_tax_type: 'Excluding Tax',
       singleDetail: {},
       unit_id: '',
+      price:0
     }));
   };
 
@@ -473,6 +482,7 @@ const UpdateInvoiceSecond = ({ onChildDataChange, onSubmit,data }) => {
                 calculateTotal={calculateTotal}
                 handleAddItem={handleAddItem}
                 isPurchase={false}
+                isDiscount={true}
               />
               <tbody>
                 <ItemRow
@@ -484,6 +494,7 @@ const UpdateInvoiceSecond = ({ onChildDataChange, onSubmit,data }) => {
                   handleItemChange={handleItemChange}
                   handleRemoveItem={handleRemoveItem}
                   isPurchase={false}
+                  isDiscount={true}
                 />
               </tbody>
               <tr>

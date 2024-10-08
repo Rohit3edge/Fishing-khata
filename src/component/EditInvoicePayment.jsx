@@ -30,7 +30,7 @@ const EditInvoicePayment = () => {
 
   const [formData, setFormData] = useState({
     profile_id: Id,
-    customer_id: '',
+    party_ledger_id: '',
     ref_id: '',
     amount_received: '',
     payment_date: '',
@@ -48,7 +48,7 @@ const EditInvoicePayment = () => {
 
   const partyOptions = listParties.map((party) => ({
     value: party.id,
-    label: party.name,
+    label: party.ledger,
   }));
 
 
@@ -71,7 +71,7 @@ const EditInvoicePayment = () => {
           
           if (data && data?.data) {
             setFormData({
-              customer_id: data?.data?.party_id || '', 
+              party_ledger_id: data?.data?.party_id || '', 
               ref_id: data.data.ref_id || '', 
               amount_received: data.data.amount || '', 
               payment_date: data.data.payment_date || '', 
@@ -138,7 +138,7 @@ const EditInvoicePayment = () => {
   const handlePartyChange = (selectedOption) => {
     setSelectedParty(selectedOption);
     const partyId = selectedOption.value;
-    setFormData({ ...formData, customer_id: partyId });
+    setFormData({ ...formData, party_ledger_id: partyId });
     handleGetCustomer(partyId);
   };
 
@@ -181,7 +181,7 @@ const EditInvoicePayment = () => {
 
   const validateForm = () => {
     let newErrors = {};
-    if (!formData.customer_id) newErrors.customer_id = 'Customer is required.';
+    if (!formData.party_ledger_id) newErrors.party_ledger_id = 'Customer is required.';
     if (!formData.amount_received || isNaN(formData.amount_received) || formData.amount_received <= 0) newErrors.amount_received = 'Valid amount is required.';
     if (!formData.payment_date || !validateDate(formData.payment_date)) newErrors.payment_date = 'Please select a valid date (not in the future).';
     // if (!formData.payment_mode) newErrors.payment_mode = 'Payment mode is required.';
@@ -195,7 +195,7 @@ const EditInvoicePayment = () => {
     const subdata={
       profile_id:Number(Id),
       payment_id:formData.payment_id,
-      customer_id:Number(formData.customer_id ),
+      party_ledger_id:Number(formData.party_ledger_id ),
       ref_id:Number(formData.ref_id ),
       amount_received:Number(formData.amount_received),
       payment_date:formData.payment_date ,
@@ -215,7 +215,7 @@ const EditInvoicePayment = () => {
           setFormData(
             {
               profile_id: Id,
-              customer_id: '',
+              party_ledger_id: '',
               ref_id: '',
               amount_received: '',
               payment_date: '',
@@ -290,7 +290,7 @@ const EditInvoicePayment = () => {
                               Customer <span className="required">*</span>
                             </label>
                             <Select options={partyOptions} placeholder="--Select Customer--" onChange={handlePartyChange} value={selectedParty} />
-                            {errors.customer_id && <p className="text-danger">{errors.customer_id}</p>}
+                            {errors.party_ledger_id && <p className="text-danger">{errors.party_ledger_id}</p>}
                           </div>
 
                           <div class="col-md-6">

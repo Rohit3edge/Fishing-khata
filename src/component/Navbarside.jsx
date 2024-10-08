@@ -56,7 +56,7 @@ const Navbarside = () => {
         setBankData(data.data);
       })
       .catch(({ message }) => {
-        alert(message);
+        console.log(message);
       });
   }, [dispatch]);
 
@@ -108,8 +108,8 @@ const Navbarside = () => {
                       </NavLink>
                     </li>
                     <li className="submenu-item">
-                      <NavLink to="/Sale/Submenu2" className="menu-title">
-                        Return/Cr. note
+                      <NavLink to="/creditnotelist" className="menu-title">
+                      Credit Note / Return
                       </NavLink>
                     </li>
                     <li className="submenu-item">
@@ -149,27 +149,27 @@ const Navbarside = () => {
                       </NavLink>
                     </li>
                     <li className="submenu-item">
-                      <NavLink to="/Sale/Submenu2" className="menu-title">
+                      <NavLink to="/purchase/paymentoutlist" className="menu-title">
                         Payment Out
                       </NavLink>
                     </li>
                     <li className="submenu-item">
-                      <NavLink to="/Sale/Submenu2" className="menu-title">
-                        Return/Dr. Note
+                      <NavLink to="/purchase/debitnotelist" className="menu-title">
+                       Debit Note / Return
                       </NavLink>
                     </li>
                   </ul>
                 )}
               </li>
-              <li className="nav_items">
+              {/* <li className="nav_items">
                 <NavLink to="/partymaster" className="menu-title">
                   <CgProfile className="nav_icons" />
                   Party Master
                 </NavLink>
-              </li>
+              </li> */}
               
               <li className="nav_items">
-                <NavLink to="/ledger" className="menu-title">
+                <NavLink to="/ledgerlist" className="menu-title">
                   <CgProfile className="nav_icons" />
                   Ledger
                 </NavLink>
@@ -189,7 +189,7 @@ const Navbarside = () => {
                   <ul className="submenu">
                     <li className="submenu-item">
                       <NavLink to="/item" className="menu-title">
-                        Item
+                        Item List
                       </NavLink>
                     </li>
                     <li className="submenu-item">
@@ -201,7 +201,7 @@ const Navbarside = () => {
                 )}
               </li>
               <li className="nav_items">
-                <NavLink to="/Physiotherapy" className="menu-title">
+                <NavLink to="/journallist" className="menu-title">
                   <RiMentalHealthFill className="nav_icons" />
                   Journal
                 </NavLink>
@@ -240,7 +240,7 @@ const Navbarside = () => {
                 )}
               </li>
               <li className="nav_items">
-                <NavLink to="/educate" className="menu-title">
+                <NavLink to="/cashbook" className="menu-title">
                   <GiWallet className="nav_icons" />
                   Cash Book
                 </NavLink>

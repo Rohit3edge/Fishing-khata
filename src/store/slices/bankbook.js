@@ -93,6 +93,25 @@ export const Depositwithdraw = createAsyncThunk(
     }
 );
 
+export const UpdateCashOpeningBalance = createAsyncThunk(
+    "/post/updatecashopeningbalance",
+    async (item,thunkAPI) => {
+        try {
+            const data = await BankBookService.UpdateCashOpeningBalance(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+
 
 const initialState = {
     loading: false,

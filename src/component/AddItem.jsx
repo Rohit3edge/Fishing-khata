@@ -367,8 +367,8 @@ const AddItem = () => {
                                       <div class="input-group">
                                         <input name="discount" class="form-control" type="text" onChange={handleInputChange} value={formData.discount} />
                                         <select name="discount_type" class="form-control" onChange={handleInputChange} value={formData.discount_type}>
+                                          <option value="Fixed">Fixed</option>
                                           <option value="Percentage">Percentage</option>
-                                          <option value="Amount">Amount</option>
                                         </select>
                                       </div>
                                     </div>

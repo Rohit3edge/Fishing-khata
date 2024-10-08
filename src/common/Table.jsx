@@ -2,7 +2,26 @@ import React from 'react';
 import Pagination from './Pagination';
 import Moment from 'moment';
 
-const Table = ({ columns, data, tableRef, pageSize, setPageSize, currentPage, totalCount, onPageChange, handleSearchChange, closing_balance,handleEdit }) => {
+const Table = ({
+  columns,
+  data,
+  tableRef,
+  pageSize,
+  setPageSize,
+  currentPage,
+  totalCount,
+  onPageChange,
+  handleSearchChange,
+  closing_balance,
+  handleEdit,
+  handleView,
+  showDateFilters,
+  fromDate,
+  toDate,
+  setFromDate,
+  setToDate,
+  handleSubmit,
+}) => {
   const handlePageSizeChange = (e) => {
     setPageSize(Number(e.target.value));
   };
@@ -20,47 +39,49 @@ const Table = ({ columns, data, tableRef, pageSize, setPageSize, currentPage, to
         maximumFractionDigits: 2,
       }).format(value);
     };
-  
+
     if (column.isAction) {
       return (
         <>
           {column.actionButtons?.map((button, index) => (
-            <button key={index} className={`btn-sm ${button.className}`} onClick={() => {
-              if (button.name === "Edit") {
-                handleEdit(row);
-              }
-            }}>
+            <button
+              key={index}
+              className={`btn-sm ${button.className}`}
+              style={button.className === 'btn-default' ? { marginBottom: '5px' } : {}}
+              onClick={() => {
+                if (button.name === 'Edit') {
+                  handleEdit(row);
+                } else if (button.name === 'View') {
+                  handleView(row);
+                }
+              }}
+            >
               {button.name}
             </button>
           ))}
         </>
       );
     }
-  
+
     switch (column.field) {
       case 'invoice_combined':
-        if (row.invoice_prefix==null)return`${row.invoice_number}`
-      return `${row.invoice_prefix}${row.invoice_number}`;
+        return row.invoice_prefix == null ? `${row.invoice_number}` : `${row.invoice_prefix}${row.invoice_number}`;
+      case 'debit_note_date':
       case 'added_on':
-        return Moment(row[column.field]).format('DD-MM-YYYY');
-        case 'date_added':
-        return Moment(row[column.field]).format('DD-MM-YYYY');
+      case 'date_added':
       case 'payment_date':
-        return Moment(row[column.field]).format('DD-MM-YYYY');
-        case 'invoice_date':
+      case 'invoice_date':
         return Moment(row[column.field]).format('DD-MM-YYYY');
       case 'dr':
         return Number(row[column.field]) === 0 ? '' : <span className="text-danger">{formatAmount(row[column.field])}</span>;
       case 'cr':
         return Number(row[column.field]) === 0 ? '' : <span className="text-success">{formatAmount(row[column.field])}</span>;
-      case 'amount': 
-        return formatAmount(row[column.field]);
-        case 'grand_total': 
-        return formatAmount(row[column.field]);
+      case 'amount':
+      case 'grand_total':
       case 'balance':
+      case 'sale_price':
         return formatAmount(row[column.field]);
       case 'description':
-        // Trim the description to remove leading/trailing newlines
         const trimmedDescription = row[column.field].trim();
         return trimmedDescription.split('\n').map((line, index) => (
           <React.Fragment key={index}>
@@ -68,16 +89,41 @@ const Table = ({ columns, data, tableRef, pageSize, setPageSize, currentPage, to
             <br />
           </React.Fragment>
         ));
-      case 'sale_price':
-        return formatAmount(row[column.field]);
       default:
         return row[column.field];
     }
   };
-  
 
   return (
     <div className="card custom-card mb-4">
+      {showDateFilters && ( // Conditionally render the date filter section
+      <div class="card custom-card">
+      <div class="card-body">
+        <div className="row">
+          <div className="col-md-3 form-inline">
+            <div className="form-group">
+              <label>From Date</label>
+              <input className="form-control" type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
+            </div>
+          </div>
+          <div className="col-md-3 form-inline">
+            <div className="form-group">
+              <label>To Date</label>
+              <input className="form-control" type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
+            </div>
+          </div>
+          <div className="col-md-3 form-inline">
+            <div className="form-group">
+              <button type="submit" className="btn btn-default" onClick={handleSubmit}>
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+        </div>
+        </div>
+      )}
+
       {data?.length === 0 && !handleSearchChange ? (
         <div className="card-body">
           <h2 className="text-center">No Record Found!!</h2>
@@ -112,7 +158,9 @@ const Table = ({ columns, data, tableRef, pageSize, setPageSize, currentPage, to
                 <thead className="table-header">
                   <tr>
                     {columns?.map((column) => (
-                      <th key={column?.field} style={column?.field === 'added_on' || column?.field === 'payment_date' || column?.field === 'invoice_date' ? { width: '8rem' } : {}}>{column?.header} </th>
+                      <th key={column?.field} style={column?.field === 'added_on' || column?.field === 'payment_date' || column?.field === 'invoice_date' ? { width: '8rem' } : {}}>
+                        {column?.header}{' '}
+                      </th>
                     ))}
                   </tr>
                 </thead>
@@ -120,7 +168,9 @@ const Table = ({ columns, data, tableRef, pageSize, setPageSize, currentPage, to
                   {currentItems?.map((row, rowIndex) => (
                     <tr key={rowIndex}>
                       {columns.map((column, colIndex) => (
-                        <td key={colIndex}>{renderCellContent(column, row)}</td>
+                        <td key={colIndex} style={column?.actionButtons ? { textAlign: 'center' } : {}}>
+                          {renderCellContent(column, row)}
+                        </td>
                       ))}
                     </tr>
                   ))}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbarside from './Navbarside';
 import { useDispatch } from 'react-redux';
-import { LedgerAdd, Getledgergroups } from '../store/slices/ledger';
+import { LedgerAdd, Getledgergroups, GetState } from '../store/slices/ledger';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../common/Loader';
 import Footer from './Footer';
@@ -14,19 +14,24 @@ const AddLedger = () => {
   const [ledgerName, setLedgerName] = useState('');
   const [groupName, setGroupName] = useState('');
   const [groupId, setGroupId] = useState('');
+  const [state, setState] = useState([]);
   const [openingDate, setOpeningDate] = useState('');
   const [amount, setAmount] = useState('');
   const [transactionType, setTransactionType] = useState('cr');
   const [isdefault, setIsdefault] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [accountDetails, setAccountDetails] = useState({
-    type:'Regular',
+    type: 'Regular',
     account_no: '',
     bank_name: '',
     account_holder: '',
     ifsc: '',
-    date: "",
-    date_as_of:""
+    date: '',
+    date_as_of: '',
+    state: '',
+    gstn: '',
+    address: '',
+    phone_number: '',
   });
 
   const user = JSON.parse(localStorage.getItem('user'));
@@ -48,12 +53,31 @@ const AddLedger = () => {
       });
   }, [dispatch]);
 
+  useEffect(() => {
+    setIsLoading(true);
+    dispatch(GetState())
+      .unwrap()
+      .then((data) => {
+        setIsLoading(false);
+        setState(data?.data);
+        console.log('data?.data', data?.data);
+      })
+      .catch(({ message }) => {
+        setIsLoading(false);
+        alert(message);
+      });
+  }, [dispatch]);
+
   const validateAmount = (value) => {
-    const regex = /^\d+(\.\d{0,2})?$/;
-    if (regex.test(value)) {
+    // This regex allows an optional negative sign (-) at the start, followed by digits, and up to two decimal places
+    const regex = /^-?\d*(\.\d{0,2})?$/;
+
+    if (value === '-' || regex.test(value)) {
+      // Allow the negative sign alone or any valid number
       return value;
     } else {
-      return value.substring(0, value.length - 1);
+      // Remove the last character if it's invalid
+      return value.slice(0, -1);
     }
   };
 
@@ -82,8 +106,8 @@ const AddLedger = () => {
         setAccountDetails((prevState) => ({
           ...prevState,
           [name]: value,
-          date:openingDate,
-          date_as_of:openingDate
+          date: openingDate,
+          date_as_of: openingDate,
         }));
         break;
     }
@@ -100,8 +124,8 @@ const AddLedger = () => {
     let formErrors = {};
     if (!ledgerName) formErrors.ledger_name = 'Ledger name is required';
     if (!groupId) formErrors.group_name = 'Group name is required';
-    if (!openingDate) formErrors.opening_date = 'Opening date is required';
-    if (!amount || (parseFloat(amount)<= 0)) formErrors.amount = 'Amount is required';
+    // if (!openingDate) formErrors.opening_date = 'Opening date is required';
+    // if (!amount || (parseFloat(amount)<= 0)) formErrors.amount = 'Amount is required';
     if (!transactionType) formErrors.transactionType = 'Transaction type is required';
 
     if (parsedObject.group_name === 'Bank Accounts') {
@@ -119,17 +143,20 @@ const AddLedger = () => {
       group_id: Number(groupId),
       is_default: Number(isdefault),
       ledger: ledgerName,
-      address: user?.data?.address,
-      phone_number: user?.data?.phoneno,
-      state: user?.data?.state,
-      gst_type: "Regular",
-      gstn: user?.data?.gst,
+      address: accountDetails?.address,
+      phone_number: accountDetails.phone_number,
+      state: accountDetails?.state,
+      gst_type: 'Regular',
+      gstn: accountDetails?.gstn,
       opening_balance: parseFloat(amount),
       dr_cr: transactionType.toUpperCase(),
       opening_date: openingDate,
+       amount:"0.00",
       ...accountDetails, // Include account details if they were entered
     };
-    
+
+    console.log('formdata', ledgerData);
+
     setIsLoading(true);
     dispatch(LedgerAdd(ledgerData))
       .unwrap()
@@ -137,13 +164,7 @@ const AddLedger = () => {
         setIsLoading(false);
         alert('Ledger added successfully!');
         navigate('/ledger');
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        alert('Failed to add ledger: ' + error.message);
-      });
-
-    setLedgerName('');
+        setLedgerName('');
     setGroupId('');
     setOpeningDate('');
     setAmount('');
@@ -155,7 +176,16 @@ const AddLedger = () => {
       bank_name: '',
       account_holder: '',
       ifsc: '',
+      state: "",
+      gstn: "",
+      address: "",
+      phone_number:""
     });
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        alert('Failed to add ledger: ' + error.message);
+      });
   };
 
   const renderOptions = (groups, level = 0) => {
@@ -236,20 +266,16 @@ const AddLedger = () => {
                                 <option value="">Select</option>
                                 {renderOptions(ledgerGroups)}
                               </select>
-                              <p className="alert-message">{errors.group_name}</p>
+                              <p className="alert-message">{errors?.group_name}</p>
                             </div>
                             <div className="col-md-3">
-                              <label>
-                                Opening Date <span className="required">*</span>
-                              </label>
+                              <label>Opening Date</label>
                               <input name="opening_date" type="date" className="form-control" value={openingDate} onChange={handleInputChange} />
                               <p className="alert-message">{errors.opening_date}</p>
                             </div>
                             <div className="col-md-3">
                               <div className="d-flex justify-content-between align-items-center mb-2">
-                                <label className="col-black mb-0">
-                                  Amount <span className="required">*</span>
-                                </label>
+                                <label className="col-black mb-0">Amount</label>
                                 <div className="ml-2">
                                   <div className="form-check form-check-inline">
                                     <input className="form-check-input" type="radio" name="transactionType" id="credit" value="cr" checked={transactionType === 'cr'} onChange={handleInputChange} />
@@ -269,10 +295,35 @@ const AddLedger = () => {
                               <p className="alert-message">{errors.amount}</p>
                             </div>
                           </div>
+                          <div className="row">
+                            <div className="col-md-3">
+                              <label>Address</label>
+                              <input name="address" type="text" className="form-control" value={accountDetails?.address} onChange={handleInputChange} />
+                            </div>
+                            <div className="col-md-3">
+                              <label>Phone Number</label>
+                              <input name="phone_number" type="text" className="form-control" value={accountDetails?.phone_number} onChange={handleInputChange} />
+                            </div>
+                            <div className="col-md-3">
+                              <label>State</label>
+                              <select className="form-control" name="state" value={accountDetails?.state || ''} onChange={handleInputChange}>
+                                <option value="">--Select State--</option>
+                                {(state || []).map((option, index) => (
+                                  <option key={index} value={option?.state_name}>
+                                    {option?.state_name}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                            <div className="col-md-3">
+                              <label>Gst Number</label>
+                              <input name="gstn" type="text" placeholder="Enter the gstn" className="form-control" value={accountDetails?.gstn} onChange={handleInputChange} />
+                            </div>
+                          </div>
 
                           {/* Conditionally render additional fields */}
                           {/* parsedObject.group_name === 'Bank Accounts' && */}
-                          {parsedObject.group_name === 'Bank Accounts' && (
+                          {parsedObject?.group_name === 'Bank Accounts' && (
                             <div class="ledger_info row">
                               <div class="col-md-12">
                                 <div class="form-group">
@@ -293,7 +344,9 @@ const AddLedger = () => {
                                 <div class="form-group">
                                   <div class="row">
                                     <div className="col-md-6">
-                                      <label>Account No <span className="required">*</span></label>
+                                      <label>
+                                        Account No <span className="required">*</span>
+                                      </label>
                                       <input name="account_no" type="text" className="form-control" placeholder="Enter account no" value={accountDetails.account_no} onChange={handleInputChange} />
                                       <p className="alert-message">{errors.account_no}</p>
                                     </div>
@@ -313,19 +366,19 @@ const AddLedger = () => {
                                         type="text"
                                         className="form-control"
                                         placeholder="Enter account holder name"
-                                        value={accountDetails.account_holder}
+                                        value={accountDetails?.account_holder}
                                         onChange={handleInputChange}
                                       />
                                     </div>
                                     <div className="col-md-6">
-                                      <label>IFSC <span className="required">*</span></label>
-                                      <input name="ifsc" type="text" className="form-control" placeholder="Enter IFSC" value={accountDetails.ifsc} onChange={handleInputChange} />
+                                      <label>
+                                        IFSC <span className="required">*</span>
+                                      </label>
+                                      <input name="ifsc" type="text" className="form-control" placeholder="Enter IFSC" value={accountDetails?.ifsc} onChange={handleInputChange} />
                                       <p className="alert-message">{errors.ifsc}</p>
                                     </div>
                                   </div>
                                 </div>
-
-                                
                               </div>
                             </div>
                           )}

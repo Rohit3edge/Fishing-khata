@@ -331,7 +331,7 @@ const EditPurchaseBill = () => {
                       <a href="#">Purchase</a>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Add Purchase Voucher
+                      Edit Purchase Voucher
                     </li>
                   </ol>
                 </div>
@@ -351,7 +351,7 @@ const EditPurchaseBill = () => {
                             <div class="row">
                               <div class="col-md-6">
                                 <label>PO Number</label>
-                                <select name="party" class="form-control" onChange={handlePOChange} value={purchaseOrderlist?.find((option) => (option?.po_number == formData.po_number))?.id || null}>
+                                <select name="party" class="form-control" onChange={handlePOChange} value={purchaseOrderlist?.find((option) => (option?.po_number == formData.po_number))?.id || null} disabled>
                                   <option value="">--Select PO--</option>
                                   {purchaseOrderlist?.map((option, index) => (
                                     <option key={index} value={option?.id}>

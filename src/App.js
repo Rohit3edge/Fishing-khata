@@ -1,7 +1,6 @@
 import React from "react";
 import "./login.css";
-import Home from "./component/Home";
-import Ledger from "./component/Ledger.jsx";
+
 import {
   BrowserRouter as Router,
   Route,
@@ -10,6 +9,14 @@ import {
 import PublicRoutes from "./component/Routes/PublicRoutes.jsx";
 import ProtectedRoutes from "./component/Routes/ProtectedRoutes.jsx";
 import Cookies from "js-cookie";
+
+
+import Home from "./component/Home";
+import LedgerList from "./component/LedgerList.jsx";
+import LedgerDetails from "./component/LedgerDetails.jsx"
+import EditLedger from "./component/EditLedger.jsx"
+
+
 //auth
 import AddLedger from "./component/AddLedger.jsx";
 import Login from "./component/Login";
@@ -26,12 +33,16 @@ import EditItem from "./component/itemEdit.jsx"
 import PartyMaster from "./component/PartyMaster.jsx";
 import AddParty from "./component/AddParty.jsx";
 import EditParty from "./component/EditParty.jsx";
+import CashBook from "./component/CashBook"
 
 import Invoice from "./component/Invoice.jsx";
 import Invoicepaymentlist from "./component/Invoicepaymentlist.jsx";
 import AddNewInvoicePayment from "./component/AddNewInvoicePayment.jsx"
 import InvoiceList from "./component/InvoiceList.jsx";
 import UpdateAddInvoice from "./component/UpdateInvoice.jsx";
+import AddCreditNote from "./component/AddCreditNote"
+import CreditNoteList from "./component/CreditNoteList"
+import EditCreditNote from "./component/EditCreditNote"
 
 // Registers
 import Registers from "./component/Registers.jsx"
@@ -71,6 +82,12 @@ import EditPurchaseOrder from "./component/EditPurchaseOrder.jsx"
 import PurchaseBillList from "./component/PurchaseBillList.jsx"
 import AddPurchaseBill from "./component/AddPurchaseBill.jsx"
 import EditPurchaseBill from "./component/EditPurchaseBill.jsx"
+import AddPaymentOut from "./component/AddPaymentOut"
+import PaymentOutList from "./component/PaymentOutList"
+import EditPaymentOut from "./component/EditPaymentOut"
+import DebitNoteList from "./component/DebitNoteList"
+import AddDebitNote from "./component/AddDebitNote"
+import EditDebitNote from "./component/EditDebitNote"
 
 // share Debenture
 
@@ -88,6 +105,10 @@ import EditDividend from "./component/EditDividend.jsx"
 // Loans
 import ListLoans from "./component/ListLoans.jsx"
 import EditLoans from "./component/EditLoans.jsx"
+
+import Journal from "./component/Journal"
+import JournalList from "./component/JournalList"
+import EditJournal from "./component/EditJournal"
 
 
 
@@ -117,7 +138,9 @@ function App() {
       {/* ProtectedRoutes */}
         <Route path="/" element={<ProtectedRoutes />}>
           <Route exact path="/" element={<Home />} />
-          <Route exact path="/ledger" element={<Ledger />} />
+          <Route exact path="/ledgerlist" element={<LedgerList />} />
+          <Route exact path="/ledgerdetails/:ledgerid" element={<LedgerDetails />} />
+          <Route exact path="/edit/ledger/:ledgerId" element={<EditLedger />} />
           <Route exact path="/addLedger" element={<AddLedger />} />
           <Route exact path="/settings" element={<Settings />} />
           <Route exact path="/addbank" element={<AddBankDetails />} />
@@ -131,12 +154,23 @@ function App() {
           <Route exact path="/partymaster" element={<PartyMaster />} />
           <Route exact path="/addparty" element={<AddParty />} />
           <Route exact path="/editparty/:id" element={<EditParty />} />
+
+          {/* CashBook */}
+
+          <Route exact path="/cashbook" element={<CashBook />} />
+
+
+          {/* Sell */}
           <Route exact path="/invoice" element={<Invoice />} />
           <Route exact path="/invoicepaymentlist" element={<Invoicepaymentlist />} />
           <Route exact path="/addnewinvoicepayment" element={<AddNewInvoicePayment />} />
           <Route exact path="/invoicelist" element={<InvoiceList />} />
           <Route exact path="/Updateaddinvoice/:id" element={<UpdateAddInvoice />} />
           <Route exact path="/invoicepayment/edit/:id" element={<EditInvoicePayment/>} />
+          <Route exact path="/addcreditnote" element={<AddCreditNote />} />
+          <Route exact path="/creditnotelist" element={<CreditNoteList />} />
+          <Route exact path="/creditnote/edit/:creditid" element={<EditCreditNote/>} />
+          
 
           {/* registers */}
           <Route exact path="/registers" element={<Registers />} />
@@ -174,6 +208,13 @@ function App() {
             <Route exact path="/purchase/purchasevoucherlist" element={<PurchaseBillList/>} />
             <Route exact path="/purchase/addpurchasevoucher" element={<AddPurchaseBill/>} />
             <Route exact path="/purchase/editpurchasevoucher/:id" element={<EditPurchaseBill/>} />
+            <Route exact path="/purchase/addpaymentout" element={<AddPaymentOut/>} />
+            <Route exact path="/purchase/paymentoutlist" element={<PaymentOutList/>} />
+            <Route exact path="/purchase/editpaymentout/:id" element={<EditPaymentOut/>} />
+
+            <Route exact path="/purchase/debitnotelist" element={<DebitNoteList/>} />
+            <Route exact path="/purchase/adddebitnote" element={<AddDebitNote/>} />
+            <Route exact path="/purchase/editdebitnote/:debitid" element={<EditDebitNote/>} />
 
 
            {/* share-transfer */}
@@ -192,8 +233,11 @@ function App() {
             <Route exact path="/loans/edit/:id" element={<EditLoans/>} />
 
 
-
-
+            {/* Journal */}
+            
+            <Route exact path="/addjournal" element={<Journal/>} />
+            <Route exact path="/journallist" element={<JournalList/>} />
+            <Route exact path="/editjournalvoucher/edit/:journalid" element={<EditJournal/>} />
 
 
             <Route path="*" element={<Notfoundpage />} />

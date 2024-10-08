@@ -1,5 +1,5 @@
 import React from 'react';
-const ProductSelector = ({ itemList, selectedProduct, handleProductChange, singleDetail, state, handleInputChange, calculateTotal, handleAddItem, isPurchase }) => (
+const ProductSelector = ({ itemList, selectedProduct, handleProductChange, singleDetail, state, handleInputChange, calculateTotal, handleAddItem, isPurchase,isDiscount }) => (
   <>
     <thead>
       <tr>
@@ -9,7 +9,7 @@ const ProductSelector = ({ itemList, selectedProduct, handleProductChange, singl
         <th>Price</th>
         <th>Cost</th>
         <th>GST</th>
-        <th>Discount</th>
+        {isDiscount && ( <th>Discount</th>)}
         {isPurchase && ( <th>Add. Tax</th>)}
         <th>Total Amount</th>
         <th>Actions</th>
@@ -51,12 +51,12 @@ const ProductSelector = ({ itemList, selectedProduct, handleProductChange, singl
           <input
             type="text"
             className="form-control"
-            value={state?.price !== 0 ? parseFloat(state?.price).toFixed(2) : singleDetail?.sale_price ? parseFloat(singleDetail?.sale_price).toFixed(2) : 0}
+            value={state?.price || 0}
             onChange={(e) => handleInputChange('price', e.target.value)}
             style={isPurchase ? { width: '70px', padding: '0.4rem' } : {}}
           />
         </td>
-        <td className="align-middle">₹{(Number(singleDetail?.sale_price || 0) * Number(state?.quantity || 0)).toFixed(2)}</td>
+        <td className="align-middle">₹{(Number(state?.price || 0) * Number(state?.quantity || 0)).toFixed(2)}</td>
         <td className="align-middle">
           <div className="input-group">
             <select className="form-control" value={parseFloat(state?.tax)} onChange={(e) => handleInputChange('tax', e.target.value)}>
@@ -73,7 +73,8 @@ const ProductSelector = ({ itemList, selectedProduct, handleProductChange, singl
             </select>
           </div>
         </td>
-        <td className="align-middle">
+        {isDiscount&&
+         ( <td className="align-middle">
           <div className="input-group">
             <input type="text" className="form-control" value={state?.discount} onChange={(e) => handleInputChange('discount', e.target.value)} />
             <select
@@ -86,7 +87,9 @@ const ProductSelector = ({ itemList, selectedProduct, handleProductChange, singl
               <option value="Percentage">Percentage</option>
             </select>
           </div>
-        </td>
+        </td>)
+        }
+        
         {isPurchase && (
           <td class="align-middle">
             <div class="input-group">

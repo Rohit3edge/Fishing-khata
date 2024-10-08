@@ -20,7 +20,7 @@ export const Getledgergroups = createAsyncThunk(
 );
 
 
-export const LedgerList = createAsyncThunk(
+export const Ledgerlist = createAsyncThunk(
     "/get/ledgerlist",
     async (thunkAPI) => {
         try {
@@ -45,6 +45,61 @@ export const LedgerAdd = createAsyncThunk(
     async (item,thunkAPI) => {
         try {
             const data = await LedgerService.LedgerAdd(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+export const GetState = createAsyncThunk(
+    "/post/getstate",
+    async (thunkAPI) => {
+        try {
+            const data = await LedgerService.GetState();
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+
+export const Getledgerdetail = createAsyncThunk(
+    "/post/getledgerdetail",
+    async (item,thunkAPI) => {
+        try {
+            const data = await LedgerService.Getledgerdetail(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+export const UpdateLedger = createAsyncThunk(
+    "/post/updateledger",
+    async (item,thunkAPI) => {
+        try {
+            const data = await LedgerService.UpdateLedger(item);
             return data;
         } catch (error) {
             const message =
