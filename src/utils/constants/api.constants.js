@@ -118,6 +118,14 @@ export const API_PATHS = {
   LoansUpdate :"/loans/update",
 
 
+QuotationList : "quotation/list",
+getQuotationnextnumber:"/quotation/next-number/",
+addQuotation: "/quotation/add",
+GetQuotationSingleDetails : "/quotation/get",
+QuotationUpdate:"/quotation/update",
+
+
+
 
 
   // PurchaseService 

@@ -289,3 +289,97 @@ export const UpdateCreditnote = createAsyncThunk(
         }
     }
 );
+
+
+export const GetByQuotationlist = createAsyncThunk(
+    "/post/getByQuotationlist",
+    async (item,thunkAPI) => {
+        try {
+            const data = await SaleService.GetByQuotationlist(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+export const Getquotationnextnumber = createAsyncThunk(
+    "/get/getquotationnextnumber",
+    async (thunkAPI) => {
+        try {
+            const data = await SaleService.Getquotationnextnumber();
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+
+export const AddQuotation = createAsyncThunk(
+    "/post/addQuotation",
+    async (item,thunkAPI) => {
+        try {
+            const data = await SaleService.AddQuotation(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+export const GetQuotationSingleDetails = createAsyncThunk(
+    "/post/getQuotationSingleDetails",
+    async (item,thunkAPI) => {
+        try {
+            const data = await SaleService.GetQuotationSingleDetails(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+
+export const QuotationUpdate = createAsyncThunk(
+    "/post/quotationUpdate",
+    async (item,thunkAPI) => {
+        try {
+            const data = await SaleService.QuotationUpdate(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+

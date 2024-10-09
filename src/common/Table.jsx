@@ -67,6 +67,9 @@ const Table = ({
       case 'invoice_combined':
         return row.invoice_prefix == null ? `${row.invoice_number}` : `${row.invoice_prefix}${row.invoice_number}`;
       case 'debit_note_date':
+      case 'quotation_combined':
+         if (row.quotation_prefix==null)return`${row.quotation_date}`
+       return `${row.quotation_prefix}${row.quotation_date}`;
       case 'added_on':
       case 'date_added':
       case 'payment_date':
