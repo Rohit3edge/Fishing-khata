@@ -84,6 +84,12 @@ import EditDividend from "./component/EditDividend.jsx"
 import ListLoans from "./component/ListLoans.jsx"
 import EditLoans from "./component/EditLoans.jsx"
 
+// Quotation
+import ListQuotation from "./component/ListQuotation.jsx"
+import AddQuotation from "./component/AddQuotation.jsx"
+import UpdateQuotation from "./component/UpdateQuotation.jsx"
+
+
 
 
 
@@ -177,6 +183,12 @@ function App() {
             {/* Loans */}
             <Route exact path="/loans/list" element={<ListLoans/>} />
             <Route exact path="/loans/edit/:id" element={<EditLoans/>} />
+
+            {/* Quotation */}
+            <Route exact path="/quotation/list" element={<ListQuotation/>} />
+            <Route exact path="/quotation/create" element={<AddQuotation/>} />
+            <Route exact path="/quotation/edit/:id" element={<UpdateQuotation/>} />
+
 
 
 

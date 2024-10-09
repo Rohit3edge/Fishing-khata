@@ -41,6 +41,9 @@ const Table = ({ columns, data, tableRef, pageSize, setPageSize, currentPage, to
       case 'invoice_combined':
         if (row.invoice_prefix==null)return`${row.invoice_number}`
       return `${row.invoice_prefix}${row.invoice_number}`;
+      case 'quotation_combined':
+         if (row.quotation_prefix==null)return`${row.quotation_date}`
+       return `${row.quotation_prefix}${row.quotation_date}`;
       case 'added_on':
         return Moment(row[column.field]).format('DD-MM-YYYY');
         case 'date_added':

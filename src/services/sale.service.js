@@ -163,6 +163,7 @@ class SaleService {
           })
           .then((response) => response.data);
       }
+
       static InvoiceUpdate(item) {
         const api = `${API_PATHS.invoiceUpdate}`;
     
@@ -198,6 +199,92 @@ class SaleService {
 
       static UpdatePayment(item) {
         const api = `${API_PATHS.updatepayment}`;
+    
+        return axios
+          .post(api, item, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .then((response) => response.data);
+      }
+
+
+      static GetByQuotationlist(item) {
+        const api = `${API_PATHS.QuotationList}`;
+        const formData = new FormData();
+    
+        for (const key in item) {
+          if (item.hasOwnProperty(key)) {
+            formData.append(key, item[key]);
+          }
+        }
+    
+        return axios
+          .post(api, formData, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .then((response) => response.data);
+      }
+
+
+      static Getquotationnextnumber() {
+        const user = JSON.parse(localStorage.getItem("user"));
+        const id = user?.data?.id;  // Safely access id
+        
+        if (!id) {
+            throw new Error("User ID not found");
+        }
+        const api = `${API_PATHS.getQuotationnextnumber}${id}`;
+       
+    
+        return axios
+          .get(api,{
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .then((response) => response.data);
+      }
+
+
+      static AddQuotation(item) {
+        const api = `${API_PATHS.addQuotation}`;
+    
+        return axios
+          .post(api, item, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .then((response) => response.data);
+      }
+
+
+      static GetQuotationSingleDetails(item) {
+        const api = `${API_PATHS.GetQuotationSingleDetails}`;
+        const formData = new FormData();
+    
+        for (const key in item) {
+          if (item.hasOwnProperty(key)) {
+            formData.append(key, item[key]);
+          }
+        }
+    
+        return axios
+          .post(api, formData, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .then((response) => response.data);
+      }
+
+
+      static QuotationUpdate(item) {
+        const api = `${API_PATHS.QuotationUpdate}`;
     
         return axios
           .post(api, item, {

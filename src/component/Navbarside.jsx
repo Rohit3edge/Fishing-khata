@@ -103,7 +103,7 @@ const Navbarside = () => {
                       </NavLink>
                     </li>
                     <li className="submenu-item">
-                      <NavLink to="/Sale/Submenu2" className="menu-title">
+                      <NavLink to="/quotation/list" className="menu-title">
                         Quotation
                       </NavLink>
                     </li>

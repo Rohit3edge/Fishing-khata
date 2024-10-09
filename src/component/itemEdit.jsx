@@ -9,7 +9,7 @@ import Footer from './Footer';
 
 const UpdateItem = () => {
   const { id } = useParams();
-  const itemId = id;
+  const itemId = id;  
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
