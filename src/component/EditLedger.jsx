@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbarside from './Navbarside';
 import Moment from 'moment';
 import { useDispatch } from 'react-redux';
-import { Getledgerdetail, Getledgergroups, GetState ,UpdateLedger} from '../store/slices/ledger'; // Assuming these actions exist
+import { Getledgerdetail, Getledgergroups, GetState ,UpdateLedger} from '../store/slices/ledger'; 
 import { useNavigate, useParams } from 'react-router-dom';
 import Loader from '../common/Loader';
 import Footer from './Footer';
@@ -10,17 +10,10 @@ import Footer from './Footer';
 const EditLedger = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { ledgerId } = useParams(); // Get the ledgerId from the URL params for editing
+  const { ledgerId } = useParams(); 
 
   const [ledgerGroups, setLedgerGroups] = useState([]);
-  const [ledgerName, setLedgerName] = useState('');
-  const [groupName, setGroupName] = useState('');
-  const [groupId, setGroupId] = useState('');
   const [state, setState] = useState([]);
-  const [openingDate, setOpeningDate] = useState('');
-  const [amount, setAmount] = useState('');
-  const [transactionType, setTransactionType] = useState('cr');
-  const [isdefault, setIsdefault] = useState();
   const [isLoading, setIsLoading] = useState(false);
  
 
@@ -52,7 +45,6 @@ const EditLedger = () => {
   });
 
 
-  const parsedObject = groupName ? JSON.parse(groupName) : {};
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -325,7 +317,8 @@ console.log(accountDetails)
                               <p className="alert-message">{errors.opening_balance}</p>
                             </div>
                           </div>
-                          <div className="row">
+                          { accountDetails?.group_name === 'Bank Accounts'? "" : (
+                            <div className="row">
                             <div className="col-md-3">
                               <label>Address</label>
                               <input name="address" type="text" className="form-control" value={accountDetails?.address} onChange={handleInputChange} />
@@ -351,9 +344,12 @@ console.log(accountDetails)
                             </div>
                           </div>
 
+                          )}
+                          
+
                           {/* Conditionally render additional fields */}
                           {/* parsedObject.group_name === 'Bank Accounts' && */}
-                          {parsedObject?.group_name === 'Bank Accounts' && (
+                          {accountDetails?.group_name === 'Bank Accounts' && (
                             <div class="ledger_info row">
                               <div class="col-md-12">
                                 <div class="form-group">

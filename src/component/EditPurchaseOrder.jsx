@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import {toast } from 'react-hot-toast';
 import { ListParties } from '../store/slices/parties';
 import {GetSingleDetailsPurchaseorders,UpdatePurchaseOrder} from '../store/slices/purchase'
 import EditPurchaseOrderSec from './EditPurchaseOrderSec';
@@ -38,8 +39,8 @@ const EditPurchaseOrder = () => {
     profile_id:Id ,
     po_prefix:"",
     party_id: '',
-    ledger_id:'',
-    party_gstn: '',
+    party_ledger_id:'',
+    party_gstn: ''||null,
     po_number: '',
     po_date: "",
     quotation_number: '',
@@ -92,21 +93,19 @@ const EditPurchaseOrder = () => {
           const purchaseorder=data?.data?.purchase_order
           setSelectedPartyDetails({
             party_gstn: purchaseorder?.party_gstn || '',
-            ledger_id: purchaseorder?.ledger_id || '',
-            party_id: purchaseorder?.party_id || '',
+            party_ledger_id: purchaseorder?.ledger_id || '',
           });
           
           if (purchaseorder?.party_id){
              fetchParties().then((ndata)=>{
-              handlePartyChange( purchaseorder?.party_id,ndata, true);
+              handlePartyChange( purchaseorder?.ledger_id,ndata, true);
             })
             
           }
 
           setFormData((prevData) => ({
               ...prevData,
-              party_id: purchaseorder?.party_id || '',
-              ledger_id:purchaseorder?.ledger_id || '',
+              party_ledger_id:purchaseorder?.ledger_id || '',
               party_gstn: purchaseorder?.party_gstn || '',
               po_number: purchaseorder?.po_number || '' ,
               po_date: purchaseorder?.po_date || '',
@@ -137,7 +136,7 @@ const EditPurchaseOrder = () => {
   // Party selection logic
   const partyOptions = listParties.map((party) => ({
     value: party?.id,
-    label: party?.name,
+    label: party?.ledger,
   }));
 
   const handlePartyChange = (selectedOption, ndata, isData) => {
@@ -149,20 +148,19 @@ const EditPurchaseOrder = () => {
     }
     const ListParties=isData?ndata:listParties
     const party = ListParties?.find((p) => p?.id == FinalselectedOption);
+    console.log("party",party)
     if (party) {
       setSelectedPartyDetails({
         address: party?.address,
-        gstin: party?.gstin,
+        gstin: party?.gstn,
         phone: party?.phone,
         state: party?.state,
-        ledger_id: party?.ledger_id,
-        party_id: party?.id,
+        party_ledger_id: party?.id,
       });
       setFormData((prevData) => ({
         ...prevData,
-        party_id: party?.id,
-        ledger_id: party?.ledger_id,
-        party_gstn: party?.gstin,
+        party_ledger_id: party?.id,
+        party_gstn: party?.gstn,
       }));
     } else {
       console.error('Party not found');
@@ -192,6 +190,7 @@ const EditPurchaseOrder = () => {
       console.log('Form Data:', mergedData);
       dispatch(UpdatePurchaseOrder(mergedData)).unwrap()
       .then((data) => {
+        toast.success('Update Purchase Order Successfully')
         setIsLoading(false);
         navigate('/purchase/purchaseorderlist');
       })
@@ -257,7 +256,7 @@ const EditPurchaseOrder = () => {
                                 <label>
                                   Supplier/Vendor <span class="required">*</span>
                                 </label>
-                                <Select options={partyOptions} placeholder="--Select Customer--" onChange={handlePartyChange} value={partyOptions?.find((option) => option?.value === selectedPartyDetails?.party_id) || null}/>
+                                <Select options={partyOptions} placeholder="--Select Customer--" onChange={handlePartyChange} value={partyOptions?.find((option) => option?.value === selectedPartyDetails?.party_ledger_id) || null}/>
                                 {errors?.customer && <p className="text-danger">{errors?.customer}</p>}
                               </div>
                             </div>

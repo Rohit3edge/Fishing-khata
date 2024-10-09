@@ -46,7 +46,7 @@ const EditDebitNote = () => {
 
   const partyOptions = listParties?.map((party) => ({
     value: party.id,
-    label: party.name,
+    label: party.ledger,
   }));
 
   useEffect(() => {
@@ -88,10 +88,10 @@ const EditDebitNote = () => {
               notes: debitNote?.notes,
             }));
           }
-        if (debitNote?.party_id) {
+        if (debitNote?.ledger_id) {
           fetchParties().then((ndata) => {
-            handlePartyChange(debitNote?.party_id, ndata, true);
-            handleGetCustomer(debitNote?.party_id).then((cdata) => {
+            handlePartyChange(debitNote?.ledger_id, ndata, true);
+            handleGetCustomer(debitNote?.ledger_id).then((cdata) => {
                 handleInvoiceChange(debitNote?.purchase_voucher_id, cdata, true);
               });
           });
@@ -125,7 +125,7 @@ const EditDebitNote = () => {
     }
     const ListParties = isData ? ndata : listParties;
     const party = ListParties?.find((p) => p?.id == FinalselectedOption);
-    setFormData((prevFormData) =>( { ...prevFormData, customer_id: party.id, party_gstn: party?.gstin, ledger_id: party?.ledger_id }));
+    setFormData((prevFormData) =>( { ...prevFormData, customer_id: party.id, party_gstn: party?.gstn, ledger_id: party?.id }));
     handleGetCustomer(party.id);
   };
 
@@ -182,8 +182,7 @@ const EditDebitNote = () => {
       debit_note_number: formData?.debit_note_number,
       debit_note_date: formData?.debit_note_date,
       fin_year: '2024-2025',
-      party_id: formData?.customer_id,
-      ledger_id: formData?.ledger_id,
+      party_ledger_id: formData?.ledger_id,
       party_gstn: formData?.party_gstn,
       purchase_voucher_id: formData?.ref_id,
       notes: formData?.notes,

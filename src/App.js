@@ -1,6 +1,6 @@
 import React from "react";
 import "./login.css";
-
+import { Toaster } from 'react-hot-toast';
 import {
   BrowserRouter as Router,
   Route,
@@ -80,8 +80,8 @@ import AddPurchaseOrder from "./component/AddPurchaseOrder.jsx"
 import PurchaseOrderList from "./component/PurchaseOrderList.jsx"
 import EditPurchaseOrder from "./component/EditPurchaseOrder.jsx"
 import PurchaseBillList from "./component/PurchaseBillList.jsx"
-import AddPurchaseBill from "./component/AddPurchaseBill.jsx"
-import EditPurchaseBill from "./component/EditPurchaseBill.jsx"
+import AddPurchaseBill from "./component/PurchaseVoucher/AddPurchaseBill.jsx"
+import EditPurchaseBill from "./component/PurchaseVoucher/EditPurchaseBill.jsx"
 import AddPaymentOut from "./component/AddPaymentOut"
 import PaymentOutList from "./component/PaymentOutList"
 import EditPaymentOut from "./component/EditPaymentOut"
@@ -133,10 +133,28 @@ function App() {
 
 
   return (
-    
+    <>
+    <Toaster containerStyle={{
+    top: 70,
+    left: 10,
+    right: 10,
+  }}
+  toastOptions={{
+    // Define default options
+    className: '',
+    duration: 5000,
+    style: {
+      background: '#363636',
+      color: '#fff',
+    },
+  }}
+
+  
+  /> 
       <Routes>
       {/* ProtectedRoutes */}
         <Route path="/" element={<ProtectedRoutes />}>
+
           <Route exact path="/" element={<Home />} />
           <Route exact path="/ledgerlist" element={<LedgerList />} />
           <Route exact path="/ledgerdetails/:ledgerid" element={<LedgerDetails />} />
@@ -248,6 +266,7 @@ function App() {
           <Route exact path="/login" element={<Login />} />
         </Route>
       </Routes>
+      </>
   );
 }
 

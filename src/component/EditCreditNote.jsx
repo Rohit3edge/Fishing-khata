@@ -45,7 +45,7 @@ const EditCreditNote = () => {
 
   const partyOptions = listParties?.map((party) => ({
     value: party.id,
-    label: party.name,
+    label: party.ledger,
   }));
 
   useEffect(() => {
@@ -86,10 +86,10 @@ const EditCreditNote = () => {
               notes: creditNote?.notes,
             }));
           }
-        if (creditNote?.party_id) {
+        if (creditNote?.ledger_id) {
           fetchParties().then((ndata) => {
-            handlePartyChange(creditNote?.party_id, ndata, true);
-            handleGetCustomer(creditNote?.party_id).then((cdata) => {
+            handlePartyChange(creditNote?.ledger_id, ndata, true);
+            handleGetCustomer(creditNote?.ledger_id).then((cdata) => {
                 handleInvoiceChange(creditNote?.invoice_id, cdata, true);
               });
           });
@@ -123,7 +123,7 @@ const EditCreditNote = () => {
     }
     const ListParties = isData ? ndata : listParties;
     const party = ListParties?.find((p) => p?.id == FinalselectedOption);
-    setFormData((prevFormData) =>( { ...prevFormData, customer_id: party.id, party_gstn: party?.gstin, ledger_id: party?.ledger_id }));
+    setFormData((prevFormData) =>( { ...prevFormData, customer_id: party.id, party_gstn: party?.gstin, ledger_id: party?.id }));
     handleGetCustomer(party.id);
   };
 
@@ -181,8 +181,7 @@ const EditCreditNote = () => {
       credit_note_number: formData?.credit_note_number,
       credit_note_date: formData?.credit_note_date,
       fin_year: '2024-2025',
-      party_id: formData?.customer_id,
-      ledger_id: formData?.ledger_id,
+      party_ledger_id: formData?.ledger_id,
       party_gstn: formData?.party_gstn,
       invoice_id: formData?.ref_id,
       notes: formData?.notes,
@@ -240,13 +239,13 @@ const EditCreditNote = () => {
             <div class="container">
               <div class="page-header">
                 <div>
-                  <h2 class="main-content-title tx-24 mg-b-5">Debit Note</h2>
+                  <h2 class="main-content-title tx-24 mg-b-5">Credit Note</h2>
                   <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                       <a href="#">Purchase</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                      Edit Debit Note
+                      Edit Credit Note
                     </li>
                   </ol>
                 </div>

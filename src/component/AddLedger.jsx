@@ -295,6 +295,7 @@ const AddLedger = () => {
                               <p className="alert-message">{errors.amount}</p>
                             </div>
                           </div>
+                         { parsedObject?.group_name === 'Bank Accounts'? "" : (
                           <div className="row">
                             <div className="col-md-3">
                               <label>Address</label>
@@ -320,6 +321,9 @@ const AddLedger = () => {
                               <input name="gstn" type="text" placeholder="Enter the gstn" className="form-control" value={accountDetails?.gstn} onChange={handleInputChange} />
                             </div>
                           </div>
+
+                         )}
+                          
 
                           {/* Conditionally render additional fields */}
                           {/* parsedObject.group_name === 'Bank Accounts' && */}

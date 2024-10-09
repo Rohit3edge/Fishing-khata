@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {toast } from 'react-hot-toast';
 import { ListParties } from '../store/slices/parties';
 import {AddPurchaseorder} from '../store/slices/purchase'
 import AddPurchaseOrderSec from './AddPurchaseOrderSec';
@@ -23,22 +24,20 @@ const AddPurchaseOrder = () => {
   const [listParties, setListParties] = useState([]);
   const [selectedPartyDetails, setSelectedPartyDetails] = useState({
     address: '',
-    gstin: '',
+    gstin: '' || null,
     phone: '',
     state: '',
-    ledger_id: '',
-    party_id: '',
+    party_ledger_id: '',
   });
   // State for form data
   const [formData, setFormData] = useState({
     profile_id:id ,
     po_prefix:"",
-    party_id: '',
-    ledger_id:'',
+    party_ledger_id:'',
     fin_year:'2024-2025',
     roundoff:"",
     tcs_amount:"",
-    party_gstn: '',
+    party_gstn: '' ||null,
     po_number: '',
     po_date: "",
     quotation_number: '',
@@ -97,7 +96,7 @@ const AddPurchaseOrder = () => {
   // Party selection logic
   const partyOptions = listParties.map((party) => ({
     value: party.id,
-    label: party.name,
+    label: party.ledger,
   }));
 
   const handlePartyChange = (selectedOption) => {
@@ -105,17 +104,15 @@ const AddPurchaseOrder = () => {
     if (party) {
       setSelectedPartyDetails({
         address: party.address,
-        gstin: party.gstin,
+        gstin: party.gstn,
         phone: party.phone,
         state: party.state,
-        ledger_id: party.ledger_id,
-        party_id: party.id,
+        party_ledger_id: party.id,
       });
       setFormData((prevData) => ({
         ...prevData,
-        party_id:party.id,
-        ledger_id:party.ledger_id,
-        party_gstn:party.gstin,
+        party_ledger_id:party.id,
+        party_gstn:party.gstn,
       }));
     }
   };
@@ -132,10 +129,10 @@ const AddPurchaseOrder = () => {
   // Validate form
   const validateForm = () => {
     let newErrors = {};
-    if (!selectedPartyDetails.party_id) {
+    if (!selectedPartyDetails?.party_ledger_id) {
       newErrors.customer = 'Customer is required.';
     }
-    if (!selectedPartyDetails.state) {
+    if (!selectedPartyDetails?.state) {
       newErrors.selectedPartyState = 'Billing state is required.';
     }
 
@@ -156,6 +153,7 @@ const AddPurchaseOrder = () => {
       dispatch(AddPurchaseorder(mergedData))
       .unwrap()
       .then((data) => {
+        toast.success('Add Purchase Order Successfully')
         setIsLoading(false);
         navigate('/purchase/purchaseorderlist');
       })

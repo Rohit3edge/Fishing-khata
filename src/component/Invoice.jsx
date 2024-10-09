@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { ListParties } from '../store/slices/parties';
 import { Getinvoicesnextnumber, AddInvoices } from '../store/slices/sale';
 import { Getsettings} from "../store/slices/settings";
+import {toast } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import InvoiceSecond from './InvoiceSecond';
 import Select from 'react-select';
 import Navbarside from './Navbarside';
@@ -214,11 +216,13 @@ const handleSubmit = async (e) => {
 
   console.log('Data to be sent:', mergedData);
 
+
   setIsLoading(true);
 
   try {
     // Use await to wait for the dispatch to finish
     await dispatch(AddInvoices(mergedData)).unwrap();
+    toast.success('Add Invoice Successfully')
     setIsLoading(false);
     navigate('/invoicelist');
   } catch (error) {
@@ -230,8 +234,10 @@ const handleSubmit = async (e) => {
 
   return (
     <div>
+         
       <div className="row" style={{ marginLeft: '0', marginRight: '0' }}>
         <Navbarside />
+        {/* <Toaster />  */}
         {isLoading && <Loader />}
         <div className="col-md-10">
           <div className="row top-header">

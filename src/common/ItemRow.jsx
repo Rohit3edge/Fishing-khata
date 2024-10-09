@@ -1,5 +1,5 @@
 import React from 'react';
-const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, state, handleItemChange,isPurchase,isDiscount }) => (
+const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, state, handleItemChange, isPurchase, isDiscount }) => (
   <>
     {addedItems?.map((item, index) => (
       <tr key={index}>
@@ -28,7 +28,7 @@ const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, 
           </div>
         </td>
         <td className="align-middle">
-          <input type="text" className="form-control" name="price" value={Number(item?.price).toFixed(2)} onChange={(e) => handleItemChange('price', e.target.value, index)} />
+          <input type="text" className="form-control" name="price" value={item?.price} onChange={(e) => handleItemChange('price', e.target.value, index)} />
         </td>
         <td className="align-middle">₹{((item?.price || 0) * (item?.quantity || 0)).toFixed(2).toString().replace(/^-/, '₹')}</td>
         <td className="align-middle">
@@ -48,21 +48,26 @@ const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, 
           </div>
         </td>
         {isDiscount && (
-        <td className="align-middle">
-          <div className="input-group">
-            <input type="text" className="form-control" name="discount" value={item?.discount} onChange={(e) => handleItemChange('discount', e.target.value, index)} />
-            <select className="form-control" name="discount_type" value={item?.discount_type} onChange={(e) => handleItemChange('discount_type', e.target.value, index)}>
-              <option value="Fixed">Fixed</option>
-              <option value="Percentage">Percentage</option>
-            </select>
-          </div>
-        </td>)}
+          <td className="align-middle">
+            <div className="input-group">
+              <input type="text" className="form-control" name="discount" value={item?.discount} onChange={(e) => handleItemChange('discount', e.target.value, index)} />
+              <select className="form-control" name="discount_type" value={item?.discount_type} onChange={(e) => handleItemChange('discount_type', e.target.value, index)}>
+                <option value="Fixed">Fixed</option>
+                <option value="Percentage">Percentage</option>
+              </select>
+            </div>
+          </td>
+        )}
         {isPurchase && (
           <td class="align-middle">
             <div class="input-group">
-              <select class="form-control" name="add_tax" value={item?.add_tax} onChange={(e) => handleItemChange('add_tax', e.target.value,index)} >
+              <select class="form-control" name="add_tax" value={item?.add_tax} onChange={(e) => handleItemChange('add_tax', e.target.value || "", index)}>
                 <option value="0">None</option>
-                <option value="2@Cess">2@Cess</option>
+                {state?.additionaltax && state?.additionaltax?.map((tax, index) => (
+                <option key={index} value={ `${Number(tax?.tax_perc)?.toFixed(0)}@${tax?.tax_type}`}>
+                  { `${Number(tax?.tax_perc)?.toFixed(0)}@${tax?.tax_type}`}
+                </option>
+              ))}
               </select>
             </div>
           </td>

@@ -31,7 +31,7 @@ const EditPaymentOut = () => {
 
   const [formData, setFormData] = useState({
     profile_id: Id,
-    customer_id: '',
+    party_ledger_id: '',
     ref_id: '',
     amount_paid: '',
     payment_date: '',
@@ -49,7 +49,7 @@ const EditPaymentOut = () => {
 
   const partyOptions = listParties.map((party) => ({
     value: party.id,
-    label: party.name,
+    label: party.ledger,
   }));
 
 
@@ -60,11 +60,11 @@ const EditPaymentOut = () => {
         .unwrap()
         .then((data) => {
           setIsLoading(false); 
-          console.log("hello data ",data.data)
-          const party = listParties.find(party => party.id === data.data.party_id);
-          // console.log(party)
+          console.log("hello data ",data.data.party_ledger_id)
+          const party = listParties?.find(party => party?.id === data?.data?.party_ledger_id);
+          console.log(party)
           if (party) {
-            setSelectedParty({ value: party.id, label: party.name });
+            setSelectedParty({ value: party.id, label: party.ledger });
              handleGetCustomer(party.id).then((ndata)=>{
              handleInvoiceChange(data?.data?.ref_id,ndata,true)
             })
@@ -73,7 +73,7 @@ const EditPaymentOut = () => {
           
           if (data && data?.data) {
             setFormData({
-              customer_id: data?.data?.party_id || '', 
+              customer_id: data?.data?.party_ledger_id || '', 
               ref_id: data.data.ref_id || '', 
               amount_paid: data.data.amount || '', 
               payment_date: data.data.payment_date || '', 
@@ -215,7 +215,7 @@ const EditPaymentOut = () => {
     const subdata={
       profile_id:Number(Id),
       payment_id:formData.payment_id,
-      customer_id:Number(formData.customer_id ),
+      party_ledger_id:Number(formData.customer_id ),
       ref_id:Number(formData.ref_id ),
       amount_paid:Number(formData.amount_paid),
       payment_date:formData.payment_date ,

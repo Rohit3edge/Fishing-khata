@@ -46,7 +46,7 @@ const Journal = () => {
 
   const partyOptions = listParties.map((party) => ({
     value: party.id,
-    label: party.name,
+    label: party.ledger,
   }));
 
   // Fetch parties

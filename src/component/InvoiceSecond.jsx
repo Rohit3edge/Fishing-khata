@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
+import {toast } from 'react-hot-toast';
 import { Getunits } from '../store/slices/settings';
 import { Listitems } from '../store/slices/items';
 import { Getsingledetail } from '../store/slices/sale';
@@ -176,8 +177,8 @@ const InvoiceSecond = ({ onChildDataChange, onSubmit }) => {
   const handleAddItem = () => {
     const { selectedProduct,quantity, price,unit_id, singleDetail, price_tax_type, tax, discount, discount_type } = state;
     
-    if (!selectedProduct || quantity <= 0 || price <= 0) {
-      alert('Please fill out all fields correctly.');
+    if (!selectedProduct || quantity <= 0 || Number(price) <= 0) {
+      toast.error('Please fill out all fields correctly.');
       return;
     }
     // Find the unit name based on the unit_id
@@ -242,8 +243,12 @@ const InvoiceSecond = ({ onChildDataChange, onSubmit }) => {
       price:0
     }));
   };
+
+  
   const handleItemChange = useCallback(
     (field, value, index) => {
+
+      console.log('field', field, value, index);
       // Create a copy of the items
       const updatedItems = [...state.addedItems];
 

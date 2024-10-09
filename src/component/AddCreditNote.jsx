@@ -43,7 +43,7 @@ const AddCreditNote = () => {
 
   const partyOptions = listParties.map((party) => ({
     value: party.id,
-    label: party.name,
+    label: party.ledger,
   }));
 
   // Fetch parties
@@ -80,7 +80,7 @@ const AddCreditNote = () => {
     const partyId = selectedOption.value;
     const partygst = listParties?.find((inv) => inv.id == partyId);
     console.log(partygst)
-    setFormData({ ...formData, customer_id: partyId,party_gstn:partygst?.gstin,ledger_id:partygst?.ledger_id});
+    setFormData({ ...formData, customer_id: partyId,party_gstn:partygst?.gstn,ledger_id:partygst?.id});
     handleGetCustomer(partyId);
   };
 
@@ -141,8 +141,7 @@ const AddCreditNote = () => {
         credit_note_number: formData?.credit_note_number,
         credit_note_date:formData?.credit_note_date,
         fin_year: "2024-2025",
-        party_id:formData?.customer_id,
-        ledger_id:formData?.ledger_id,
+        party_ledger_id:formData?.ledger_id,
         party_gstn:formData?.party_gstn,
         invoice_id:formData?.ref_id,
         notes: formData?.notes,

@@ -24,7 +24,7 @@ const AddPaymentOut = () => {
 
   const [formData, setFormData] = useState({
     profile_id: id,
-    customer_id: '',
+    party_ledger_id: '',
     ref_id: '',
     amount_paid: '',
     payment_date: '',
@@ -40,7 +40,7 @@ const AddPaymentOut = () => {
 
   const partyOptions = listParties.map((party) => ({
     value: party.id,
-    label: party.name,
+    label: party.ledger,
   }));
 
   // Fetch parties
@@ -88,7 +88,7 @@ const AddPaymentOut = () => {
   const handlePartyChange = (selectedOption) => {
     setSelectedParty(selectedOption);
     const partyId = selectedOption.value;
-    setFormData({ ...formData, customer_id: partyId});
+    setFormData({ ...formData, party_ledger_id: partyId});
     handleGetCustomer(partyId);
   };
 
@@ -150,7 +150,7 @@ const AddPaymentOut = () => {
 
   const validateForm = () => {
     let newErrors = {};
-    if (!formData.customer_id) newErrors.customer_id = 'Customer is required.';
+    if (!formData.party_ledger_id) newErrors.party_ledger_id = 'Customer is required.';
     if (!formData.amount_paid || isNaN(formData.amount_paid) || formData.amount_paid <= 0) newErrors.amount_paid = 'Valid amount is required.';
     if (!formData.payment_date || !validateDate(formData.payment_date)) newErrors.payment_date = 'Please select a valid date (not in the future).';
     if (!formData.payment_mode) newErrors.payment_mode = 'Payment mode is required.';
@@ -231,7 +231,7 @@ const AddPaymentOut = () => {
                               Customer <span className="required">*</span>
                             </label>
                             <Select options={partyOptions} placeholder="--Select Customer--" onChange={handlePartyChange} value={selectedParty} />
-                            {errors.customer_id && <p className="text-danger">{errors.customer_id}</p>}
+                            {errors.party_ledger_id && <p className="text-danger">{errors.party_ledger_id}</p>}
                           </div>
 
                           <div class="col-md-6">

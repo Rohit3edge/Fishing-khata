@@ -59,10 +59,10 @@ const EditInvoicePayment = () => {
         .unwrap()
         .then((data) => {
           setIsLoading(false); 
-          const party = listParties.find(party => party.id === data.data.party_id);
+          const party = listParties.find(party => party.id === data.data.party_ledger_id);
           // console.log(party)
           if (party) {
-            setSelectedParty({ value: party.id, label: party.name });
+            setSelectedParty({ value: party?.id, label: party?.ledger });
              handleGetCustomer(party.id).then((ndata)=>{
              handleInvoiceChange(data?.data?.ref_id,ndata,true)
             })
@@ -71,7 +71,7 @@ const EditInvoicePayment = () => {
           
           if (data && data?.data) {
             setFormData({
-              party_ledger_id: data?.data?.party_id || '', 
+              party_ledger_id: data?.data?.party_ledger_id || '', 
               ref_id: data.data.ref_id || '', 
               amount_received: data.data.amount || '', 
               payment_date: data.data.payment_date || '', 
@@ -80,7 +80,8 @@ const EditInvoicePayment = () => {
               notes: data.data.remark || '',
               pay_mode: data.data.pay_mode,
               payment_id:data.data.id,
-              ledger_id:data.data.ledger_id
+              ledger_id:data.data.ledger_id,
+              bank_name:data.data.bank_name || ''
             });
             
           }
@@ -90,7 +91,7 @@ const EditInvoicePayment = () => {
           console.log(message);
         });
     }, [Id,listParties]);
-    console.log(formData)
+    // console.log(formData)
 
   // Fetch parties
   useEffect(() => {
@@ -159,6 +160,7 @@ const EditInvoicePayment = () => {
       const PaymentMethods = paymentMethods?.find((p) => p.id === value)?.ledger;
       const uPaymentMethods= PaymentMethods=="Cash" ?"Cash":"Bank"
       const bankname =PaymentMethods=="Cash" ? " ":PaymentMethods
+
       setFormData((prevData) => ({
         ...prevData,
         payment_mode: uPaymentMethods, 

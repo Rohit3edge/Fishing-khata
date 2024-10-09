@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
+import {toast } from 'react-hot-toast';
 import { Getunits } from '../store/slices/settings';
 import { Listitems } from '../store/slices/items';
 import { Getsingledetail } from '../store/slices/sale';
@@ -99,8 +100,8 @@ const EditPurchaseOrderSec = ({ onChildDataChange, data }) => {
   const handleAddItem = () => {
     const { selectedProduct, quantity, unit_id, price, hsn } = state;
 
-    if (!selectedProduct || quantity <= 0 || !unit_id || price <= 0) {
-      alert('Please fill out all fields correctly.');
+    if (!selectedProduct || quantity <= 0 || !unit_id || price < 0) {
+      toast.error('Please fill out all fields correctly.');
       return;
     }
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import {toast } from 'react-hot-toast';
 import Cookies from 'js-cookie';
 import logo from '../img/logos/kisaankhatalogo.png';
 import { login } from '../store/slices/auth';
@@ -58,7 +59,8 @@ const Login = () => {
       dispatch(login({ email, password }))
         .unwrap()
         .then((data) => {
-          console.log(data?.user?.data);
+          // console.log(data?.user?.data);
+          toast.success('LogIn Successfully')
           const loginTime = new Date();
           loginTime.setMinutes(loginTime.getMinutes() +100); // Add 10 minutes to the login time
           Cookies.set('user', JSON.stringify(data?.user?.data), { expires: loginTime });

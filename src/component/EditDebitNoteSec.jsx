@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
+import {toast } from 'react-hot-toast';
 import { Getunits } from '../store/slices/settings';
 import { Listitems } from '../store/slices/items';
 import { Getsingledetail } from '../store/slices/sale';
@@ -108,7 +109,7 @@ const EditDebitNoteSec = ({ onChildDataChange,data}) => {
         return acc;
       }, {});
       // Check if shipping cost exists and calculate shipping GST (12%)
-      const shippingCost = parseFloat(data?.debit_note?.shipping_amount) || 0;
+      const shippingCost = parseFloat(data?.debit_note?.shipping_cost) || 0;
       if (shippingCost > 0) {
         const shippingTaxRate = 12; // Fixed 12% GST for shipping
         const shippingGst = parseFloat(((shippingCost * shippingTaxRate) / 100).toFixed(2));
@@ -127,7 +128,7 @@ const EditDebitNoteSec = ({ onChildDataChange,data}) => {
         ...prevState,
         addedItems: initializedItems,
         taxAmounts: initialTaxAmounts,
-        shippingCost: Number(data?.debit_note?.shipping_amount) || 0,
+        shippingCost: Number(data?.debit_note?.shipping_cost) || 0,
 
       }));
     }
@@ -260,8 +261,8 @@ const EditDebitNoteSec = ({ onChildDataChange,data}) => {
   const handleAddItem = () => {
     const {selectedProduct,quantity, price, unit_id, singleDetail, price_tax_type, tax, discount, discount_type, add_tax } = state;
 
-    if (!selectedProduct || quantity <= 0 || price <= 0) {
-      alert('Please fill out all fields correctly.');
+    if (!selectedProduct || quantity <= 0 || price < 0) {
+      toast.error('Please fill out all fields correctly.');
       return;
     }
     // Find the unit name
