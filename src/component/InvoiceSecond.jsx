@@ -67,7 +67,7 @@ const InvoiceSecond = ({ onChildDataChange, onSubmit }) => {
           const data = await dispatch(Getsingledetail({ profile_id: id, item_id: productId })).unwrap();
           setState((prevState) => ({
             ...prevState,
-            price:data?.data?.sale_price,
+            price:Number(data?.data?.sale_price)?.toFixed(2),
             singleDetail: data?.data,
             unit_id: data?.data?.unit || '',
             tax: data?.data?.tax || 0,
@@ -432,8 +432,6 @@ const InvoiceSecond = ({ onChildDataChange, onSubmit }) => {
           <div className="card-body">
             <table className="table item-table">
               <ProductSelector
-                itemList={state?.itemList}
-                selectedProduct={state?.selectedProduct}
                 handleProductChange={handleProductChange}
                 singleDetail={state?.singleDetail}
                 handleInputChange={handleInputChange}

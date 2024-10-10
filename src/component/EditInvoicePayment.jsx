@@ -72,16 +72,16 @@ const EditInvoicePayment = () => {
           if (data && data?.data) {
             setFormData({
               party_ledger_id: data?.data?.party_ledger_id || '', 
-              ref_id: data.data.ref_id || '', 
-              amount_received: data.data.amount || '', 
-              payment_date: data.data.payment_date || '', 
-              payment_mode: data.data.pay_mode || '', 
-              transaction_number: data.data.transaction_id || '', 
-              notes: data.data.remark || '',
-              pay_mode: data.data.pay_mode,
-              payment_id:data.data.id,
-              ledger_id:data.data.ledger_id,
-              bank_name:data.data.bank_name || ''
+              ref_id: data?.data?.ref_id || '', 
+              amount_received:Number(data?.data?.amount)?.toFixed(2)  || '', 
+              payment_date: data?.data?.payment_date || '', 
+              payment_mode: data?.data?.pay_mode || '', 
+              transaction_number: data?.data?.transaction_id || '', 
+              notes: data?.data?.remark || '',
+              pay_mode: data?.data?.pay_mode,
+              payment_id:data?.data?.id,
+              ledger_id:data?.data?.ledger_id,
+              bank_name:data?.data?.bank_name || ''
             });
             
           }
@@ -137,9 +137,19 @@ const EditInvoicePayment = () => {
   };
 
   const handlePartyChange = (selectedOption) => {
-    setSelectedParty(selectedOption);
+    setSelectedInvoice(null); 
+    setByCustomer(null)
+    setSelectedParty(selectedOption); // Set the newly selected party
+  
     const partyId = selectedOption.value;
-    setFormData({ ...formData, party_ledger_id: partyId });
+    setFormData((prevData) => ({
+      ...prevData,
+      party_ledger_id: partyId, 
+      ref_id: '', 
+      amount_received: '', 
+    }));
+  
+    // Fetch invoices for the selected customer
     handleGetCustomer(partyId);
   };
 
@@ -153,25 +163,43 @@ const EditInvoicePayment = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
-    // Check if the name is payment_mode
-    if (name === "payment_mode") {
-      // Find the ledger based on the selected value
+  
+    // Check if the field is 'amount_received' and apply validation logic
+    if (name === 'amount_received') {
+      let inputValue = value;
+  
+      // Remove leading zeros
+      inputValue = inputValue.replace(/^0+/, '');
+  
+      // Allow only valid numbers with up to 2 decimal places
+      const validInput = /^\d+(\.\d{0,2})?$/.test(inputValue);
+  
+      if (validInput || inputValue === '') {
+        // Update formData with sanitized value
+        setFormData((prevData) => ({
+          ...prevData,
+          [name]: inputValue
+        }));
+      }
+    } else if (name === 'payment_mode') {
       const PaymentMethods = paymentMethods?.find((p) => p.id === value)?.ledger;
-      const uPaymentMethods= PaymentMethods=="Cash" ?"Cash":"Bank"
-      const bankname =PaymentMethods=="Cash" ? " ":PaymentMethods
-
+      const uPaymentMethods = PaymentMethods === 'Cash' ? 'Cash' : 'Bank';
+      const bankname = PaymentMethods === 'Cash' ? '' : PaymentMethods;
       setFormData((prevData) => ({
         ...prevData,
-        payment_mode: uPaymentMethods, 
-        ledger_id: value, 
-        bank_name:bankname,            
+        payment_mode: uPaymentMethods,
+        ledger_id: value,
+        bank_name: bankname,
       }));
-      
+  
       console.log("Payment Mode (Ledger):", PaymentMethods);
       console.log("Ledger ID:", value);
     } else {
-      setFormData({ ...formData, [name]: value });
+      // For other inputs, just update the formData
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value
+      }));
     }
   };
   // Date validation to prevent future dates
@@ -395,7 +423,7 @@ const EditInvoicePayment = () => {
                         <table className="table">
                         <tr>
                             <th>Name</th>
-                            <td>{selectedInvoice?.customer_name}</td>
+                            <td>{selectedInvoice?.party_name}</td>
                           </tr>
                           <tr>
                             <th>Phone Number</th>

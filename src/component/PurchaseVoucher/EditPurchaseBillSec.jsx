@@ -42,7 +42,7 @@ const EditPurchaseBillSec = ({ onChildDataChange,data}) => {
     } catch (error) {
       console.log(error.message);
     }
-  }, [dispatch]);
+  }, []);
 
   const fetchItemList = useCallback(async () => {
     try {
@@ -51,7 +51,7 @@ const EditPurchaseBillSec = ({ onChildDataChange,data}) => {
     } catch (error) {
       console.error(error.message);
     }
-  }, [dispatch, id]);
+  }, []);
 
   const fetchAdditionalTax = useCallback(async () => {
     try {
@@ -61,12 +61,12 @@ const EditPurchaseBillSec = ({ onChildDataChange,data}) => {
     } catch (error) {
       console.log(error.message);
     }
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     fetchUnits();
     fetchItemList();
-    fetchAdditionalTax();
+    // fetchAdditionalTax();
   }, [fetchUnits, fetchItemList]);
 
 
@@ -148,7 +148,7 @@ const EditPurchaseBillSec = ({ onChildDataChange,data}) => {
           const data = await dispatch(Getsingledetail({ profile_id: id, item_id: productId })).unwrap();
           setState((prevState) => ({
             ...prevState,
-            price:data?.data?.purchase_price,
+            price:Number(data?.data?.purchase_price)?.toFixed(2),
             singleDetail: data?.data,
             unit_id: data?.data?.unit || '',
             tax: data?.data?.tax || 0,

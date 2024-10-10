@@ -131,7 +131,7 @@ const UpdateInvoiceSecond = ({ onChildDataChange, onSubmit,data }) => {
           const data = await dispatch(Getsingledetail({ profile_id: id, item_id: productId })).unwrap();
           setState((prevState) => ({
             ...prevState,
-            price:data?.data?.sale_price,
+            price: Number(data?.data?.sale_price)?.toFixed(2),
             singleDetail: data?.data,
             unit_id: data?.data?.unit || '',
             tax: data?.data?.tax || 0,

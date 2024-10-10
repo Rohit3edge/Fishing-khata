@@ -86,11 +86,22 @@ const AddNewInvoicePayment = () => {
   };
 
   const handlePartyChange = (selectedOption) => {
-    setSelectedParty(selectedOption);
+    setSelectedInvoice(null); 
+    setByCustomer(null)
+    setSelectedParty(selectedOption); // Set the newly selected party
+  
     const partyId = selectedOption.value;
-    setFormData({ ...formData, party_ledger_id: partyId});
+    setFormData((prevData) => ({
+      ...prevData,
+      party_ledger_id: partyId, 
+      ref_id: '', 
+      amount_received: '', 
+    }));
+  
+    // Fetch invoices for the selected customer
     handleGetCustomer(partyId);
   };
+  
 
   const handleInvoiceChange = (e) => {
     const invoiceNumber = e.target.value;
@@ -102,24 +113,43 @@ const AddNewInvoicePayment = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
-    // Check if the name is payment_mode
-    if (name === "payment_mode") {
-      // Find the ledger based on the selected value
+  
+    // Check if the field is 'amount_received' and apply validation logic
+    if (name === 'amount_received') {
+      let inputValue = value;
+  
+      // Remove leading zeros
+      inputValue = inputValue.replace(/^0+/, '');
+  
+      // Allow only valid numbers with up to 2 decimal places
+      const validInput = /^\d+(\.\d{0,2})?$/.test(inputValue);
+  
+      if (validInput || inputValue === '') {
+        // Update formData with sanitized value
+        setFormData((prevData) => ({
+          ...prevData,
+          [name]: inputValue
+        }));
+      }
+    } else if (name === 'payment_mode') {
       const PaymentMethods = paymentMethods?.find((p) => p.id === value)?.ledger;
-      const uPaymentMethods= PaymentMethods=="Cash" ?"Cash":"Bank"
-      const bankname =PaymentMethods=="Cash" ? " ":PaymentMethods
+      const uPaymentMethods = PaymentMethods === 'Cash' ? 'Cash' : 'Bank';
+      const bankname = PaymentMethods === 'Cash' ? '' : PaymentMethods;
       setFormData((prevData) => ({
         ...prevData,
-        payment_mode: uPaymentMethods, 
-        ledger_id: value, 
-        bank_name:bankname,            
+        payment_mode: uPaymentMethods,
+        ledger_id: value,
+        bank_name: bankname,
       }));
-      
+  
       console.log("Payment Mode (Ledger):", PaymentMethods);
       console.log("Ledger ID:", value);
     } else {
-      setFormData({ ...formData, [name]: value });
+      // For other inputs, just update the formData
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value
+      }));
     }
   };
   
@@ -244,7 +274,7 @@ const AddNewInvoicePayment = () => {
                               <span class="input-group-text" id="basic-addon1">
                                 ₹
                               </span>
-                              <input name='amount_received' aria-describedby="basic-addon1" aria-label="Username" class="form-control" type="text" value={formData.amount_received} onChange={handleInputChange}></input>
+                              <input name='amount_received' aria-describedby="basic-addon1" aria-label="Username" class="form-control" type="text" value={formData.amount_received} onChange={handleInputChange} ></input>
                               
                             </div>
                             {errors.amount_received && <p className="text-danger">{errors.amount_received}</p>}
@@ -317,7 +347,7 @@ const AddNewInvoicePayment = () => {
                         <table className="table">
                         <tr>
                             <th>Name</th>
-                            <td>{selectedInvoice?.customer_name}</td>
+                            <td>{selectedInvoice?.party_name}</td>
                           </tr>
                           <tr>
                             <th>Phone Number</th>

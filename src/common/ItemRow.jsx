@@ -28,7 +28,18 @@ const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, 
           </div>
         </td>
         <td className="align-middle">
-          <input type="text" className="form-control" name="price" value={item?.price} onChange={(e) => handleItemChange('price', e.target.value, index)} />
+          <input type="text" className="form-control" name="price" value={item?.price} 
+          
+          onChange={(e) => {
+            let inputValue = e.target.value;
+            inputValue = inputValue.replace(/^0+/, '');
+            const validInput = /^\d+(\.\d{0,2})?$/.test(inputValue);
+            if (validInput || inputValue === '') {
+               handleItemChange('price', inputValue, index)
+            }
+          }}
+          
+          />
         </td>
         <td className="align-middle">₹{((item?.price || 0) * (item?.quantity || 0)).toFixed(2).toString().replace(/^-/, '₹')}</td>
         <td className="align-middle">
@@ -50,7 +61,17 @@ const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, 
         {isDiscount && (
           <td className="align-middle">
             <div className="input-group">
-              <input type="text" className="form-control" name="discount" value={item?.discount} onChange={(e) => handleItemChange('discount', e.target.value, index)} />
+              <input type="text" className="form-control" name="discount" value={item?.discount} 
+               onChange={(e) => {
+                let inputValue = e.target.value;
+                inputValue = inputValue.replace(/^0+/, '');
+                const validInput = /^\d+(\.\d{0,2})?$/.test(inputValue);
+                if (validInput || inputValue === '') {
+                   handleItemChange('discount', inputValue, index)
+                }
+              }}
+              
+              />
               <select className="form-control" name="discount_type" value={item?.discount_type} onChange={(e) => handleItemChange('discount_type', e.target.value, index)}>
                 <option value="Fixed">Fixed</option>
                 <option value="Percentage">Percentage</option>

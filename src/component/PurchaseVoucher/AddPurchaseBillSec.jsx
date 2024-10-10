@@ -80,7 +80,7 @@ const AddPurchaseBillSec = ({ onChildDataChange,data }) => {
         quantity: item?.quantity,
         unit_id: item?.unit_id,
         unit_name: item?.unit_name, 
-        price: item?.price,
+        price: Number(item?.price).toFixed(2),
         price_tax_type: item?.price_tax_type || "Including Tax",
         tax: item?.tax || 0,
         tax_type: item?.tax_type || 'GST' ,
@@ -147,7 +147,7 @@ const AddPurchaseBillSec = ({ onChildDataChange,data }) => {
           const data = await dispatch(Getsingledetail({ profile_id: id, item_id: productId })).unwrap();
           setState((prevState) => ({
             ...prevState,
-            price:data?.data?.purchase_price,
+            price:Number(data?.data?.purchase_price)?.toFixed(2),
             singleDetail: data?.data,
             unit_id: data?.data?.unit || '',
             tax: data?.data?.tax || 0,

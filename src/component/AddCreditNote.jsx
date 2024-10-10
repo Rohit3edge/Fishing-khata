@@ -76,6 +76,8 @@ const AddCreditNote = () => {
   };
 
   const handlePartyChange = (selectedOption) => {
+    setSelectedInvoice(null); 
+    setByCustomer(null)
     setSelectedParty(selectedOption);
     const partyId = selectedOption.value;
     const partygst = listParties?.find((inv) => inv.id == partyId);

@@ -60,7 +60,7 @@ const AddPurchaseOrderSec = ({ onChildDataChange, handleSubmit }) => {
           setState((prevState) => ({
             ...prevState,
             singleDetail: data?.data,
-            price: data?.data?.purchase_price || 0,
+            price:Number(data?.data?.purchase_price)?.toFixed(2) || 0,
             hsn: data?.data?.hsn || '',
             unit_id: data?.data?.unit || '',
           }));

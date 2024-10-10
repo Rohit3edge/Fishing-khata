@@ -115,6 +115,8 @@ const EditCreditNote = () => {
   };
 
   const handlePartyChange = (selectedOption, ndata, isData) => {
+    setSelectedInvoice(null); 
+    setByCustomer(null)
     setSelectedParty(selectedOption);
     const FinalselectedOption = isData ? selectedOption : selectedOption?.value; // Check if selectedOption exists
     if (!FinalselectedOption) {

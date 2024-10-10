@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useMemo} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {toast } from 'react-hot-toast';
 import { ListParties } from '../../store/slices/parties';
@@ -101,10 +101,10 @@ const EditPurchaseBill = () => {
   }, [dispatch, Id]);
 
   // Party selection logic
-  const partyOptions = listParties.map((party) => ({
+  const partyOptions = useMemo(() => listParties.map((party) => ({
     value: party.id,
     label: party.ledger,
-  }));
+  })), [listParties]);
 
   const handlePartyChange = (selectedOption, ndata, isData) => {
     console.log("selectedOption, ndata, isData",selectedOption, ndata, isData)
@@ -204,7 +204,7 @@ const EditPurchaseBill = () => {
             const edata = newdata?.find((option) => option?.po_number == purchasevoucher?.po_no).id; // Fix here
             console.log("edata", edata); // Check if newdata is correct
             if (edata) {
-              handlePOChange(edata, true); // Now handle the PO change correctly
+              fetchPurchaseOrderDetails(edata); // Now handle the PO change correctly
             } else {
               console.error('PO not found in the list');
             }})
@@ -229,13 +229,6 @@ const EditPurchaseBill = () => {
   };
 
 
-
-  const handlePOChange = (e,isdata) => {
-    const selectedPO =isdata? e: e.target.value;
-    if (selectedPO) {
-      fetchPurchaseOrderDetails(selectedPO);
-    }
-  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -350,7 +343,7 @@ const EditPurchaseBill = () => {
                             <div class="row">
                               <div class="col-md-6">
                                 <label>PO Number</label>
-                                <select name="party" class="form-control" onChange={handlePOChange} value={purchaseOrderlist?.find((option) => (option?.po_number == formData.po_number))?.id || null} disabled>
+                                <select name="party" class="form-control"  value={purchaseOrderlist?.find((option) => (option?.po_number == formData.po_number))?.id || null} disabled>
                                   <option value="">--Select PO--</option>
                                   {purchaseOrderlist?.map((option, index) => (
                                     <option key={index} value={option?.id}>
