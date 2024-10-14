@@ -9,6 +9,9 @@ import Invoice from "./Invoice";
 import TaxesGst from "./TaxesGst";
 import SettingsItem from "./SettingsItem";
 import Footer from "../Footer";
+import AdminLayout from '../AdminLayout';
+
+
 const Settings = () => {
   const dispatch = useDispatch();
   const setting = useSelector((state) => state?.settings?.updatesettings);
@@ -62,31 +65,8 @@ const Settings = () => {
   }
 
   return (
-    <div>
-      <div class="row" style={{ marginLeft: "0", marginRight: "0" }}>
-        <Navbarside />
+    <AdminLayout>
         {isLoading && <Loader />}
-        <div className="col-md-10">
-          <div className="row top-header">
-            <div className="col-md-7">
-              <div className="company-name">
-                {Name}
-              </div>
-            </div>
-            <div className="col-md-5">
-              <div className="d-flex justify-content-end">
-                <button type="submit" className="btn btn-default" onClick={()=>navigate("/ledger")}>
-                  Ledger
-                </button>
-                <button type="submit" className="btn btn-default" onClick={() => navigate('/invoice')}>
-                  Sale
-                </button>
-                <button type="submit" className="btn btn-default">
-                  Purchase
-                </button>
-              </div>
-            </div>
-          </div>
           <div className="row content-body">
             <div className="container-fluid">
               <div className="page-header">
@@ -413,10 +393,7 @@ const Settings = () => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <Footer />
-    </div>
+        </AdminLayout>
   );
 };
 

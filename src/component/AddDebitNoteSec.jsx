@@ -7,6 +7,7 @@ import { Getsingledetail } from '../store/slices/sale';
 import {GetAdditionalTax } from "../store/slices/purchase"
 import ProductSelector from '../common/ProductSelector';
 import ItemRow from '../common/ItemRow';
+import AdminLayout from './AdminLayout';
 
 const AddDebitNoteSec = ({ onChildDataChange,data}) => {
   const dispatch = useDispatch();

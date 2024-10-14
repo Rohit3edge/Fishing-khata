@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../common/Loader';
 import Navbarside from './Navbarside';
 import Footer from './Footer';
+import AdminLayout from './AdminLayout';
 
 const UpdateItem = () => {
   const { id } = useParams();
@@ -204,29 +205,8 @@ const UpdateItem = () => {
   };
 
   return (
-    <div>
-      <div className="row" style={{ marginLeft: '0', marginRight: '0' }}>
-        <Navbarside />
+    <AdminLayout>
         {isLoading && <Loader />}
-        <div className="col-md-10">
-          <div className="row top-header">
-            <div className="col-md-7">
-              <div className="company-name">{Name}</div>
-            </div>
-            <div className="col-md-5">
-              <div className="d-flex justify-content-end">
-                <button type="submit" className="btn btn-default" onClick={() => navigate('/ledger')}>
-                  Ledger
-                </button>
-                <button type="submit" className="btn btn-default" onClick={() => navigate('/invoice')}>
-                  Sale
-                </button>
-                <button type="submit" className="btn btn-default">
-                  Purchase
-                </button>
-              </div>
-            </div>
-          </div>
           <div className="row content-body">
             <div className="container">
               <div className="page-header">
@@ -440,10 +420,7 @@ const UpdateItem = () => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <Footer />
-    </div>
+        </AdminLayout>
   );
 };
 
