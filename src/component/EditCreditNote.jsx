@@ -9,6 +9,7 @@ import Footer from './Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../common/Loader';
 import EditCreditNoteSec from './EditCreditNoteSec';
+import AdminLayout from './AdminLayout';
 
 const EditCreditNote = () => {
   const navigate = useNavigate();
@@ -214,29 +215,8 @@ const EditCreditNote = () => {
 //   console.log('invoice', formData);
 
   return (
-    <div>
-      <div class="row" style={{ marginLeft: '0', marginRight: '0' }}>
-        <Navbarside />
+    <AdminLayout>
         {isLoading && <Loader />}
-        <div className="col-md-10">
-          <div className="row top-header">
-            <div className="col-md-7">
-              <div className="company-name">{Name}</div>
-            </div>
-            <div className="col-md-5">
-              <div className="d-flex justify-content-end">
-                <button type="submit" className="btn btn-default" onClick={() => navigate('/ledger')}>
-                  Ledger
-                </button>
-                <button type="submit" className="btn btn-default" onClick={() => navigate('/invoice')}>
-                  Sale
-                </button>
-                <button type="submit" className="btn btn-default">
-                  Purchase
-                </button>
-              </div>
-            </div>
-          </div>
           <div class="row content-body">
             <div class="container">
               <div class="page-header">
@@ -366,10 +346,7 @@ const EditCreditNote = () => {
               <EditCreditNoteSec onChildDataChange={setData} data={pVoucherData} />
             </div>
           </div>
-        </div>
-      </div>
-      <Footer />
-    </div>
+          </AdminLayout>
   );
 };
 

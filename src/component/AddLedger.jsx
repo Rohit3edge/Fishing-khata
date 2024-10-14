@@ -5,6 +5,8 @@ import { LedgerAdd, Getledgergroups, GetState } from '../store/slices/ledger';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../common/Loader';
 import Footer from './Footer';
+import AdminLayout from './AdminLayout';
+
 
 const AddLedger = () => {
   const dispatch = useDispatch();
@@ -60,7 +62,7 @@ const AddLedger = () => {
       .then((data) => {
         setIsLoading(false);
         setState(data?.data);
-        console.log('data?.data', data?.data);
+        console.log('state', data?.data);
       })
       .catch(({ message }) => {
         setIsLoading(false);
@@ -200,30 +202,8 @@ const AddLedger = () => {
   };
 
   return (
-    <>
-      <div className="">
-        <div className="row" style={{ marginLeft: '0', marginRight: '0' }}>
-          <Navbarside />
+      <AdminLayout>
           {isLoading && <Loader />}
-          <div className="col-md-10">
-            <div className="row top-header">
-              <div className="col-md-7">
-                <div className="company-name">{Name}</div>
-              </div>
-              <div className="col-md-5">
-                <div className="d-flex justify-content-end">
-                  <button type="submit" className="btn btn-default" onClick={() => navigate('/ledger')}>
-                    Ledger
-                  </button>
-                  <button type="submit" className="btn btn-default" onClick={() => navigate('/invoice')}>
-                    Sale
-                  </button>
-                  <button type="submit" className="btn btn-default">
-                    Purchase
-                  </button>
-                </div>
-              </div>
-            </div>
             <div className="row content-body">
               <div className="container">
                 <div className="page-header">
@@ -393,11 +373,7 @@ const AddLedger = () => {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    </>
+          </AdminLayout>
   );
 };
 

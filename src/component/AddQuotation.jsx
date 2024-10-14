@@ -9,6 +9,7 @@ import Navbarside from './Navbarside';
 import Loader from '../common/Loader';
 import Footer from './Footer';
 import { useDispatch, useSelector } from 'react-redux';
+import AdminLayout from './AdminLayout';
 
 const AddQuotationdata = () => {
   const navigate = useNavigate();
@@ -100,7 +101,7 @@ const AddQuotationdata = () => {
   // Party selection logic
   const partyOptions = listParties.map((party) => ({
     value: party.id,
-    label: party.name,
+    label: party.ledger,
   }));
 
   const handlePartyChange = (selectedOption) => {
@@ -111,8 +112,7 @@ const AddQuotationdata = () => {
         gstin: party.gstin,
         phone: party.phone,
         state: party.state,
-        ledger_id:party.ledger_id,
-        party_id:party.id
+        ledger_id:party.id,
       });
 
       if (isSameAsBilling) {
@@ -230,29 +230,8 @@ const validateForm = () => {
       });
   };
   return (
-    <div>
-      <div className="row" style={{ marginLeft: '0', marginRight: '0' }}>
-        <Navbarside />
+      <AdminLayout>
         {isLoading && <Loader />}
-        <div className="col-md-10">
-          <div className="row top-header">
-            <div className="col-md-7">
-              <div className="company-name">{Name}</div>
-            </div>
-            <div className="col-md-5">
-              <div className="d-flex justify-content-end">
-                <button type="submit" className="btn btn-default" onClick={() => navigate('/ledger')}>
-                  Ledger
-                </button>
-                <button type="submit" className="btn btn-default" onClick={() => navigate('/invoice')}>
-                  Sale
-                </button>
-                <button type="submit" className="btn btn-default">
-                  Purchase
-                </button>
-              </div>
-            </div>
-          </div>
           <div className="row content-body">
             <div className="container">
               <div className="page-header">
@@ -419,10 +398,7 @@ const validateForm = () => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <Footer />
-    </div>
+        </AdminLayout>
   );
 };
 

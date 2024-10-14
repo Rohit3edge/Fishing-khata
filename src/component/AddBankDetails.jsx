@@ -5,6 +5,7 @@ import Footer from './Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import { AddBankBook } from '../store/slices/bankbook';
 import Loader from '../common/Loader';
+import AdminLayout from './AdminLayout';
 
 const AddParty = () => {
   const navigate = useNavigate();
@@ -131,29 +132,8 @@ const AddParty = () => {
   };
 
   return (
-    <div>
-      <div class="row" style={{ marginLeft: '0', marginRight: '0' }}>
-        <Navbarside />
+      <AdminLayout>
         {isLoading && <Loader />}
-        <div className="col-md-10">
-          <div className="row top-header">
-            <div className="col-md-7">
-              <div className="company-name">{Name}</div>
-            </div>
-            <div className="col-md-5">
-              <div className="d-flex justify-content-end">
-                <button type="submit" className="btn btn-default" onClick={() => navigate('/ledger')}>
-                  Ledger
-                </button>
-                <button type="submit" className="btn btn-default" onClick={() => navigate('/invoice')}>
-                  Sale
-                </button>
-                <button type="submit" className="btn btn-default">
-                  Purchase
-                </button>
-              </div>
-            </div>
-          </div>
           <div className="row content-body">
             <div className="container">
               <div className="page-header">
@@ -274,10 +254,7 @@ const AddParty = () => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <Footer />
-    </div>
+      </AdminLayout>
   );
 };
 
