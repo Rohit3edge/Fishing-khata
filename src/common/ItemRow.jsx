@@ -3,42 +3,28 @@ const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, 
   <>
     {addedItems?.map((item, index) => (
       <tr key={index}>
-        <td className="align-middle">
-          <select className="form-control" value={item?.item_id} onChange={(e) => handleItemChange('item_id', e.target.value, index)}>
-            <option value="">--Select Product--</option>
-            {state?.itemList?.map((option, idx) => (
-              <option key={idx} value={option?.id}>
-                {option?.name}
-              </option>
-            ))}
-          </select>
+        <td className="align-middle" style={{ fontWeight: '300', fontSize: '14px', textAlign: 'center' }}>
+          {state?.itemList?.find((unit) => unit.id == item?.item_id)?.name || 'N/A'}
         </td>
         <td className="align-middle">{item?.hsn}</td>
         <td className="align-middle">
-          <div className="input-group">
-            <input className="form-control" type="text" value={item?.quantity} onChange={(e) => handleItemChange('quantity', e.target.value, index)} />
-            <select className="form-control" value={item?.unit_id} onChange={(e) => handleItemChange('unit_id', e.target.value, index)}>
-              <option value="">--Select Unit--</option>
-              {state?.units?.map((option, idx) => (
-                <option key={idx} value={option?.id}>
-                  {option?.unit}
-                </option>
-              ))}
-            </select>
-          </div>
+          <input className="form-control" type="text" value={item?.quantity} onChange={(e) => handleItemChange('quantity', e.target.value, index)} style={{ width: '60px', padding: '0.4rem' }} />
         </td>
+        <td className="align-middle">{state?.units?.find((unit) => unit.id == item?.unit_id)?.unit || 'N/A'}</td>
         <td className="align-middle">
-          <input type="text" className="form-control" name="price" value={item?.price} 
-          
-          onChange={(e) => {
-            let inputValue = e.target.value;
-            inputValue = inputValue.replace(/^0+/, '');
-            const validInput = /^\d+(\.\d{0,2})?$/.test(inputValue);
-            if (validInput || inputValue === '') {
-               handleItemChange('price', inputValue, index)
-            }
-          }}
-          
+          <input
+            type="text"
+            className="form-control"
+            name="price"
+            value={item?.price}
+            onChange={(e) => {
+              let inputValue = e.target.value;
+              inputValue = inputValue.replace(/^0+/, '');
+              const validInput = /^\d+(\.\d{0,2})?$/.test(inputValue);
+              if (validInput || inputValue === '') {
+                handleItemChange('price', inputValue, index);
+              }
+            }}
           />
         </td>
         <td className="align-middle">₹{((item?.price || 0) * (item?.quantity || 0)).toFixed(2).toString().replace(/^-/, '₹')}</td>
@@ -61,16 +47,19 @@ const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, 
         {isDiscount && (
           <td className="align-middle">
             <div className="input-group">
-              <input type="text" className="form-control" name="discount" value={item?.discount} 
-               onChange={(e) => {
-                let inputValue = e.target.value;
-                inputValue = inputValue.replace(/^0+/, '');
-                const validInput = /^\d+(\.\d{0,2})?$/.test(inputValue);
-                if (validInput || inputValue === '') {
-                   handleItemChange('discount', inputValue, index)
-                }
-              }}
-              
+              <input
+                type="text"
+                className="form-control"
+                name="discount"
+                value={item?.discount}
+                onChange={(e) => {
+                  let inputValue = e.target.value;
+                  inputValue = inputValue.replace(/^0+/, '');
+                  const validInput = /^\d+(\.\d{0,2})?$/.test(inputValue);
+                  if (validInput || inputValue === '') {
+                    handleItemChange('discount', inputValue, index);
+                  }
+                }}
               />
               <select className="form-control" name="discount_type" value={item?.discount_type} onChange={(e) => handleItemChange('discount_type', e.target.value, index)}>
                 <option value="Fixed">Fixed</option>
@@ -82,13 +71,14 @@ const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, 
         {isPurchase && (
           <td class="align-middle">
             <div class="input-group">
-              <select class="form-control" name="add_tax" value={item?.add_tax} onChange={(e) => handleItemChange('add_tax', e.target.value || "", index)}>
+              <select class="form-control" name="add_tax" value={item?.add_tax} onChange={(e) => handleItemChange('add_tax', e.target.value || '', index)}>
                 <option value="0">None</option>
-                {state?.additionaltax && state?.additionaltax?.map((tax, index) => (
-                <option key={index} value={ `${Number(tax?.tax_perc)?.toFixed(0)}@${tax?.tax_type}`}>
-                  { `${Number(tax?.tax_perc)?.toFixed(0)}@${tax?.tax_type}`}
-                </option>
-              ))}
+                {state?.additionaltax &&
+                  state?.additionaltax?.map((tax, index) => (
+                    <option key={index} value={`${Number(tax?.tax_perc)?.toFixed(0)}@${tax?.tax_type}`}>
+                      {`${Number(tax?.tax_perc)?.toFixed(0)}@${tax?.tax_type}`}
+                    </option>
+                  ))}
               </select>
             </div>
           </td>
@@ -102,19 +92,19 @@ const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, 
       </tr>
     ))}
     <tr>
-      <td colSpan="7" className="text-right align-middle">
+      <td colSpan="8" className="text-right align-middle">
         <strong>Shipment Amount:</strong>
         <span className="fw-normal text-muted">(12% GST applicable)</span>
       </td>
-      <td colSpan="2">
+      <td colSpan="3">
         <input type="text" className="form-control" value={state?.shippingCost} onChange={(e) => handleInputChange('shippingCost', e.target.value)} />
       </td>
     </tr>
     <tr>
-      <td colSpan="7" className="text-right align-middle">
+      <td colSpan="8" className="text-right align-middle">
         <strong>Grand Total:</strong>
       </td>
-      <td colspan="2" className="align-middle">
+      <td colspan="3" className="align-middle">
         ₹{grandTotal}
       </td>
     </tr>
@@ -123,10 +113,10 @@ const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, 
         // Only show taxes with a non-zero amount
         return (
           <tr key={index}>
-            <td colSpan="7" className="text-right align-middle">
+            <td colSpan="8" className="text-right align-middle">
               <strong>GST {Number(taxRate)?.toFixed(1)}%:</strong>
             </td>
-            <td colSpan="2" className="align-middle">
+            <td colSpan="3" className="align-middle">
               ₹{amount.toFixed(2)}
             </td>
           </tr>

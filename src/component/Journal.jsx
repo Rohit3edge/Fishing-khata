@@ -172,7 +172,7 @@ const Journal = () => {
           // Use await to wait for the dispatch to finish
           await dispatch(AddJournalVoucher(formData)).unwrap();
           setIsLoading(false);
-          navigate('/invoicelist');
+          navigate('/journallist');
         } catch (error) {
           // Handle the error if the API call fails
           setIsLoading(false);

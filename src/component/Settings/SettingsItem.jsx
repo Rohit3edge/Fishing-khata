@@ -30,6 +30,36 @@ const SettingsItem = ({ data }) => {
       <div class="container">
         <div class="row pt-4">
           <div class="col-sm-6">
+
+          <div class="form-group row my-2">
+              <label for="stock_value_method" class="col-sm-6 col-form-label">
+                Stock Value Method
+              </label>
+              <div class="col-sm-6">
+                <select
+                  name="stock_value_method"
+                  id="sell_type"
+                  class="form-control form-control-sm"
+                  value={
+                    setting?.stock_value_method ??
+                    data?.stock_value_method
+                  }
+                  onChange={(e) => {
+                    dispatch(
+                      updateSettingsField({
+                        stock_value_method: e.target.value,
+                      })
+                    );
+                  }}
+                >
+                  <option value="Average Purchase Price">Average Purchase Price</option>
+                  <option value="FIFO">FIFO</option>
+                  <option value="LIFO">LIFO</option>
+                </select>
+              </div>
+            </div>
+
+
             <div class="form-group row my-2">
               <label for="sell_type" class="col-sm-6 col-form-label">
                 What do you sell?

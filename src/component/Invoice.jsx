@@ -192,21 +192,21 @@ const handleSubmit = async (e) => {
   const billingData = {
     profile_id: Number(id),
     invoice_prefix: invoicePrefix,
-    ledger_id: Number(selectedPartyDetails.ledger_id), // Assuming this is hardcoded for now
-    invoice_number: formData.invoice_number,
-    invoice_date: formData.invoice_date,
+    ledger_id: Number(selectedPartyDetails?.ledger_id), // Assuming this is hardcoded for now
+    invoice_number: formData?.invoice_number,
+    invoice_date: formData?.invoice_date,
     fin_year: '2024-2025',
-    po_number: formData.po_number,
-    billing_address: selectedPartyDetails.address,
-    billing_state: selectedPartyDetails.state,
-    billing_phone: selectedPartyDetails.phone || null,
-    party_gstn: selectedPartyDetails.gstin || null ,
-    shipping_address: shippingAddress.address,
-    shipping_state: shippingAddress.state,
-    shipping_phone: shippingAddress.phone || null,
-    eway_bill: formData.eway_number,
-    vehicle_number: formData.vehicle_number,
-    notes: formData.message,
+    po_number: formData?.po_number,
+    billing_address: selectedPartyDetails?.address,
+    billing_state: selectedPartyDetails?.state,
+    billing_phone: selectedPartyDetails?.phone || null,
+    party_gstn: selectedPartyDetails?.gstin || null ,
+    shipping_address: shippingAddress?.address,
+    shipping_state: shippingAddress?.state,
+    shipping_phone: shippingAddress?.phone || null,
+    eway_bill: formData?.eway_number,
+    vehicle_number: formData?.vehicle_number,
+    notes: formData?.message,
   };
 
   const mergedData = {
@@ -370,7 +370,7 @@ const handleSubmit = async (e) => {
       type="text"
       className="form-control"
       value={formData.invoice_number}
-      readOnly
+      onChange={handleInputChange}
       style={{ width: '90%' }} // This ensures the input takes the remaining space
     />
   </div>

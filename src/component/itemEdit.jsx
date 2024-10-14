@@ -2,6 +2,7 @@ import React, { useState ,useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ListCategories, Updateitems ,Edititems } from '../store/slices/items';
 import { Getunits } from '../store/slices/settings';
+import { FaInfoCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../common/Loader';
 import Navbarside from './Navbarside';
@@ -47,6 +48,7 @@ const UpdateItem = () => {
     batch_no: '',
     model_no: '',
     item_size: '',
+    low_stock_value :''
   });
 
   const [showProductDetails, setShowProductDetails] = useState(true);
@@ -85,6 +87,7 @@ const UpdateItem = () => {
                 exp_date: item?.exp_date || currentDate,
                 model_no: item?.model_no || '',
                 item_size: item?.item_size || '',
+                low_stock_value: item?.low_stock_value || '',
           });
         })
         .catch(({ message }) => {
@@ -152,6 +155,7 @@ const UpdateItem = () => {
           batch_no: '',
           model_no: '',
           item_size: '',
+          low_stock_value :''
         });
         navigate('/item');
       })
@@ -354,13 +358,18 @@ const UpdateItem = () => {
                           <div className="col-md-6">
                             <div className="card">
                               <div className="card-body">
-                                <div className="form-group">
+                              <div className="form-group">
                                   <div className="row">
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                       <label>Opening Quantity </label>
                                       <div className="input-group">
-                                        <input name="opening_quantity" type="text" className="form-control" onChange={handleInputChange} value={formData?.opening_quantity} />
-                                        <select name="unit" className="form-control" style={{ maxWidth: '40%' }} onChange={handleInputChange} value={formData?.unit}>
+                                        <input name="opening_quantity" type="text" className="form-control" onChange={handleInputChange} value={formData.opening_quantity} />
+                                      </div>
+                                      {errors.unit && <p className="alert-message">{errors.unit}</p>}
+                                    </div>
+                                    <div className="col-md-4">
+                                      <label>Item Units</label>
+                                      <select name="unit" className="form-control" onChange={handleInputChange} value={formData.unit}>
                                           <option value="">Unit</option>
                                           {units?.map((option, index) => (
                                             <option key={index} value={option?.id}>
@@ -368,13 +377,10 @@ const UpdateItem = () => {
                                             </option>
                                           ))}
                                         </select>
-                                      </div>
-                                      {errors?.unit && <p className="alert-message">{errors?.unit}</p>}
                                     </div>
-
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                       <label>Opening Stock Date</label>
-                                      <input name="opening_stock_date" type="date" className="form-control" onChange={handleInputChange} value={formData?.opening_stock_date} />
+                                      <input name="opening_stock_date" type="date" className="form-control" onChange={handleInputChange} value={formData.opening_stock_date} />
                                     </div>
                                   </div>
                                 </div>
@@ -426,6 +432,13 @@ const UpdateItem = () => {
                                     <div class="col-md-6">
                                       <label>Barcode/Serial No</label>
                                       <input type="text" name="serial_no" class="form-control" onChange={handleInputChange} value={formData?.serial_no} />
+                                    </div>
+                                    <div className="col-md-6">
+                                      <label className='d-flex'>
+                                        Set Low Value 
+                                        <div className="dis_in pl-2" title=" Add low stock value to get alert. Example 1: you listed 100 laptops in stock, &amp; you set low stock value (10) when your laptop stock below 10 you get low stock alert notification."><FaInfoCircle/></div>
+                                      </label>
+                                      <input type="text" name="low_stock_value" className="form-control" onChange={handleInputChange} value={formData.low_stock_value} />
                                     </div>
                                   </div>
                                 </div>

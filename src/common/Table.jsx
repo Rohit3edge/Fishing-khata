@@ -84,6 +84,8 @@ const Table = ({
       case 'balance':
       case 'sale_price':
         return formatAmount(row[column.field]);
+        case 'purchase_price':
+          return formatAmount(row[column.field]);
       case 'description':
         const trimmedDescription = row[column.field].trim();
         return trimmedDescription.split('\n').map((line, index) => (

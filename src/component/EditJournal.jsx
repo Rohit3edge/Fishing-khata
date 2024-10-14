@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ListParties } from '../store/slices/parties';
-import {UpdateJournalVoucher} from "../store/slices/journal"
+import {UpdateJournalVoucher,Getdetailjournalvoucher} from "../store/slices/journal"
 
 import Select from 'react-select';
 import Navbarside from './Navbarside';
@@ -13,6 +13,8 @@ import Loader from '../common/Loader';
 const Journal = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const {journalid}=useParams()
+
   const [isLoading, setIsLoading] = useState(false);
   const [listParties, setListParties] = useState([]);
   
@@ -22,6 +24,7 @@ const Journal = () => {
 
   const [formData, setFormData] = useState({
     profile_id: id,
+    voucher_id: journalid,
     voucher_date: '',
     voucher_name: '',
     debit_entries: [],
@@ -45,6 +48,32 @@ const Journal = () => {
     value: party.id,
     label: party.ledger,
   }));
+
+  useEffect(() => {
+    if (id && journalid) {  // Ensure both values are not undefined or null
+      setIsLoading(true);
+      dispatch(Getdetailjournalvoucher({profile_id: id, voucher_id: journalid}))
+        .unwrap()
+        .then((data) => {
+          setIsLoading(false);
+          console.log("voucher", data?.data);
+          setFormData(prevState => ({
+            ...prevState,
+            voucher_date: data?.data?.voucher_date,
+            voucher_name: data?.data?.voucher_name,
+            debit_entries: data?.data?.debit_entries ||[],
+            credit_entries:data?.data?.credit_entries ||[]
+          }));
+        })
+        .catch(({ message }) => {
+          setIsLoading(false);
+          console.log(message);
+        });
+    } else {
+      console.log("Missing ID values:", { profile_id: id, voucher_id: journalid });
+    }
+  }, [dispatch, journalid, id]);
+  
 
   // Fetch parties
   useEffect(() => {
@@ -169,7 +198,7 @@ const Journal = () => {
           // Use await to wait for the dispatch to finish
           await dispatch(UpdateJournalVoucher(formData)).unwrap();
           setIsLoading(false);
-          navigate('/invoicelist');
+          navigate('/journallist');
         } catch (error) {
           // Handle the error if the API call fails
           setIsLoading(false);

@@ -166,5 +166,9 @@ getstate:"/common/getstatelist",
 Addjournalvoucher :"/journal-voucher/add",
 journalvoucherlist:"/journal-voucher/list",
 Updatejournalvoucher:"/journal-voucher/update",
-getdetailjournalvoucher:"/journal-voucher/get-detail"
+getdetailjournalvoucher:"/journal-voucher/get-detail",
+
+
+stocksummary:"/report/stock-inventory",
+trialbalance:"/ledger/trial-balance"
 }

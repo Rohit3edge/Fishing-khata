@@ -246,7 +246,7 @@ const Navbarside = () => {
                 </NavLink>
               </li>
               <li className="nav_items">
-                <NavLink to="/Experts" className="menu-title">
+                <NavLink to="/reportssection" className="menu-title">
                   <RiBarChart2Fill className="nav_icons" />
                   Reports
                 </NavLink>

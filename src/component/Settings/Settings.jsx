@@ -16,6 +16,7 @@ const Settings = () => {
   
   const user = JSON.parse(localStorage.getItem("user"));
   const Name = user?.data?.company_name;
+  const id = user?.data?.id;
 
 
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ const Settings = () => {
       });
   }, [dispatch]);
 
-  const item = setting;
+  const item = { profile_id:id,...setting};
   console.log("item",item)
 
   async function handleUpdatesettings() {

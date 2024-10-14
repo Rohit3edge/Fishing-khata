@@ -54,3 +54,21 @@ export const UpdateJournalVoucher = createAsyncThunk(
         }
     }
 );
+
+export const Getdetailjournalvoucher = createAsyncThunk(
+    "/post/getdetailjournalvoucher",
+    async (item,thunkAPI) => {
+        try {
+            const data = await JournalService.Getdetailjournalvoucher(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);

@@ -22,8 +22,8 @@ const Item = () => {
     { header: 'Product Type', field: 'type' },
     { header: 'Category', field: 'category_name' },
     { header: 'Item Name', field: 'name' },
-    { header: 'Price', field: 'sale_price' },
-    { header: 'HSN/SAC Code', field: 'hsn' },
+    { header: 'Sale Price', field: 'sale_price' },
+    { header: 'Purchase Price', field: 'purchase_price' },
     { 
       header: 'Actions', 
       field: 'actions', 
@@ -80,7 +80,7 @@ const Item = () => {
     party?.category_name?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
     party?.name?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
     party?.sale_price?.toLowerCase()?.includes(searchQuery?.toLowerCase())||
-    party?.hsn?.toLowerCase()?.includes(searchQuery?.toLowerCase())
+    party?.purchase_price?.toLowerCase()?.includes(searchQuery?.toLowerCase())
 
   );
 

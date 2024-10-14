@@ -250,7 +250,7 @@ const UpdateAddInvoice = () => {
                       <a href="#">Sales</a>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                      Add Invoice
+                      Edit Invoice
                     </li>
                   </ol>
                 </div>
@@ -354,7 +354,7 @@ const UpdateAddInvoice = () => {
       type="text"
       className="form-control"
       value={formData.invoice_number}
-      readOnly
+      onChange={handleInputChange}
       style={{ width: '90%' }} // This ensures the input takes the remaining space
     />
   </div>

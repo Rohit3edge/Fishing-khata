@@ -115,6 +115,12 @@ import ListQuotation from "./component/ListQuotation.jsx"
 import AddQuotation from "./component/AddQuotation.jsx"
 import UpdateQuotation from "./component/UpdateQuotation.jsx"
 
+// ReportsSection
+
+import ReportsSection from "./component/Reports/ReportsSection.jsx"
+import StockSummary from "./component/Reports/StockSummary.jsx"
+import TrialBalance from "./component/Reports/TrialBalance.jsx"
+
 
 
 
@@ -269,6 +275,13 @@ function App() {
             <Route exact path="/journallist" element={<JournalList/>} />
             <Route exact path="/editjournalvoucher/edit/:journalid" element={<EditJournal/>} />
 
+
+            {/* ReportsSection */}
+
+            <Route exact path="/reportssection" element={<ReportsSection/>} />
+            <Route exact path="/reports/stocksummary" element={<StockSummary/>} />
+
+            <Route exact path="/reports/trialbalance" element={<TrialBalance/>} />
 
             <Route path="*" element={<Notfoundpage />} />
         </Route>

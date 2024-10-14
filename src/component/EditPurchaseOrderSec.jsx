@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import {toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { Getunits } from '../store/slices/settings';
 import { Listitems } from '../store/slices/items';
 import { Getsingledetail } from '../store/slices/sale';
@@ -80,10 +80,9 @@ const EditPurchaseOrderSec = ({ onChildDataChange, data }) => {
           setState((prevState) => ({
             ...prevState,
             singleDetail: data?.data,
-            price:Number(data?.data?.purchase_price)?.toFixed(2) || 0,
+            price: Number(data?.data?.purchase_price)?.toFixed(2) || 0,
             hsn: data?.data?.hsn || '',
             unit_id: data?.data?.unit || '',
-            
           }));
         } catch (error) {
           console.error(error.message);
@@ -219,24 +218,16 @@ const EditPurchaseOrderSec = ({ onChildDataChange, data }) => {
                       </td>
                       <td className="align-middle">{state?.hsn}</td>
                       <td className="align-middle">
-                        <div className="input-group">
-                          <input
-                            className="form-control"
-                            type="number"
-                            value={state?.quantity}
-                            onChange={(e) => handleInputChange('quantity', e.target.value)}
-                            style={{ width: '40px', padding: '0.4rem' }}
-                          />
-                          <select className="form-control" value={state?.unit_id} onChange={(e) => handleInputChange('unit_id', e.target.value)}>
-                            <option value="">--Select Unit--</option>
-                            {state?.units?.map((unit, index) => (
-                              <option key={index} value={unit?.id}>
-                                {unit?.unit}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
+                        <input
+                          className="form-control"
+                          type="number"
+                          value={state?.quantity}
+                          onChange={(e) => handleInputChange('quantity', e.target.value)}
+                          style={{ width: '80px', padding: '0.4rem' }}
+                        />
+                        
                       </td>
+                      <td className="align-middle">{state?.units?.find((unit) => unit.id == state.unit_id)?.unit || 'N/A'}</td>
                       <td className="align-middle">
                         <input type="number" className="form-control" value={state?.price} onChange={(e) => handleInputChange('price', e.target.value)} style={{ width: '80px', padding: '0.4rem' }} />
                       </td>
@@ -263,24 +254,16 @@ const EditPurchaseOrderSec = ({ onChildDataChange, data }) => {
                         </td>
                         <td className="align-middle">{item?.hsn}</td>
                         <td className="align-middle">
-                          <div className="input-group">
-                            <input
-                              className="form-control"
-                              type="number"
-                              value={item?.quantity}
-                              onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
-                              style={{ width: '40px', padding: '0.4rem' }}
-                            />
-                            <select className="form-control" value={item?.unit_id} onChange={(e) => handleItemChange(index, 'unit_id', e.target.value)}>
-                              <option value="">--Select Unit--</option>
-                              {state?.units?.map((unit, idx) => (
-                                <option key={idx} value={unit?.id}>
-                                  {unit?.unit}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
+                          <input
+                            className="form-control"
+                            type="number"
+                            value={item?.quantity}
+                            onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
+                            style={{ width: '80px', padding: '0.4rem' }}
+                          />
+                          
                         </td>
+                        <td className="align-middle">{state?.units?.find((unit) => unit.id == item.unit_id)?.unit || 'N/A'}</td>
                         <td className="align-middle">
                           <input
                             type="number"

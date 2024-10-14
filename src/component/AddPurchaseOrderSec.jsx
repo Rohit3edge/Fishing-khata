@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import {toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { Getunits } from '../store/slices/settings';
 import { Listitems } from '../store/slices/items';
 import { Getsingledetail } from '../store/slices/sale';
@@ -60,7 +60,7 @@ const AddPurchaseOrderSec = ({ onChildDataChange, handleSubmit }) => {
           setState((prevState) => ({
             ...prevState,
             singleDetail: data?.data,
-            price:Number(data?.data?.purchase_price)?.toFixed(2) || 0,
+            price: Number(data?.data?.purchase_price)?.toFixed(2) || 0,
             hsn: data?.data?.hsn || '',
             unit_id: data?.data?.unit || '',
           }));
@@ -151,12 +151,12 @@ const AddPurchaseOrderSec = ({ onChildDataChange, handleSubmit }) => {
       shipping_cost: shippingCost,
       grand_total: grandTotal,
       purchase_order_items: state?.addedItems?.map((item) => ({
-        item_id:item.item_id,
-        price:item.price ,
-        quantity:item.quantity ,
-        sub_total:item.sub_total ,
-        unit_id:item.unit_id ,
-        unit_name:item.unit_name ,
+        item_id: item.item_id,
+        price: item.price,
+        quantity: item.quantity,
+        sub_total: item.sub_total,
+        unit_id: item.unit_id,
+        unit_name: item.unit_name,
       })),
     };
 
@@ -177,6 +177,7 @@ const AddPurchaseOrderSec = ({ onChildDataChange, handleSubmit }) => {
                       <th>Item</th>
                       <th>HSN/SAC</th>
                       <th>Quantity</th>
+                      <th>Unit</th>
                       <th>Price</th>
                       <th>Total Amount</th>
                       <th>Action</th>
@@ -196,24 +197,15 @@ const AddPurchaseOrderSec = ({ onChildDataChange, handleSubmit }) => {
                       </td>
                       <td className="align-middle">{state.hsn}</td>
                       <td className="align-middle">
-                        <div className="input-group">
-                          <input
-                            className="form-control"
-                            type="number"
-                            value={state.quantity}
-                            onChange={(e) => handleInputChange('quantity', e.target.value)}
-                            style={{ width: '40px', padding: '0.4rem' }}
-                          />
-                          <select className="form-control" value={state.unit_id} onChange={(e) => handleInputChange('unit_id', e.target.value)}>
-                            <option value="">--Select Unit--</option>
-                            {state?.units?.map((unit, index) => (
-                              <option key={index} value={unit?.id}>
-                                {unit?.unit}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
+                        <input
+                          className="form-control"
+                          type="number"
+                          value={state.quantity}
+                          onChange={(e) => handleInputChange('quantity', e.target.value)}
+                          style={{ width: '80px', padding: '0.4rem' }}
+                        />
                       </td>
+                      <td className="align-middle">{state?.units?.find((unit) => unit.id == state?.unit_id)?.unit || 'N/A'}</td>
                       <td className="align-middle">
                         <input type="number" className="form-control" value={state.price} onChange={(e) => handleInputChange('price', e.target.value)} style={{ width: '80px', padding: '0.4rem' }} />
                       </td>
@@ -240,24 +232,15 @@ const AddPurchaseOrderSec = ({ onChildDataChange, handleSubmit }) => {
                         </td>
                         <td className="align-middle">{item.hsn}</td>
                         <td className="align-middle">
-                          <div className="input-group">
-                            <input
-                              className="form-control"
-                              type="number"
-                              value={item.quantity}
-                              onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
-                              style={{ width: '40px', padding: '0.4rem' }}
-                            />
-                            <select className="form-control" value={item.unit_id} onChange={(e) => handleItemChange(index, 'unit_id', e.target.value)}>
-                              <option value="">--Select Unit--</option>
-                              {state?.units?.map((unit, idx) => (
-                                <option key={idx} value={unit?.id}>
-                                  {unit?.unit}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
+                          <input
+                            className="form-control"
+                            type="number"
+                            value={item.quantity}
+                            onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
+                            style={{ width: '80px', padding: '0.4rem' }}
+                          />
                         </td>
+                        <td className="align-middle">{state?.units?.find((unit) => unit.id == item.unit_id)?.unit || 'N/A'}</td>
                         <td className="align-middle">
                           <input
                             type="number"
@@ -277,18 +260,18 @@ const AddPurchaseOrderSec = ({ onChildDataChange, handleSubmit }) => {
                     ))}
 
                     <tr>
-                      <td colSpan="4" className="text-right align-middle">
+                      <td colSpan="5" className="text-right align-middle">
                         <strong>Shipment Amount:</strong>
                       </td>
-                      <td colSpan="2" className="align-middle">
+                      <td colSpan="3" className="align-middle">
                         <input type="number" className="form-control" value={state.shippingCost} onChange={(e) => handleInputChange('shippingCost', e.target.value)} />
                       </td>
                     </tr>
                     <tr>
-                      <td colSpan="4" className="text-right align-middle">
+                      <td colSpan="5" className="text-right align-middle">
                         <strong>Grand Total:</strong>
                       </td>
-                      <td colSpan="2" className="align-middle">
+                      <td colSpan="3" className="align-middle">
                         ₹{(state.addedItems.reduce((sum, item) => sum + parseFloat(item.sub_total), 0) + parseFloat(state.shippingCost || 0)).toFixed(2)}
                       </td>
                     </tr>
