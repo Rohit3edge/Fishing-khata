@@ -4,7 +4,6 @@ import { ListParties } from '../store/slices/parties';
 import { Getinvoicesnextnumber, AddInvoices } from '../store/slices/sale';
 import { Getsettings} from "../store/slices/settings";
 import {toast } from 'react-hot-toast';
-import { Toaster } from 'react-hot-toast';
 import InvoiceSecond from './InvoiceSecond';
 import Select from 'react-select';
 import Navbarside from './Navbarside';
@@ -172,9 +171,9 @@ const validateForm = () => {
   if (!shippingAddress.state) {
     newErrors.shippingState = 'Shipping state is required.';
   }
-  if (!invoiceSecond.invoice_items) {
-    // newErrors.invoice_items = 'Invoice items is required.';
-    alert("Invoice items is required.")
+  if ((invoiceSecond.invoice_items)?.length==0) {
+    toast.error("Invoice items is required.")
+    return
   }
 
   setErrors(newErrors);
@@ -226,7 +225,6 @@ const handleSubmit = async (e) => {
     setIsLoading(false);
     navigate('/invoicelist');
   } catch (error) {
-    // Handle the error if the API call fails
     setIsLoading(false);
     console.log(error.message);
   }

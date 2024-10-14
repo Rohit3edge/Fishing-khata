@@ -196,10 +196,15 @@ const AddPurchaseBill = () => {
     const validateForm = () => {
       let newErrors = {};
       if (!selectedPartyDetails?.ledger_id) {
-        newErrors.customer = 'Customer is required.';
+        newErrors.ledger_id = 'Supplier/Vendor is required.';
       }
       if (!selectedPartyDetails?.state) {
-        newErrors.selectedPartyState = 'Billing state is required.';
+        toast.error('Supplier/Vendor State is required')
+         return
+      }
+      if ((data?.invoice_items)?.length==0) {
+        toast.error('Item is required')
+         return
       }
 
       setErrors(newErrors);
@@ -316,6 +321,7 @@ const AddPurchaseBill = () => {
                                   onChange={handlePartyChange}
                                   value={partyOptions?.find((option) => option?.value === selectedPartyDetails?.ledger_id) || null}
                                 />
+                                 {errors.ledger_id && <p className="text-danger">{errors.ledger_id}</p>}     
                               </div>
                             </div>
 

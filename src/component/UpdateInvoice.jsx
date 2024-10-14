@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ListParties } from '../store/slices/parties';
+import {toast } from 'react-hot-toast';
 import { GetInvoicesSingleDetails,InvoiceUpdate } from '../store/slices/sale';
 import UpdateInvoiceSecond from './UpdateInvoiceSecond';
 import Select from 'react-select';
@@ -174,7 +175,10 @@ const UpdateAddInvoice = () => {
   // Form submission logic
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    if ((invoiceSecond.invoice_items)?.length==0) {
+      toast.error("Invoice items is required.")
+      return
+    }
     const billingData = {
       invoice_prefix:formData.invoice_prefix,
       invoice_id: Number(invoicedetails?.invoice?.id),

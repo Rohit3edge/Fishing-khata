@@ -21,14 +21,13 @@ const LedgerList = () => {
   const [columns, setcolumns] = useState([
     { header: 'Name', field: 'ledger' },
     { header: 'Group Name', field: 'group_name' },
-    { header: 'Opening Balance', field: 'opening_balance' },
     { header: 'State', field: 'state' },
     { 
       header: 'Actions', 
       field: 'actions', 
       isAction: true, 
       actionButtons: [
-        { name: 'View', className: 'btn-default' }, 
+        { name: 'View Ledger Entries', className: 'btn-default' }, 
         { name: 'Edit', className: 'btn-default' }, 
       ]
     }
@@ -81,7 +80,6 @@ const LedgerList = () => {
   const filteredParties = ledgerList?.filter(party => 
     party?.ledger?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
     party?.group_name?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
-    String(party?.opening_balance || '').toLowerCase().includes(search)||
     party?.state?.toLowerCase()?.includes(searchQuery?.toLowerCase())
   );
 

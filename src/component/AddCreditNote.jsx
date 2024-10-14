@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ListParties } from '../store/slices/parties';
+import {toast } from 'react-hot-toast';
 import {GetByCustomer,GetInvoicesSingleDetails,AddCreditnote } from '../store/slices/sale';
 import moment from 'moment';
 import Select from 'react-select';
@@ -120,19 +121,32 @@ const AddCreditNote = () => {
   };
   
 
-  // Date validation to prevent future dates
-  const validateDate = (date) => {
-    const selectedDate = new Date(date);
-    const currentDate = new Date();
-    return selectedDate <= currentDate;
-  };
 
   const validateForm = () => {
     let newErrors = {};
-    if (!formData.customer_id) newErrors.customer_id = 'Customer is required.';
+  
+    // Validate customer_id
+    if (!formData.customer_id) {
+      newErrors.customer_id = 'Customer is required.';
+    }
+  
+    // Validate credit_note_date
+    if (!formData.credit_note_date) {
+      newErrors.credit_note_date = 'Date is required.';
+    }
+    if ((data.credit_note_items)?.length==0) {
+      toast.error('Items is required.')
+      return
+    }
+  
+    // Set errors state
     setErrors(newErrors);
+  
+    // Return true if no errors, false otherwise
     return Object.keys(newErrors).length === 0;
   };
+  
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -246,6 +260,7 @@ console.log("formdata",meargedata)
                                             <div class="col-md-6">
                                                 <label>Date <span class="required">*</span></label>
                                                 <input name="credit_note_date" type="date" class="form-control" onChange={handleInputChange}/>
+                                                {errors.credit_note_date && <p className="text-danger">{errors.credit_note_date}</p>} 
                                             </div>
                                         </div>
                                     </div>

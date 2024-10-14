@@ -170,7 +170,8 @@ const InvoiceSecond = ({ onChildDataChange, onSubmit }) => {
       finalTotal,
       discountedTotal,
       taxAmount,
-      subtotal: totalBeforeTax,
+      subtotal: discountedTotal,
+      discountAmount:discountAmount
     };
   }, [state]);
 
@@ -393,18 +394,25 @@ const InvoiceSecond = ({ onChildDataChange, onSubmit }) => {
   }, [state.addedItems, state.shippingCost]);
 
   useEffect(() => {
-    // Prepare the final invoice data to send back
+    const discountAmount = state?.addedItems
+      ?.reduce((sum, item) => {
+        const discountAmountSubTotal = isNaN(Number(item.discount_amount)) ? 0 : Number(item.discount_amount);
+        return sum + discountAmountSubTotal;
+      }, 0)
+      ?.toFixed(2);
+    
     const gstTotal = state?.addedItems
       ?.reduce((sum, item) => {
         const itemSubTotal = isNaN(Number(item.tax_amount)) ? 0 : Number(item.tax_amount);
         return sum + itemSubTotal;
       }, 0)
       ?.toFixed(2);
-    console.log(gstTotal);
     const invoiceData = {
       sub_total: state?.addedItems?.reduce((sum, item) => sum + Number(item.sub_total), 0).toFixed(2),
       shipping_cost: Number(state?.shippingCost)?.toFixed(2),
+      discount_amount:discountAmount,
       grand_total: grandTotal,
+      balance_amount:grandTotal,
       total_gst: gstTotal,
       invoice_items: state?.addedItems?.map((item) => ({
         item_id: item.item_id,

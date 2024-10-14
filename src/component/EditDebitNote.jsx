@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ListParties } from '../store/slices/parties';
+import {toast } from 'react-hot-toast';
 import { PaymentOutGetByCustomer, GetPurchaseVoucherDetail, GetSingleDebitnote, UpdateDebitnote } from '../store/slices/purchase';
 import moment from 'moment';
 import Select from 'react-select';
@@ -167,10 +168,21 @@ const EditDebitNote = () => {
 
   const validateForm = () => {
     let newErrors = {};
-    if (!formData.customer_id) newErrors.customer_id = 'Customer is required.';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  
+    // Validate customer_id
+    if (!formData.customer_id) {
+      newErrors.customer_id = 'Customer is required.';
+    }
+  
+    // Validate credit_note_date
+    if (!formData.debit_note_date) {
+      newErrors.debit_note_date = 'Date is required.';
+    }
+    if ((data.debit_note_items)?.length==0) {
+      toast.error('Items is required.')
+      return
+    }
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -300,6 +312,7 @@ const EditDebitNote = () => {
                               Date <span class="required">*</span>
                             </label>
                             <input name="debit_note_date" type="date" class="form-control" value={formData?.debit_note_date} onChange={handleInputChange} />
+                            {errors.debit_note_date && <p className="text-danger">{errors.debit_note_date}</p>} 
                           </div>
                         </div>
                       </div>
