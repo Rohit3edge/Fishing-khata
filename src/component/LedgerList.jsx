@@ -44,10 +44,10 @@ const LedgerList = () => {
   };
 
   const handleEdit = (item) => {
-     navigate(`/edit/ledger/${item.id ? item.id : null}`)
+     navigate(`/edit/ledger/${item?.id ? item?.id : null}`)
   };
   const handleView = (item) => {
-    navigate(`/ledgerdetails/${item.id ? item.id : null}`)
+    navigate(`/ledgerdetails/${item?.id ? item?.id : null}`)
  };
 
 

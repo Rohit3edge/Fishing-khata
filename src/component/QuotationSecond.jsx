@@ -6,7 +6,7 @@ import { Getsingledetail } from '../store/slices/sale';
 import ProductSelector from '../common/ProductSelector';
 import ItemRow from '../common/ItemRow';
 
-const InvoiceSecond = ({ onChildDataChange, onSubmit }) => {
+const QuotationSecond = ({ onChildDataChange, onSubmit }) => {
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id;
@@ -454,4 +454,4 @@ const InvoiceSecond = ({ onChildDataChange, onSubmit }) => {
   );
 };
 
-export default InvoiceSecond;
+export default QuotationSecond;

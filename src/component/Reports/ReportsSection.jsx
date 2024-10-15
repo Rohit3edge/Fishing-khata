@@ -68,7 +68,7 @@ const  ReportsSection= () => {
                                         <a onClick={() => navigate('')}  className="btn register-link">Sale</a><br></br>
                                         <a  className="btn register-link">Purchase</a><br></br>
                                         <a  className="btn register-link" onClick={() => navigate('/reports/trialbalance')} >Trial Balance</a><br></br>
-                                        <a   onClick={() => navigate('')} className="btn register-link">Profit and Loss</a><br></br>
+                                        <a   onClick={() => navigate('/reports/profitandloss')} className="btn register-link">Profit and Loss</a><br></br>
                                         <a  onClick={() => navigate('')} className="btn register-link" >Balance Sheet</a><br></br>
                                     </div>
                                     <div className="col-md-4 text-center">

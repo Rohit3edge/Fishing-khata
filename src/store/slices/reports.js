@@ -36,3 +36,22 @@ export const GetTrialBalance = createAsyncThunk(
         }
     }
 );
+
+
+export const GetProfitLoss = createAsyncThunk(
+    "/post/getprofitloss",
+    async (item,thunkAPI) => {
+        try {
+            const data = await ReportsService.GetProfitLoss(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);

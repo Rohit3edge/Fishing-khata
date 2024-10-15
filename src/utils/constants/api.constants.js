@@ -168,7 +168,9 @@ journalvoucherlist:"/journal-voucher/list",
 Updatejournalvoucher:"/journal-voucher/update",
 getdetailjournalvoucher:"/journal-voucher/get-detail",
 
+// report
 
 stocksummary:"/report/stock-inventory",
-trialbalance:"/ledger/trial-balance"
+trialbalance:"/ledger/trial-balance",
+ProfitLoss:"/ledger/get-pl-statement"
 }

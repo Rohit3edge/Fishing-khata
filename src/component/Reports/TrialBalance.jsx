@@ -73,148 +73,169 @@ const TrialBalance = () => {
   }
 
   return (
-
     <AdminLayout>
-        {isLoading && <Loader />}
-          <div className="row content-body">
-            <div className="container-fluid">
-              <div className="page-header">
-                <div>
-                  <h2 class="main-content-title tx-24 mg-b-5">Trial Balance</h2>
-                  <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                      <a href="#">Reports</a>
-                    </li>
-                    <li class="breadcrumb-item active" aria-current="page">
-                      Trial Balance
-                    </li>
-                  </ol>
-                </div>
-              </div>
+      {isLoading && <Loader />}
+      <div className="row content-body">
+        <div className="container-fluid">
+          <div className="page-header">
+            <div>
+              <h2 class="main-content-title tx-24 mg-b-5">Trial Balance</h2>
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                  <a href="#">Reports</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                  Trial Balance
+                </li>
+              </ol>
+            </div>
+          </div>
 
-              <div class="row mb-4">
+          <div class="row mb-4">
+            <div class="col-md-12">
+              <div class="row">
                 <div class="col-md-12">
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div class="card custom-card">
-                        <div class="card-body">
-                          <div class="row">
-                            <div class="col-md-4 form-inline">
-                              <div class="form-group">
-                                <label class="">From Date</label>
-                                <input class="form-control" type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
-                              </div>
-                            </div>
-                            <div class="col-md-4 form-inline">
-                              <div class="form-group">
-                                <label class="">To Date</label>
-                                <input class="form-control" type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
-                              </div>
-                            </div>
-                            <div class="col-md-3 form-inline">
-                              <div class="form-group">
-                                <button type="submit" class="btn btn-default" onClick={() => handleTrialBalance()}>
-                                  Submit
-                                </button>
-                              </div>
-                            </div>
+                  <div class="card custom-card">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-4 form-inline">
+                          <div class="form-group">
+                            <label class="">From Date</label>
+                            <input class="form-control" type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
+                          </div>
+                        </div>
+                        <div class="col-md-4 form-inline">
+                          <div class="form-group">
+                            <label class="">To Date</label>
+                            <input class="form-control" type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
+                          </div>
+                        </div>
+                        <div class="col-md-3 form-inline">
+                          <div class="form-group">
+                            <button type="submit" class="btn btn-default" onClick={() => handleTrialBalance()}>
+                              Submit
+                            </button>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div className="row mt-3">
-                    <div className="col-md-12">
-                      <div className="card custom-card">
-                        <div className="card-body">
-                          {/* Trial Balance Table */}
-                          <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-                            <h3 style={{ fontWeight: '700' }} className="text-capitalize">
-                              {Name}
-                            </h3>
-                            <h4 style={{ fontWeight: '700' }}>Trial Balance</h4>
-                            <p>{formatDateRange(fromDate, toDate)}</p>
-                          </div>
-                          <table className="table">
-                            <thead>
-                              <tr style={{ BorderBottom: '2px solid black' }}>
-                                <th>Particulars</th>
-                                <th style={{ textAlign: 'center', width: '125px' }}>Dr</th>
-                                <th style={{ textAlign: 'center', width: '125px' }}>Cr</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {Object.entries(trialBalance)?.map(([group, items]) => (
-                                <React.Fragment key={group}>
-                                  <tr>
-                                    <td style={{ textAlign: 'left', fontWeight: 'bold', border: 'none' }}>{group}</td>
-                                    <td style={{ border: 'none', fontWeight: 'bold',textAlign:"center" }}>
-                                      {' '}
-                                      {items?.reduce((sum, item) => {
-                                        const debitValue = Number(item?.debit.toString().replace(/,/g, '')); // Remove commas if any
-                                        return isNaN(debitValue) ? sum : sum + debitValue;
-                                      }, 0) > 0
-                                        ? items
-                                            .reduce((sum, item) => {
-                                              const debitValue = Number(item?.debit.toString().replace(/,/g, ''));
-                                              return isNaN(debitValue) ? sum : sum + debitValue;
-                                            }, 0)
-                                            .toLocaleString('en-US', { minimumFractionDigits: 2 })
-                                        : ''}{' '}
-                                      {/* Render blank if total is 0 */}
-                                    </td>
-                                    <td style={{ border: 'none', fontWeight: 'bold',textAlign:"center" }}>
-                                      {' '}
-                                      {items?.reduce((sum, item) => {
-                                        const creditValue = Number(item?.credit.toString().replace(/,/g, '')); // Remove commas if any
-                                        return isNaN(creditValue) ? sum : sum + creditValue;
-                                      }, 0) > 0
-                                        ? items
-                                            .reduce((sum, item) => {
-                                              const creditValue = Number(item?.credit.toString().replace(/,/g, ''));
-                                              return isNaN(creditValue) ? sum : sum + creditValue;
-                                            }, 0)
-                                            .toLocaleString('en-US', { minimumFractionDigits: 2 })
-                                        : ''}{' '}
-                                      {/* Render blank if total is 0 */}
-                                    </td>
-                                  </tr>
-
-                                  {items.map((item, index) => (
-                                    <tr key={index} style={{ border: 'none' }}>
-                                      <td style={{ padding: '2px 0px 2px 40px', border: 'none'}}>{item.ledger}</td>
-                                      <td style={{ borderBottom: index === items.length - 1 ? '2px solid black' : 'none', borderTop: 'none', padding: '2px 0px 2px 0px',textAlign:"center" }}>
-                                        {Number(item.debit) > 0 ? item.debit : ''}
-                                      </td>
-                                      <td style={{ borderBottom: index === items.length - 1 ? '2px solid black' : 'none', borderTop: 'none', padding: '2px 0px 2px 0px' ,textAlign:"center"}}>
-                                        {Number(item.credit.toString().replace(/,/g, '')) > 0 ? item.credit : ''}
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </React.Fragment>
-                              ))}
-                              <tr>
-                                <td className="td1" style={{ borderTop: '1px solid', borderBottom: '1px solid' }}>
-                                  <b>Total</b>
-                                </td>
-                                <td className="td2" style={{ borderTop: '1px solid', borderBottom: '1px solid' }}>
-                                  {totaldebits}
-                                </td>
-                                <td className="td2" style={{ borderTop: '1px solid', borderBottom: '1px solid' }}>
-                                  {totalcredits}
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
+                </div>
+              </div>
+              <div className="row mt-3">
+                <div className="col-md-12">
+                  <div className="card custom-card">
+                    <div className="card-body">
+                      {/* Trial Balance Table */}
+                      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                        <h3 style={{ fontWeight: '700' }} className="text-capitalize">
+                          {Name}
+                        </h3>
+                        <h4 style={{ fontWeight: '700' }}>Trial Balance</h4>
+                        <p>{formatDateRange(fromDate, toDate)}</p>
                       </div>
+                      <table className="table">
+                        <thead>
+                          <tr style={{ BorderBottom: '2px solid black' }}>
+                            <th>Particulars</th>
+                            <th style={{ textAlign: 'center', width: '125px' }}>Dr</th>
+                            <th style={{ textAlign: 'center', width: '125px' }}>Cr</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {Object.entries(trialBalance)?.map(([group, items]) => (
+                            <React.Fragment key={group}>
+                              <tr>
+                                <td style={{ textAlign: 'left', fontWeight: 'bold', border: 'none' }}>{group}</td>
+                                <td style={{ border: 'none', fontWeight: 'bold', textAlign: 'center' }}>
+                                  {' '}
+                                  {items?.reduce((sum, item) => {
+                                    const debitValue = Number(item?.debit.toString().replace(/,/g, '')); // Remove commas if any
+                                    return isNaN(debitValue) ? sum : sum + debitValue;
+                                  }, 0) > 0
+                                    ? '₹' +
+                                      items
+                                        .reduce((sum, item) => {
+                                          const debitValue = Number(item?.debit.toString().replace(/,/g, ''));
+                                          return isNaN(debitValue) ? sum : sum + debitValue;
+                                        }, 0)
+                                        .toLocaleString('en-IN', { minimumFractionDigits: 2 }) // Indian formatting with commas
+                                    : ''}{' '}
+                                  {/* Render blank if total is 0 */}
+                                </td>
+
+                                <td style={{ border: 'none', fontWeight: 'bold', textAlign: 'center' }}>
+                                  {' '}
+                                  {items?.reduce((sum, item) => {
+                                    const creditValue = Number(item?.credit.toString().replace(/,/g, '')); // Remove commas if any
+                                    return isNaN(creditValue) ? sum : sum + creditValue;
+                                  }, 0) > 0
+                                    ? '₹' +
+                                      items
+                                        .reduce((sum, item) => {
+                                          const creditValue = Number(item?.credit.toString().replace(/,/g, ''));
+                                          return isNaN(creditValue) ? sum : sum + creditValue;
+                                        }, 0)
+                                        .toLocaleString('en-US', { minimumFractionDigits: 2 })
+                                    : ''}{' '}
+                                  {/* Render blank if total is 0 */}
+                                </td>
+                              </tr>
+
+                              {items.map((item, index) => (
+                                <tr key={index} style={{ border: 'none' }}>
+                                  <td style={{ padding: '2px 0px 2px 40px', border: 'none' }}>{item.ledger}</td>
+                                  <td
+                                    style={{
+                                      borderBottom: index === items.length - 1 ? '2px solid black' : 'none',
+                                      borderTop: 'none',
+                                      padding: '2px 0px 2px 0px',
+                                      textAlign: 'center',
+                                    }}
+                                  >
+                                    {Number(item.debit.toString().replace(/,/g, '')) > 0
+                                      ? '₹ ' + Number(item.debit.toString().replace(/,/g, '')).toLocaleString('en-IN', { minimumFractionDigits: 2 })
+                                      : ''}
+                                  </td>
+
+                                  <td
+                                    style={{
+                                      borderBottom: index === items.length - 1 ? '2px solid black' : 'none',
+                                      borderTop: 'none',
+                                      padding: '2px 0px 2px 0px',
+                                      textAlign: 'center',
+                                    }}
+                                  >
+                                    {Number(item.credit.toString().replace(/,/g, '')) > 0
+                                      ? '₹ ' + Number(item.credit.toString().replace(/,/g, '')).toLocaleString('en-IN', { minimumFractionDigits: 2 })
+                                      : ''}
+                                  </td>
+                                </tr>
+                              ))}
+                            </React.Fragment>
+                          ))}
+                          <tr>
+                            <td className="td1" style={{ borderTop: '1px solid', borderBottom: '1px solid' }}>
+                              <b>Total</b>
+                            </td>
+                            <td className="td2" style={{ borderTop: '1px solid', borderBottom: '1px solid' }}>
+                              ₹{parseFloat(totaldebits?.replace(/,/g, '')).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                            </td>
+                            <td className="td2" style={{ borderTop: '1px solid', borderBottom: '1px solid' }}>
+                              ₹{parseFloat(totalcredits?.replace(/,/g, '')).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          </AdminLayout>
+        </div>
+      </div>
+    </AdminLayout>
   );
 };
 

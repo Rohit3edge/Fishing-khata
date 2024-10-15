@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ListParties } from '../store/slices/parties';
 import { Getquotationnextnumber, AddQuotation } from '../store/slices/sale';
 import { Getsettings} from "../store/slices/settings";
-import InvoiceSecond from './QuotationSecond';
+import QuotationSecond from './QuotationSecond';
 import Select from 'react-select';
 import Navbarside from './Navbarside';
 import Loader from '../common/Loader';
@@ -393,7 +393,7 @@ const validateForm = () => {
                       </div>
                     </div>
                   </div>
-                  <InvoiceSecond onChildDataChange={setInvoiceSecond} onSubmit={handleSubmit}/>
+                  <QuotationSecond onChildDataChange={setInvoiceSecond} onSubmit={handleSubmit}/>
                 </div>
               </div>
             </div>

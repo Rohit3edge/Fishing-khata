@@ -120,10 +120,7 @@ import UpdateQuotation from "./component/UpdateQuotation.jsx"
 import ReportsSection from "./component/Reports/ReportsSection.jsx"
 import StockSummary from "./component/Reports/StockSummary.jsx"
 import TrialBalance from "./component/Reports/TrialBalance.jsx"
-
-
-
-
+import ProfitAndLoss from "./component/Reports/ProfitAndLoss.jsx"
 
 
 
@@ -282,6 +279,7 @@ function App() {
             <Route exact path="/reports/stocksummary" element={<StockSummary/>} />
 
             <Route exact path="/reports/trialbalance" element={<TrialBalance/>} />
+            <Route exact path="/reports/profitandloss" element={<ProfitAndLoss/>} />
 
             <Route path="*" element={<Notfoundpage />} />
         </Route>

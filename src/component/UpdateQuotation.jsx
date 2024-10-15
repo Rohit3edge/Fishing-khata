@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ListParties } from '../store/slices/parties';
 import { GetQuotationSingleDetails,QuotationUpdate } from '../store/slices/sale';
-import UpdateInvoiceSecond from './UpdateQuotationSecond';
+import UpdateQuotationSecond from './UpdateQuotationSecond';
 import Select from 'react-select';
 import Navbarside from './Navbarside';
 import Loader from '../common/Loader';
@@ -114,7 +114,7 @@ const UpdateAddInvoice = () => {
   // Party selection logic
   const partyOptions = listParties.map((party) => ({
     value: party.id,
-    label: party.name,
+    label: party.ledger,
   }));
 
   const handlePartyChange = (selectedOption) => {
@@ -125,8 +125,7 @@ const UpdateAddInvoice = () => {
         gstin: party.gstin,
         phone: party.phone,
         state: party.state,
-        ledger_id: party.ledger_id,
-        party_id: party.id,
+        ledger_id: party.id,
       });
 
       if (isSameAsBilling) {
@@ -253,7 +252,7 @@ const UpdateAddInvoice = () => {
                                   options={partyOptions}
                                   placeholder="--Select Customer--"
                                   onChange={handlePartyChange}
-                                  value={partyOptions.find((option) => option.value === selectedPartyDetails.party_id) || null}
+                                  value={partyOptions.find((option) => option.value === selectedPartyDetails.ledger_id) || null}
                                 />
                               </div>
                             </div>
@@ -376,7 +375,7 @@ const UpdateAddInvoice = () => {
                       </div>
                     </div>
                   </div>
-                  <UpdateInvoiceSecond onChildDataChange={setInvoiceSecond} onSubmit={handleSubmit} data={invoicedetails} />
+                  <UpdateQuotationSecond onChildDataChange={setInvoiceSecond} onSubmit={handleSubmit} data={invoicedetails} />
                 </div>
               </div>
             </div>

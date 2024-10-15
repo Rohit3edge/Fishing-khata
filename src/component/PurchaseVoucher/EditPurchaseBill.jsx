@@ -7,9 +7,9 @@ import { GetPurchaseOrderlist } from '../../store/slices/purchase';
 import EditPurchaseBillSec from './EditPurchaseBillSec';
 import moment from 'moment';
 import Select from 'react-select';
-import Navbarside from '../Navbarside';
+import AdminLayout from '../AdminLayout';
 import Loader from '../../common/Loader';
-import Footer from '../Footer';
+
 import { useDispatch, useSelector } from 'react-redux';
 
 const EditPurchaseBill = () => {
@@ -77,14 +77,11 @@ const EditPurchaseBill = () => {
   };
 
   const fetchPurchaseOrderlist = async () => {
-    setIsLoading(true);
     try {
       const data = await dispatch(GetPurchaseOrderlist({ profile_id: Id })).unwrap();
-      setIsLoading(false);
       setPurchaseOrderlist(data?.data);
       return data?.data; // Make sure you return the data
     } catch (error) {
-      setIsLoading(false);
       console.log(error.message);
     }
   };
@@ -182,12 +179,9 @@ const EditPurchaseBill = () => {
   };
 
   const fetchPurchaseVoucherDetails = async (id) => {
-    setIsLoading(true);
     dispatch(GetPurchaseVoucherDetail({ profile_id: Id, invoice_id: id }))
       .unwrap()
       .then((data) => {
-        setIsLoading(false);
-        // console.log('data data', data?.data);
         const purchasevoucher = data?.data?.invoice;
         setSelectedPartyDetails({
           party_gstn: purchasevoucher?.party_gstn || '',
@@ -223,7 +217,6 @@ const EditPurchaseBill = () => {
         setVoucherBillData(data?.data);
       })
       .catch(({ message }) => {
-        setIsLoading(false);
         console.log(message);
       });
   };
@@ -295,29 +288,8 @@ const EditPurchaseBill = () => {
     }
   };
   return (
-    <div>
-      <div className="row" style={{ marginLeft: '0', marginRight: '0' }}>
-        <Navbarside />
+    <AdminLayout>
         {isLoading && <Loader />}
-        <div className="col-md-10">
-          <div className="row top-header">
-            <div className="col-md-7">
-              <div className="company-name">{Name}</div>
-            </div>
-            <div className="col-md-5">
-              <div className="d-flex justify-content-end">
-                <button type="submit" className="btn btn-default" onClick={() => navigate('/ledger')}>
-                  Ledger
-                </button>
-                <button type="submit" className="btn btn-default" onClick={() => navigate('/invoice')}>
-                  Sale
-                </button>
-                <button type="submit" className="btn btn-default">
-                  Purchase
-                </button>
-              </div>
-            </div>
-          </div>
           <div className="row content-body">
             <div className="container">
               <div className="page-header">
@@ -456,10 +428,7 @@ const EditPurchaseBill = () => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <Footer />
-    </div>
+          </AdminLayout>
   );
 };
 

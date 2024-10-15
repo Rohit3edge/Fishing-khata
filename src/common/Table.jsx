@@ -51,7 +51,7 @@ const Table = ({
               onClick={() => {
                 if (button.name === 'Edit') {
                   handleEdit(row);
-                } else if (button.name === 'View') {
+                } else if (button.name === "View Ledger Entries") {
                   handleView(row);
                 }
               }}
