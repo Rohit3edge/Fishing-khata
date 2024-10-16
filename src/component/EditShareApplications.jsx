@@ -18,8 +18,7 @@ const ShareApplicationsEdit = () => {
   
     const user = JSON.parse(localStorage.getItem('user'));
     const userID = user?.data?.id;
-    const Name = user?.data?.company_name;
-    console.log('user',user);
+
   
     const [formData, setFormData] = useState({
         profile_id: userID || '',
@@ -156,7 +155,6 @@ const ShareApplicationsEdit = () => {
                 refund_letter: '',
                 remarks: '',
             });
-            console.log('Form submitted successfully', data);
             navigate('/share-applications/list');
           })
           .catch(({ message }) => {

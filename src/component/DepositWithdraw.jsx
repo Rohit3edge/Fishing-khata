@@ -22,9 +22,7 @@ const DepositWithdraw = () => {
 
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id;
-  const Name = user?.data?.company_name;
 
-  // console.log("newdata",data)
   React.useEffect(() => {
     dispatch(Getcompanybanks())
       .unwrap()
@@ -117,8 +115,8 @@ const DepositWithdraw = () => {
       updatedFormData.from_ledger_id = data?.ledger_id || '';
       updatedFormData.to_ledger_id = formData.to_ledger_id; 
     }
-    console.log("NewOne",updatedFormData)
-    console.log("NewOne",data?.ledger_id)
+    // console.log("NewOne",updatedFormData)
+    // console.log("NewOne",data?.ledger_id)
     setIsLoading(true);
     dispatch(Depositwithdraw(updatedFormData))
       .unwrap()

@@ -153,7 +153,7 @@ const Registermembers = () => {
                 instruction: '',
                 address_beneficial: '',
             });
-            console.log('Form submitted successfully', data);
+
             navigate('/members/list');
           })
           .catch(({ message }) => {

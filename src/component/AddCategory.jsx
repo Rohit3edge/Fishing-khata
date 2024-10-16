@@ -30,7 +30,6 @@ const AddCategory = () => {
       .then((data) => {
         setIsLoading(false);
         setListCategories(data?.data);
-        console.log(data.data);
       })
       .catch(({ message }) => {
         setIsLoading(false);
@@ -57,7 +56,6 @@ const AddCategory = () => {
   };
 
   const handleSubmit = (e) => {
-    console.log(formData);
     e.preventDefault();
     const newErrors = {};
     if (!formData.parent_category_id) {

@@ -121,7 +121,6 @@ const AddParty = () => {
             date_as_of: '',
             type: '',
           });
-          console.log('Form submitted successfully', data);
           navigate('/ledger');
         })
         .catch(({ message }) => {

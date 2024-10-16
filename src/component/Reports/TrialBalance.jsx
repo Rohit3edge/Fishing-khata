@@ -8,7 +8,6 @@ import Footer from '../Footer';
 import AdminLayout from '../AdminLayout';
 
 const TrialBalance = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -55,7 +54,6 @@ const TrialBalance = () => {
       setTrialBalance(data?.data?.trial_balance || []); // Update stockSummary with the response
       setTotaldebits(data?.data?.total_debits);
       setTotalcredits(data?.data?.total_credits);
-      console.log(data?.data?.trial_balance);
     } catch (error) {
       console.error('Error fetching stock summary:', error.message);
     } finally {
@@ -150,16 +148,16 @@ const TrialBalance = () => {
                                 <td style={{ border: 'none', fontWeight: 'bold', textAlign: 'center' }}>
                                   {' '}
                                   {items?.reduce((sum, item) => {
-                                    const debitValue = Number(item?.debit.toString().replace(/,/g, '')); // Remove commas if any
+                                    const debitValue = Number(item?.debit?.toString()?.replace(/,/g, '')); // Remove commas if any
                                     return isNaN(debitValue) ? sum : sum + debitValue;
                                   }, 0) > 0
                                     ? '₹' +
                                       items
-                                        .reduce((sum, item) => {
-                                          const debitValue = Number(item?.debit.toString().replace(/,/g, ''));
+                                        ?.reduce((sum, item) => {
+                                          const debitValue = Number(item?.debit?.toString()?.replace(/,/g, ''));
                                           return isNaN(debitValue) ? sum : sum + debitValue;
                                         }, 0)
-                                        .toLocaleString('en-IN', { minimumFractionDigits: 2 }) // Indian formatting with commas
+                                        ?.toLocaleString('en-IN', { minimumFractionDigits: 2 }) // Indian formatting with commas
                                     : ''}{' '}
                                   {/* Render blank if total is 0 */}
                                 </td>
@@ -167,16 +165,16 @@ const TrialBalance = () => {
                                 <td style={{ border: 'none', fontWeight: 'bold', textAlign: 'center' }}>
                                   {' '}
                                   {items?.reduce((sum, item) => {
-                                    const creditValue = Number(item?.credit.toString().replace(/,/g, '')); // Remove commas if any
+                                    const creditValue = Number(item?.credit?.toString()?.replace(/,/g, '')); // Remove commas if any
                                     return isNaN(creditValue) ? sum : sum + creditValue;
                                   }, 0) > 0
                                     ? '₹' +
                                       items
-                                        .reduce((sum, item) => {
-                                          const creditValue = Number(item?.credit.toString().replace(/,/g, ''));
+                                        ?.reduce((sum, item) => {
+                                          const creditValue = Number(item?.credit?.toString()?.replace(/,/g, ''));
                                           return isNaN(creditValue) ? sum : sum + creditValue;
                                         }, 0)
-                                        .toLocaleString('en-US', { minimumFractionDigits: 2 })
+                                        ?.toLocaleString('en-US', { minimumFractionDigits: 2 })
                                     : ''}{' '}
                                   {/* Render blank if total is 0 */}
                                 </td>
@@ -193,8 +191,8 @@ const TrialBalance = () => {
                                       textAlign: 'center',
                                     }}
                                   >
-                                    {Number(item.debit.toString().replace(/,/g, '')) > 0
-                                      ? '₹ ' + Number(item.debit.toString().replace(/,/g, '')).toLocaleString('en-IN', { minimumFractionDigits: 2 })
+                                    {Number(item?.debit?.toString()?.replace(/,/g, '')) > 0
+                                      ? '₹ ' + Number(item?.debit?.toString()?.replace(/,/g, ''))?.toLocaleString('en-IN', { minimumFractionDigits: 2 })
                                       : ''}
                                   </td>
 
@@ -206,8 +204,8 @@ const TrialBalance = () => {
                                       textAlign: 'center',
                                     }}
                                   >
-                                    {Number(item.credit.toString().replace(/,/g, '')) > 0
-                                      ? '₹ ' + Number(item.credit.toString().replace(/,/g, '')).toLocaleString('en-IN', { minimumFractionDigits: 2 })
+                                    {Number(item?.credit?.toString().replace(/,/g, '')) > 0
+                                      ? '₹ ' + Number(item?.credit?.toString()?.replace(/,/g, ''))?.toLocaleString('en-IN', { minimumFractionDigits: 2 })
                                       : ''}
                                   </td>
                                 </tr>
@@ -219,10 +217,16 @@ const TrialBalance = () => {
                               <b>Total</b>
                             </td>
                             <td className="td2" style={{ borderTop: '1px solid', borderBottom: '1px solid' }}>
-                              ₹{parseFloat(totaldebits?.replace(/,/g, '')).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                              ₹
+                              {typeof totaldebits === 'string'
+                                ? parseFloat(totaldebits.replace(/,/g, '')).toLocaleString('en-IN', { minimumFractionDigits: 2 })
+                                : parseFloat(totaldebits || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                             </td>
                             <td className="td2" style={{ borderTop: '1px solid', borderBottom: '1px solid' }}>
-                              ₹{parseFloat(totalcredits?.replace(/,/g, '')).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                              ₹
+                              {typeof totalcredits === 'string'
+                                ? parseFloat(totalcredits.replace(/,/g, '')).toLocaleString('en-IN', { minimumFractionDigits: 2 })
+                                : parseFloat(totalcredits || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                             </td>
                           </tr>
                         </tbody>

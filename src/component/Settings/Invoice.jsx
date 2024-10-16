@@ -5,7 +5,7 @@ const Invoice = ({ data }) => {
   const dispatch = useDispatch();
   const setting = useSelector((state) => state?.settings?.updatesettings);
   // const { data, loading, error } = useSelector((state) => state.settings);
-console.log("data",data)
+
   return (
     <div class="">
       <div class="container">

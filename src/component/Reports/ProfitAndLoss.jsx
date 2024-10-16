@@ -52,7 +52,6 @@ const ProfitAndLoss = () => {
       const data = await dispatch(GetProfitLoss(newItem)).unwrap();
 
       setProfitLoss(data?.data || []); // Update stockSummary with the response
-      console.log(data?.data);
     } catch (error) {
       console.error('Error fetching stock summary:', error.message);
     } finally {

@@ -85,7 +85,6 @@ const DebantureTransfer = () => {
                   cs_offices: '',
                   remarks: '',
               });
-            console.log('Form submitted successfully', data);
             navigate('/share-transfer/list');
           })
           .catch(({ message }) => {

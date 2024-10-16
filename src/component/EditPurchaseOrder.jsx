@@ -149,7 +149,7 @@ const EditPurchaseOrder = () => {
     }
     const ListParties=isData?ndata:listParties
     const party = ListParties?.find((p) => p?.id == FinalselectedOption);
-    console.log("party",party)
+    // console.log("party",party)
     if (party) {
       setSelectedPartyDetails({
         address: party?.address,
@@ -188,7 +188,7 @@ const EditPurchaseOrder = () => {
       ...formData,
       ...data
     };
-      console.log('Form Data:', mergedData);
+      // console.log('Form Data:', mergedData);
       dispatch(UpdatePurchaseOrder(mergedData)).unwrap()
       .then((data) => {
         toast.success('Update Purchase Order Successfully')

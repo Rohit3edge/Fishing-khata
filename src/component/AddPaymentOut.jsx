@@ -4,8 +4,6 @@ import { ListParties } from '../store/slices/parties';
 import { GetPaymentMethods} from '../store/slices/sale';
 import {PaymentOutGetByCustomer,AddPaymentout,GetPurchaseVoucherDetail} from "../store/slices/purchase"
 import Select from 'react-select';
-import Navbarside from './Navbarside';
-import Footer from './Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../common/Loader';
 import AdminLayout from './AdminLayout';
@@ -21,14 +19,14 @@ const AddPaymentOut = () => {
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id;
-  const Name = user?.data?.company_name;
+  const currentDate = new Date().toISOString().split('T')[0];
 
   const [formData, setFormData] = useState({
     profile_id: id,
     party_ledger_id: '',
     ref_id: '',
     amount_paid: '',
-    payment_date: '',
+    payment_date: currentDate,
     ledger_id: "",
     payment_mode: '',
     transaction_number: '',
@@ -95,7 +93,7 @@ const AddPaymentOut = () => {
 
   const handleInvoiceChange = (e) => {
     const invoiceNumber = e.target.value;
-    const invoice = byCustomer?.find((inv) => inv?.bill_no == invoiceNumber);
+    const invoice = byCustomer?.find((inv) => inv?.id == invoiceNumber);
     fetchPurchaseVoucherDetails(invoice?.id)
     setFormData({ ...formData, ref_id: invoiceNumber });
   };
@@ -107,7 +105,6 @@ const AddPaymentOut = () => {
       .unwrap()
       .then((data) => {
         setIsLoading(false);
-        console.log('data data', data?.data);
         const purchasevoucher = data?.data;
         setSelectedInvoice(purchasevoucher);
       })
@@ -134,8 +131,6 @@ const AddPaymentOut = () => {
         bank_name:bankname,            
       }));
       
-      console.log("Payment Mode (Ledger):", PaymentMethods);
-      console.log("Ledger ID:", value);
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -161,12 +156,10 @@ const AddPaymentOut = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
     if (validateForm()) {
       try {
         setIsLoading(true);
         const data = await dispatch(AddPaymentout(formData)).unwrap();
-        console.log(data)
         setIsLoading(false);
         navigate('/purchase/paymentoutlist');
         
@@ -187,14 +180,14 @@ const AddPaymentOut = () => {
             <div className="container">
               <div className="page-header">
                 <div>
-                  <h2 class="main-content-title tx-24 mg-b-5">Payment</h2>
+                  <h2 class="main-content-title tx-24 mg-b-5">Payment Out</h2>
 
                   <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                       <a href="#">Purchase</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                     Payment Out
+                    Add Payment Out
                     </li>
                   </ol>
                 </div>
@@ -221,7 +214,7 @@ const AddPaymentOut = () => {
                             <select name="ref_id" class="form-control" onChange={handleInvoiceChange} value={selectedInvoice?.ref_id}>
                               <option value="">--Select Invoice--</option>
                               {byCustomer?.map((option, index) => (
-                                <option key={index} value={option?.bill_no}>
+                                <option key={index} value={option?.id}>
                                   {option?.bill_no}
                                 </option>
                               ))}

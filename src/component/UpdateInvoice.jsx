@@ -53,9 +53,11 @@ const UpdateAddInvoice = () => {
     invoice_prefix:""
   });
 
+  const [errors, setErrors] = useState({});
+
   // Fetch invoice details if editing
   useEffect(() => {
-    console.log(selectedPartyDetails)
+    // console.log(selectedPartyDetails)
     if (invoiceId && userId) {
       setIsLoading(true);
       dispatch(GetInvoicesSingleDetails({ profile_id: userId, invoice_id: invoiceId }))
@@ -172,6 +174,32 @@ const UpdateAddInvoice = () => {
       });
     }
   };
+
+
+  const validateForm = () => {
+    let newErrors = {};
+    if (!selectedPartyDetails.ledger_id) {
+      newErrors.customer = 'Customer is required.';
+    }
+    if (!selectedPartyDetails.state) {
+      newErrors.selectedPartyState = 'Billing state is required.';
+    }
+    if (!shippingAddress.state) {
+      newErrors.shippingState = 'Shipping state is required.';
+    }
+    if (!formData.invoice_number) {
+      newErrors.invoice_number = 'Invoice Number is required.';
+    }
+    if ((invoiceSecond.invoice_items)?.length==0) {
+      toast.error("Invoice items is required.")
+      return
+    }
+    setErrors(newErrors);
+  
+    // Return true if no errors, false otherwise
+    return Object.keys(newErrors).length === 0;
+  
+  }
 // console.log(invoicedetails?.invoice?.id)
   // Form submission logic
   const handleSubmit = (e) => {
@@ -205,7 +233,10 @@ const UpdateAddInvoice = () => {
       ...billingData,
       ...invoiceSecond,
     };
-    console.log(mergedData)
+    // console.log(mergedData)
+    if(validateForm()){
+
+ 
     setIsLoading(true);
     dispatch(InvoiceUpdate(mergedData))
       .unwrap()
@@ -217,7 +248,7 @@ const UpdateAddInvoice = () => {
         setIsLoading(false);
         console.log(message);
       });
-
+    }
   };
 
 
@@ -325,12 +356,10 @@ const UpdateAddInvoice = () => {
                         <div className="row">
                           <div className="col-md-6">
                             <div className="row">
-                              {/* <div className="col-md-6">
-                                <label>Invoice Number </label>
-                                <input name="invoice_number" type="text" className="form-control" value={formData.invoice_number || ''} onChange={handleInputChange} readOnly/>
-                              </div> */}
                               <div className="col-md-6">
-  <label>Invoice Number</label>
+                              <label>
+                                Invoice Number <span className="required">*</span>
+                              </label>
   <div className="d-flex align-items-center">
     <span className="me-2 " style={{ paddingRight:"1rem" }}>{formData.invoice_prefix }</span>
     <input
@@ -341,6 +370,7 @@ const UpdateAddInvoice = () => {
       onChange={handleInputChange}
       style={{ width: '90%' }} // This ensures the input takes the remaining space
     />
+     {errors.invoice_number && <p className="text-danger">{errors.invoice_number}</p>}
   </div>
 </div>
 

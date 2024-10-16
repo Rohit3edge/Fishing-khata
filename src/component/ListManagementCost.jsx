@@ -48,7 +48,6 @@ const ListManagement = () => {
         .then((data) => {
           setIsLoading(false);
           const item = data?.data;
-          console.log('item',item);
           setFormData({
                 id : item?.id || '',
                 profile_id : UserID|| '',
@@ -100,7 +99,6 @@ const ListManagement = () => {
   
   
   const handleSubmit = () => {
-    console.log(formData);
     setIsLoading(true);
     dispatch(UpdateManagementCost(formData))
       .unwrap()
@@ -138,7 +136,6 @@ const ListManagement = () => {
         .then((data) => {
           setIsLoading(false);
           const item = data?.data;
-          console.log('item',item);
           setFormData({
                 id : item?.id || '',
                 profile_id : UserID|| '',

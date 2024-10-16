@@ -4,9 +4,7 @@ import { ListParties } from '../store/slices/parties';
 import { GetQuotationSingleDetails,QuotationUpdate } from '../store/slices/sale';
 import UpdateQuotationSecond from './UpdateQuotationSecond';
 import Select from 'react-select';
-import Navbarside from './Navbarside';
 import Loader from '../common/Loader';
-import Footer from './Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import AdminLayout from './AdminLayout';
 
@@ -18,7 +16,6 @@ const UpdateAddInvoice = () => {
 
   const user = JSON.parse(localStorage.getItem('user'));
   const userId = user?.data?.id; // profile_id
-  const Name = user?.data?.company_name;
   const currentDate = new Date().toISOString().split('T')[0];
 
   const [isLoading, setIsLoading] = useState(false);
@@ -51,10 +48,10 @@ const UpdateAddInvoice = () => {
     po_number: '',
     invoice_prefix:""
   });
-
+  const [errors, setErrors] = useState({});
   // Fetch invoice details if editing
   useEffect(() => {
-    console.log(selectedPartyDetails)
+    // console.log(selectedPartyDetails)
     if (invoiceId && userId) {
       setIsLoading(true);
       dispatch(GetQuotationSingleDetails({ profile_id: userId, invoice_id: invoiceId }))
@@ -64,13 +61,10 @@ const UpdateAddInvoice = () => {
           const invoice = data?.data?.invoice;
           setInvoicedetails(data?.data || {});
           setFormData({
-            invoice_date: invoice?.invoice_date || currentDate,
-            eway_number: invoice?.eway_bill || '',
-            vehicle_number: invoice?.vehicle_number || '',
+            invoice_date: invoice?.quotation_date || currentDate,
             message: invoice?.notes || '',
-            invoice_number: invoice?.invoice_number || '',
-            po_number: invoice?.po_number || '',
-            invoice_prefix:invoice?.invoice_prefix
+            invoice_number: invoice?.quotation_number || '',
+            invoice_prefix:invoice?.quotation_prefix
           });
           setSelectedPartyDetails({
             address: invoice?.billing_address || '',
@@ -78,7 +72,6 @@ const UpdateAddInvoice = () => {
             phone: invoice?.billing_phone || '',
             state: invoice?.billing_state || '',
             ledger_id: invoice?.ledger_id || '',
-            party_id: invoice?.party_id || '',
           });
           setShippingAddress({
             address: invoice?.shipping_address || '',
@@ -171,6 +164,35 @@ const UpdateAddInvoice = () => {
       });
     }
   };
+
+
+  const validateForm = () => {
+    let newErrors = {};
+    if (!selectedPartyDetails.ledger_id) {
+      newErrors.customer = 'Customer is required.';
+    }
+    if (!selectedPartyDetails.state) {
+      newErrors.selectedPartyState = 'Billing state is required.';
+    }
+    if (!formData.invoice_number) {
+      newErrors.invoice_number = 'Quotation Number is required.';
+    }
+    if (!formData.invoice_date) {
+      newErrors.invoice_date = 'Expiry Date is required.';
+    }
+    if (!shippingAddress.state) {
+      newErrors.shippingState = 'Shipping state is required.';
+    }
+    if (!invoiceSecond.invoice_items) {
+      // newErrors.invoice_items = 'Invoice items is required.';
+      alert('Invoice items is required.');
+    }
+
+    setErrors(newErrors);
+    // If there are no errors, return true. Otherwise, return false.
+    return Object.keys(newErrors).length === 0;
+  };
+
 // console.log(invoicedetails?.invoice?.id)
   // Form submission logic
   const handleSubmit = (e) => {
@@ -180,21 +202,17 @@ const UpdateAddInvoice = () => {
       invoice_prefix:formData.invoice_prefix,
       invoice_id: Number(invoicedetails?.invoice?.id),
       profile_id: Number(userId),
-      party_id: Number(selectedPartyDetails.party_id),
       ledger_id: Number(selectedPartyDetails.ledger_id),
       invoice_number: formData.invoice_number,
       invoice_date: formData.invoice_date,
       fin_year: '2024-2025',
-      po_number: formData.po_number,
-      billing_address: selectedPartyDetails.address,
+      billing_address: selectedPartyDetails.address || null,
       billing_state: selectedPartyDetails.state,
-      billing_phone: selectedPartyDetails.phone,
-      party_gstn: selectedPartyDetails.gstin,
-      shipping_address: shippingAddress.address,
+      billing_phone: selectedPartyDetails.phone || null,
+      party_gstn: selectedPartyDetails.gstin || null,
+      shipping_address: shippingAddress.address || null,
       shipping_state: shippingAddress.state,
-      shipping_phone: shippingAddress.phone,
-      eway_bill: formData.eway_number,
-      vehicle_number: formData.vehicle_number,
+      shipping_phone: shippingAddress.phone || null,
       notes: formData.message,
     };
  
@@ -202,7 +220,9 @@ const UpdateAddInvoice = () => {
       ...billingData,
       ...invoiceSecond,
     };
-    console.log(mergedData)
+    // console.log(mergedData)
+    if(validateForm()){
+
     setIsLoading(true);
     dispatch(QuotationUpdate(mergedData))
       .unwrap()
@@ -214,7 +234,8 @@ const UpdateAddInvoice = () => {
         setIsLoading(false);
         console.log(message);
       });
-
+            
+    }
   };
 
 
@@ -327,7 +348,9 @@ const UpdateAddInvoice = () => {
                                 <input name="invoice_number" type="text" className="form-control" value={formData.invoice_number || ''} onChange={handleInputChange} readOnly/>
                               </div> */}
                               <div className="col-md-6">
-  <label>Quotation Number</label>
+  <label>
+    Quotation Number <span className="required">*</span>
+    </label>
   <div className="d-flex align-items-center">
     <span className="me-2 " style={{ paddingRight:"1rem" }}>{formData.invoice_prefix }</span>
     <input
@@ -335,14 +358,17 @@ const UpdateAddInvoice = () => {
       type="text"
       className="form-control"
       value={formData.invoice_number}
-      readOnly
+      onChange={handleInputChange}
       style={{ width: '90%' }} // This ensures the input takes the remaining space
     />
   </div>
+  {errors.invoice_date && <p className="text-danger">{errors.invoice_date}</p>}
 </div>
 
                               <div className="col-md-6">
-                                <label>Quotation Date </label>
+                                <label>
+                                  Expiry Date <span className="required">*</span>
+                                   </label>
                                 <input
                                   name="invoice_date"
                                   type="date"
@@ -351,18 +377,7 @@ const UpdateAddInvoice = () => {
                                   max={currentDate}
                                   onChange={handleInputChange}
                                 />
-                              </div>
-                            </div>
-
-                            <div className="row mt-3">
-                              <div className="col-md-6">
-                                <label>E-Way Bill Number </label>
-                                <input name="eway_number" type="text" className="form-control" value={formData.eway_number || ''} onChange={handleInputChange} />
-                              </div>
-
-                              <div className="col-md-6">
-                                <label>Vehicle Number </label>
-                                <input name="vehicle_number" type="text" className="form-control" value={formData.vehicle_number || ''} onChange={handleInputChange} />
+                                {errors.invoice_date && <p className="text-danger">{errors.invoice_date}</p>}
                               </div>
                             </div>
                           </div>

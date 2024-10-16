@@ -134,7 +134,6 @@ const LoanandguaranteeEdit = () => {
             loan_perc: '',
             maturity_date:'',
           });
-          console.log('Form submitted successfully', data);
           navigate('/loans/list');
         })
         .catch(({ message }) => {

@@ -3,9 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ListParties } from '../store/slices/parties';
 import {GetByCustomer,GetInvoicesSingleDetails ,GetSingleCreditnote,UpdateCreditnote} from '../store/slices/sale';
 import moment from 'moment';
+import {toast } from 'react-hot-toast';
 import Select from 'react-select';
-import Navbarside from './Navbarside';
-import Footer from './Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../common/Loader';
 import EditCreditNoteSec from './EditCreditNoteSec';
@@ -27,7 +26,6 @@ const EditCreditNote = () => {
 
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id;
-  const Name = user?.data?.company_name;
 
   const [formData, setFormData] = useState({
     profile_id: id,
@@ -76,7 +74,7 @@ const EditCreditNote = () => {
       .unwrap()
       .then((data) => {
         setIsLoading(false);
-        console.log('data to single ', data?.data);
+
         const creditNote = data?.data?.credit_note;
         if (creditNote) {
             setFormData((prevFormData) => ({
@@ -134,7 +132,7 @@ const EditCreditNote = () => {
     const invoiceNumber = isOnLoad ? e : e.target.value;
     const cdata = bydata?.length > 0 ? bydata : byCustomer;
     const invoice = cdata.find((inv) => inv.id == invoiceNumber);
-    console.log(invoice?.id)
+    // console.log(invoice?.id)
     fetchInvoicesSingleDetails(invoice?.id); 
     setFormData((prevFormData) =>({ ...prevFormData, ref_id: invoice?.id }));
   };
@@ -145,9 +143,10 @@ const EditCreditNote = () => {
       .unwrap()
       .then((data) => {
         setIsLoading(false);
-        console.log('data data', data?.data);
+
         const purchasevoucher = data?.data;
         setSelectedInvoice(purchasevoucher);
+        // console.log("purchasevoucher",purchasevoucher)
       })
       .catch(({ message }) => {
         setIsLoading(false);
@@ -170,10 +169,29 @@ const EditCreditNote = () => {
 
   const validateForm = () => {
     let newErrors = {};
-    if (!formData.customer_id) newErrors.customer_id = 'Customer is required.';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  
+    // Validate customer_id
+    if (!formData.customer_id) {
+      newErrors.customer_id = 'Customer is required.';
+    }
+  
+    // Validate credit_note_date
+    if (!formData.credit_note_date) {
+      newErrors.credit_note_date = 'Date is required.';
+    }
+    if (!formData.credit_note_number) {
+      newErrors.credit_note_number = 'Credit Note Number is required.';
+    }
+    if ((data.credit_note_items)?.length==0) {
+      toast.error('Items is required.')
+      return
+    }
+           // Set errors state
+           setErrors(newErrors);
+  
+           // Return true if no errors, false otherwise
+           return Object.keys(newErrors).length === 0;
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -196,7 +214,7 @@ const EditCreditNote = () => {
       ...data,
     };
 
-    console.log('formdata', meargedata);
+    // console.log('formdata', meargedata);
     if (validateForm()) {
       setIsLoading(true);
       dispatch(UpdateCreditnote(meargedata))
@@ -212,7 +230,6 @@ const EditCreditNote = () => {
     }
   };
 
-//   console.log('invoice', formData);
 
   return (
     <AdminLayout>
@@ -257,7 +274,9 @@ const EditCreditNote = () => {
                             {errors.customer_id && <p className="text-danger">{errors.customer_id}</p>}
                           </div>
                           <div class="col-md-6">
-                            <label>Invoice Number</label>
+                            <label>
+                              Invoice Number 
+                              </label>
                             <select name="party" class="form-control" onChange={handleInvoiceChange} value={byCustomer?.find((option) => option?.id == formData?.ref_id)?.id || null} disabled>
                               <option value="">--Select Voucher--</option>
                               {byCustomer?.map((option, index) => (
@@ -273,8 +292,11 @@ const EditCreditNote = () => {
                       <div class="form-group">
                         <div class="row">
                           <div class="col-md-6">
-                            <label>Credit Note Number</label>
+                            <label>
+                              Credit Note Number <span class="required">*</span>
+                              </label>
                             <input name="credit_note_number" class="form-control" type="text" value={formData.credit_note_number} onChange={handleInputChange} />
+                            {errors.credit_note_number && <p className="text-danger">{errors.credit_note_number}</p>} 
                           </div>
                           <div class="col-md-6">
                             <label>
@@ -307,16 +329,16 @@ const EditCreditNote = () => {
                           </tr>
                           <tr>
                             <th>Invoice Date</th>
-                            <td>{selectedInvoice?.invoice?.invoice_date}</td>
+                            <td>{moment(selectedInvoice?.invoice?.invoice_date).format('DD-MM-YYYY')}</td>
                           </tr>
-                          <tr>
+                          {/* <tr>
                             <th>Party Bill Number</th>
                             <td>{selectedInvoice?.invoice?.po_number}</td>
                           </tr>
                           <tr>
                             <th>Party Bill Date</th>
                             <td>{moment(selectedInvoice?.invoice?.added_on).format('DD-MM-YYYY')}</td>
-                          </tr>
+                          </tr> */}
                           <tr>
                             <th>Invoice Amount</th>
                             <td>₹ {selectedInvoice?.invoice?.grand_total}</td>

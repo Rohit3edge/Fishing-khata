@@ -84,7 +84,6 @@ const EditLedger = () => {
         .then((data) => {
           setIsLoading(false);
           populateLedgerData(data?.ledger);
-          console.log(data?.ledger)
         })
         .catch(({ message }) => {
           setIsLoading(false);
@@ -163,11 +162,9 @@ const EditLedger = () => {
       return value.slice(0, -1);
     }
   };
-console.log(accountDetails)
   const handleSubmit = (e) => {
     e.preventDefault();
     let formErrors = {};
-    console.log("form data" ,accountDetails)
     if (!accountDetails.ledger) formErrors.ledger = 'Ledger name is required';
     if (!accountDetails.group_id) formErrors.group_id = 'Group name is required';
     // if (!accountDetails.dr_cr) formErrors.transactionType = 'Transaction type is required';
@@ -176,7 +173,6 @@ console.log(accountDetails)
     //   return;
     // }
 
-    console.log("form data 2" ,accountDetails)
     const ledgerData = {
         id: ledgerId,
         profile_id:id,
@@ -194,7 +190,6 @@ console.log(accountDetails)
 
       ...accountDetails,
     };
-  console.log("ledgerData" ,ledgerData)
     setIsLoading(true);
     if (ledgerId) {
       // If ledgerId exists, update the existing ledger

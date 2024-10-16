@@ -67,7 +67,7 @@ const DebitNoteList = () => {
       .then((data) => {
         setIsLoading(false);
         setDebitNotelist(data?.data);
-        console.log(data?.data)
+
       })
       .catch(({ message }) => {
         setIsLoading(false);

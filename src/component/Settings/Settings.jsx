@@ -48,7 +48,7 @@ const Settings = () => {
   }, [dispatch]);
 
   const item = { profile_id:id,...setting};
-  console.log("item",item)
+
 
   async function handleUpdatesettings() {
     try {

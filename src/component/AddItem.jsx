@@ -90,7 +90,6 @@ const AddItem = () => {
   };
   
   const handleSubmit = () => {
-    console.log(formData);
     if (validate()) {
     setIsLoading(true);
     dispatch(Additems(formData))

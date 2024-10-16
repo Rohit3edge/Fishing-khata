@@ -63,7 +63,6 @@ const StockSummary = () => {
       const data = await dispatch(GetStockSummary(newItem)).unwrap();
 
       setStockSummary(data?.stock_report || []); // Update stockSummary with the response
-      console.log(data.stock_report);
     } catch (error) {
       console.error('Error fetching stock summary:', error.message);
     } finally {

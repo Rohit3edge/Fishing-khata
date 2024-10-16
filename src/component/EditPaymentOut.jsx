@@ -61,9 +61,9 @@ const EditPaymentOut = () => {
         .unwrap()
         .then((data) => {
           setIsLoading(false); 
-          console.log("hello data ",data.data.party_ledger_id)
+          // console.log("hello data ",data.data.party_ledger_id)
           const party = listParties?.find(party => party?.id === data?.data?.party_ledger_id);
-          console.log(party)
+          // console.log(party)
           if (party) {
             setSelectedParty({ value: party.id, label: party.ledger });
              handleGetCustomer(party.id).then((ndata)=>{
@@ -149,7 +149,7 @@ const EditPaymentOut = () => {
   const handleInvoiceChange = (e,bydata,isOnLoad) => {
     const invoiceNumber = isOnLoad ?e :e.target.value;
     const cdata=bydata?.length>0 ? bydata : byCustomer
-    const invoice = cdata.find((inv) => inv.bill_no == invoiceNumber);
+    const invoice = cdata.find((inv) => inv.id == invoiceNumber);
 
     fetchPurchaseVoucherDetails(invoice?.id)
     setFormData({ ...formData, ref_id: invoiceNumber });
@@ -161,7 +161,7 @@ const EditPaymentOut = () => {
       .unwrap()
       .then((data) => {
         setIsLoading(false);
-        console.log('data data', data?.data);
+        // console.log('data data', data?.data);
         const purchasevoucher = data?.data;
         setSelectedInvoice(purchasevoucher);
       })
@@ -187,8 +187,8 @@ const EditPaymentOut = () => {
         bank_name:bankname,            
       }));
       
-      console.log("Payment Mode (Ledger):", PaymentMethods);
-      console.log("Ledger ID:", value);
+      // console.log("Payment Mode (Ledger):", PaymentMethods);
+      // console.log("Ledger ID:", value);
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -226,7 +226,7 @@ const EditPaymentOut = () => {
       ledger_id: formData.ledger_id, 
       bank_name:formData.bank_name,      
     }
-    console.log("data",subdata)
+    // console.log("data",subdata)
     if (validateForm()) {
       setIsLoading(true);
       dispatch(UpdatePaymentOut(subdata))
@@ -266,7 +266,7 @@ const EditPaymentOut = () => {
             <div className="container">
               <div className="page-header">
                 <div>
-                  <h2 class="main-content-title tx-24 mg-b-5">Payment</h2>
+                  <h2 class="main-content-title tx-24 mg-b-5">Payment Out</h2>
 
                   <ol class="breadcrumb">
                     <li class="breadcrumb-item">
@@ -300,7 +300,7 @@ const EditPaymentOut = () => {
                             <select name="ref_id" class="form-control" onChange={handleInvoiceChange} value={formData.ref_id} disabled>
                               <option value="">--Select Invoice--</option>
                               {byCustomer?.map((option, index) => (
-                                <option key={index} value={option?.bill_no}>
+                                <option key={index} value={option?.id}>
                                   {option?.bill_no}
                                 </option>
                               ))}

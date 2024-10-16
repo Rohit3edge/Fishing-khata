@@ -5,8 +5,6 @@ import {toast } from 'react-hot-toast';
 import { PaymentOutGetByCustomer, GetPurchaseVoucherDetail, GetSingleDebitnote, UpdateDebitnote } from '../store/slices/purchase';
 import moment from 'moment';
 import Select from 'react-select';
-import Navbarside from './Navbarside';
-import Footer from './Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../common/Loader';
 import EditDebitNoteSec from './EditDebitNoteSec';
@@ -78,9 +76,9 @@ const EditDebitNote = () => {
       .unwrap()
       .then((data) => {
         setIsLoading(false);
-        console.log('data to single ', data?.data);
+        // console.log('data to single ', data?.data);
         const debitNote = data?.data?.debit_note;
-        console.log('data to single 2', debitNote?.debit_note_number,debitNote?.debit_note_date, debitNote?.purchase_voucher_id);
+        // console.log('data to single 2', debitNote?.debit_note_number,debitNote?.debit_note_date, debitNote?.purchase_voucher_id);
         if (debitNote) {
             setFormData((prevFormData) => ({
               ...prevFormData,
@@ -171,18 +169,20 @@ const EditDebitNote = () => {
     let newErrors = {};
   
     // Validate customer_id
-    if (!formData.customer_id) {
+    if (!formData.ledger_id) {
       newErrors.customer_id = 'Customer is required.';
     }
   
-    // Validate credit_note_date
-    if (!formData.debit_note_date) {
-      newErrors.debit_note_date = 'Date is required.';
-    }
     if ((data.debit_note_items)?.length==0) {
       toast.error('Items is required.')
       return
     }
+
+       // Set errors state
+       setErrors(newErrors);
+  
+       // Return true if no errors, false otherwise
+       return Object.keys(newErrors).length === 0;
   }
 
   const handleSubmit = (e) => {

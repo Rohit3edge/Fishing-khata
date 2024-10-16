@@ -18,8 +18,7 @@ const AddPurchaseOrder = () => {
 
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id; // profile_id
-  const Name = user?.data?.company_name;
-  // const currentDate = new Date().toISOString().split('T')[0];
+  const currentDate = new Date().toISOString().split('T')[0];
 
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState({});
@@ -41,7 +40,7 @@ const AddPurchaseOrder = () => {
     tcs_amount:"",
     party_gstn: '' ||null,
     po_number: '',
-    po_date: "",
+    po_date: currentDate,
     quotation_number: '',
     quotation_date: '',
     notes: '',
@@ -137,6 +136,12 @@ const AddPurchaseOrder = () => {
     if (!selectedPartyDetails?.state) {
       newErrors.selectedPartyState = 'Billing state is required.';
     }
+    if (!formData.po_date) {
+      newErrors.selectedPartyState = 'PO Date is required.';
+    }
+    if (!formData.po_number) {
+      newErrors.selectedPartyState = 'PO Number is required.';
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -149,7 +154,7 @@ const AddPurchaseOrder = () => {
       ...formData,
       ...data
     };
-      console.log('Form Data:', mergedData);
+      // console.log('Form Data:', mergedData);
     if (validateForm()) {
 
       dispatch(AddPurchaseorder(mergedData))
@@ -226,13 +231,19 @@ const AddPurchaseOrder = () => {
                           <div class="col-md-6">
                             <div class="row">
                               <div class="col-md-6">
-                                <label>PO Number </label>
+                                <label>
+                                  PO Number <span class="required">*</span>
+                                  </label>
                                 <input name="po_number" type="text" class="form-control" value={formData.po_number} onChange={handleInputChange} />
+                                {errors.po_number && <p className="text-danger">{errors.po_number}</p>}
                               </div>
 
                               <div class="col-md-6">
-                                <label>PO Date </label>
+                                <label>
+                                  PO Date <span class="required">*</span>
+                                  </label>
                                 <input name="po_date" type="date" class="form-control" value={formData.po_date} onChange={handleInputChange} />
+                                {errors.po_date && <p className="text-danger">{errors.po_date}</p>}
                               </div>
                             </div>
 

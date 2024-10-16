@@ -61,7 +61,6 @@ const Item = () => {
       .then((data) => {
         setIsLoading(false);
         setListDividend(data?.data);
-        console.log(data.data);
       })
       .catch(({ message }) => {
         setIsLoading(false);

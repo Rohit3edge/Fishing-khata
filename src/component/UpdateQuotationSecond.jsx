@@ -157,29 +157,29 @@ const UpdateQuotationSecond = ({ onChildDataChange, onSubmit,data }) => {
       const shippingCost = parseFloat(value) || 0;
       const shippingTaxRate = 12; // Fixed rate for shipping GST
       const shippingGst = parseFloat(((shippingCost * shippingTaxRate) / 100).toFixed(2)); // Calculate GST for shipping
-     console.log("1",shippingCost,shippingGst)
+    //  console.log("1",shippingCost,shippingGst)
       // Retrieve the existing shipping GST from the state or set it to 0 if not present
       const existingShippingGst = state.shippingGst || 0;
-      console.log("2",existingShippingGst)
+      // console.log("2",existingShippingGst)
       // Copy the existing taxAmounts state
       const updatedTaxAmounts = { ...state.taxAmounts };
-      console.log("3",updatedTaxAmounts)
+      // console.log("3",updatedTaxAmounts)
       // Calculate the difference between the new shipping GST and the existing one
       const difference = shippingGst - existingShippingGst;
-      console.log("3",updatedTaxAmounts)
+      // console.log("3",updatedTaxAmounts)
       // Adjust the tax amount for 12% GST based on the shipping GST difference
       if (updatedTaxAmounts[shippingTaxRate]) {
         updatedTaxAmounts[shippingTaxRate] += difference;
       } else {
         updatedTaxAmounts[shippingTaxRate] = shippingGst; // Initialize shipping GST for the 12% rate if not present
       }
-      console.log("4",updatedTaxAmounts,shippingGst,difference)
+      // console.log("4",updatedTaxAmounts,shippingGst,difference)
   
       // Remove the tax rate if the amount becomes zero
       if (updatedTaxAmounts[shippingTaxRate] <= 0) {
         delete updatedTaxAmounts[shippingTaxRate];
       }
-      console.log("5",updatedTaxAmounts)
+      // console.log("5",updatedTaxAmounts)
       // Update the state with the new shipping cost and updated taxAmounts
       setState((prevState) => ({
         ...prevState,
@@ -451,11 +451,11 @@ const UpdateQuotationSecond = ({ onChildDataChange, onSubmit,data }) => {
         total_amount: item.total_amount,
       })),
     };
-    console.log("invoiceData",invoiceData)
+    // console.log("invoiceData",invoiceData)
     onChildDataChange(invoiceData);
   }, [state.addedItems, state.shippingCost, grandTotal, onChildDataChange]);
 
-  console.log("addedItems",state.addedItems)
+  // console.log("addedItems",state.addedItems)
  
   return (
     <div className="row my-3">

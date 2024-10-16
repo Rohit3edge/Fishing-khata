@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { ListParties } from '../store/slices/parties';
 import { GetPaymentMethods, GetByCustomer,AddInvoicesPayment } from '../store/slices/sale';
 import Select from 'react-select';
-import Navbarside from './Navbarside';
-import Footer from './Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import AdminLayout from './AdminLayout';
 
@@ -21,14 +19,15 @@ const AddNewInvoicePayment = () => {
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id;
-  const Name = user?.data?.company_name;
+
+  const currentDate = new Date().toISOString().split('T')[0];
 
   const [formData, setFormData] = useState({
     profile_id: id,
     party_ledger_id: '',
     ref_id: '',
     amount_received: '',
-    payment_date: '',
+    payment_date:currentDate,
     ledger_id: "",
     payment_mode: '',
     transaction_number: '',
@@ -106,8 +105,8 @@ const AddNewInvoicePayment = () => {
 
   const handleInvoiceChange = (e) => {
     const invoiceNumber = e.target.value;
-    const invoice = byCustomer.find((inv) => inv.invoice_number === invoiceNumber);
-    console.log(invoice)
+    const invoice = byCustomer.find((inv) => inv.id === invoiceNumber);
+    // console.log(invoice)
     setSelectedInvoice(invoice);
     setFormData({ ...formData, ref_id: invoiceNumber });
   };
@@ -143,8 +142,6 @@ const AddNewInvoicePayment = () => {
         bank_name: bankname,
       }));
   
-      console.log("Payment Mode (Ledger):", PaymentMethods);
-      console.log("Ledger ID:", value);
     } else {
       // For other inputs, just update the formData
       setFormData((prevData) => ({
@@ -175,7 +172,6 @@ const AddNewInvoicePayment = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("data",formData)
     if (validateForm()) {
       setIsLoading(true);
       dispatch(AddInvoicesPayment(formData))
@@ -234,7 +230,7 @@ const AddNewInvoicePayment = () => {
                             <select name="ref_id" class="form-control" onChange={handleInvoiceChange} value={selectedInvoice?.ref_id}>
                               <option value="">--Select Invoice--</option>
                               {byCustomer?.map((option, index) => (
-                                <option key={index} value={option?.invoice_number}>
+                                <option key={index} value={option?.id}>
                                   {option?.invoice_number}
                                 </option>
                               ))}

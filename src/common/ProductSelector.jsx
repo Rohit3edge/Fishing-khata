@@ -43,13 +43,22 @@ const ProductSelector = ({ handleProductChange, singleDetail, state, handleInput
           <input
             type="text"
             className="form-control"
-            value={state?.price || 0}
+            value={state?.price !== undefined ? state.price : ''} // Allow empty value
             onChange={(e) => {
               let inputValue = e.target.value;
-              inputValue = inputValue.replace(/^0+/, '');
-              const validInput = /^\d+(\.\d{0,2})?$/.test(inputValue);
+
+              // Regex allows 0 or other numbers, and up to 2 decimal places
+              const validInput = /^(0|[1-9]\d*)(\.\d{0,2})?$/.test(inputValue);
+
+              // If input is valid or empty, update the state
               if (validInput || inputValue === '') {
                 handleInputChange('price', inputValue);
+              }
+            }}
+            onBlur={() => {
+              // On blur, if input is empty, set it back to 0.00
+              if (state.price === '' || state.price === undefined) {
+                handleInputChange('price', '0.00');
               }
             }}
             style={isPurchase ? { width: '70px', padding: '0.4rem' } : {}}

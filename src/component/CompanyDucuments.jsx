@@ -14,14 +14,8 @@ const ListManagement = () => {
 
   const user = JSON.parse(localStorage.getItem('user'));
   const UserID = user?.data?.id;
-  const Name = user?.data?.company_name;
 
-  console.log("formData.id",UserID)
-
-  const imgBaseUrl = 'https://updateproject.com/kisaan-khata-api/public/uploads/farmer_documents/';
-  const [units, setUnits] = useState();
   const [isLoading, setIsLoading] = useState(false);
-  const currentDate = new Date().toISOString().split('T')[0];
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
       id:UserID || '' ,
@@ -32,7 +26,7 @@ const ListManagement = () => {
       tan_file: '',
   });
 
-  const [showProductDetails, setShowProductDetails] = useState(true);
+
 
   const fetchComapnyDucuments = async () => {
     if (UserID) {
@@ -42,7 +36,6 @@ const ListManagement = () => {
         .then((data) => {
           setIsLoading(false);
           const item = data?.documents;
-          console.log('item',item);
           setFormData((prevState) =>( {
              ...prevState, 
               registration_certificate: item?.registration_certificate || '',
@@ -97,7 +90,6 @@ const ListManagement = () => {
         ...prevFiles,
         [name]: file,
       };
-      console.log('Updated files state:', updatedFiles); // Debugging line
       return updatedFiles;
     });
 
@@ -112,7 +104,6 @@ const ListManagement = () => {
   const handleSubmit = () => {
     const submitData = new FormData();
     
-  console.log("formData.id",formData.id)
   // Append the text data
   for (let key in formData) {
     submitData.append(key, formData[key]);

@@ -246,14 +246,14 @@ const QuotationSecond = ({ onChildDataChange, onSubmit }) => {
       const itemPrice = parseFloat(updatedItems[index].price) || 0;
       const itemQuantity = parseFloat(updatedItems[index].quantity) || 0;
       let itemTotalWithoutTax = itemPrice * itemQuantity;
-      console.log('Before Change1:', itemPrice, itemQuantity, itemTotalWithoutTax);
+      // console.log('Before Change1:', itemPrice, itemQuantity, itemTotalWithoutTax);
       // Get current tax and discount values
       const oldGst = parseFloat(state.addedItems[index]?.tax) || 0;
       const newGst = parseFloat(field === 'tax' ? value : updatedItems[index].tax) || 0;
       const discountValue = parseFloat(updatedItems[index]?.discount) || 0;
       const discountType = updatedItems[index]?.discount_type;
-      console.log('Before Change2:', oldGst, newGst, discountValue, discountType);
-      console.log('price_tax_type', updatedItems[index]?.price_tax_type);
+      // console.log('Before Change2:', oldGst, newGst, discountValue, discountType);
+      // console.log('price_tax_type', updatedItems[index]?.price_tax_type);
       let newTaxAmount = 0;
       let discountAmount = 0;
       let discountedTotal = itemTotalWithoutTax;
@@ -322,8 +322,8 @@ const QuotationSecond = ({ onChildDataChange, onSubmit }) => {
       }));
 
       // Log the state after update for debugging
-      console.log('After Change:', updatedItems);
-      console.log('Tax Amounts Display:', taxAmountsDisplay);
+      // console.log('After Change:', updatedItems);
+      // console.log('Tax Amounts Display:', taxAmountsDisplay);
     },
     [state.addedItems, state.taxAmounts]
   );
@@ -387,7 +387,7 @@ const QuotationSecond = ({ onChildDataChange, onSubmit }) => {
         return sum + itemSubTotal;
       }, 0)
       ?.toFixed(2);
-    console.log(gstTotal);
+    // console.log(gstTotal);
     const invoiceData = {
       sub_total: state.addedItems.reduce((sum, item) => sum + Number(item.sub_total), 0).toFixed(2),
       shipping_cost: Number(state.shippingCost)?.toFixed(2),
@@ -411,7 +411,7 @@ const QuotationSecond = ({ onChildDataChange, onSubmit }) => {
     };
     onChildDataChange(invoiceData);
   }, [state.addedItems, state.shippingCost, grandTotal, onChildDataChange]);
-  console.log('addedItems', state.addedItems);
+  // console.log('addedItems', state.addedItems);
   return (
     <div className="row my-3">
       <div className="col-md-12">
@@ -427,6 +427,7 @@ const QuotationSecond = ({ onChildDataChange, onSubmit }) => {
                 state={state}
                 calculateTotal={calculateTotal}
                 handleAddItem={handleAddItem}
+                isDiscount={true}
               />
               <tbody>
                 <ItemRow
@@ -437,6 +438,7 @@ const QuotationSecond = ({ onChildDataChange, onSubmit }) => {
                   state={state}
                   handleItemChange={handleItemChange}
                   handleRemoveItem={handleRemoveItem}
+                  isDiscount={true}
                 />
               </tbody>
               <tr>

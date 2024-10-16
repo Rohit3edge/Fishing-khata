@@ -2,6 +2,14 @@ import axios from "axios";
 import qs from "qs";  // Import the qs library
 import { API_PATHS } from "../utils/constants/api.constants";
 
+// const secretKey = 'z3rlamk8xyv4r79x5wb8t35x3ot49yzg'; // Use a strong secret key
+
+// // Function to encrypt the payload
+// const encryptPayload = (data) => {
+//     const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), secretKey).toString();
+//     return encryptedData;
+// };
+
 class AuthService {
     static login({ email, password }) {
         return axios.post(API_PATHS.login, qs.stringify({

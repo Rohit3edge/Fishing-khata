@@ -57,7 +57,7 @@ const Journal = () => {
         .unwrap()
         .then((data) => {
           setIsLoading(false);
-          console.log("voucher", data?.data);
+          // console.log("voucher", data?.data);
           setFormData(prevState => ({
             ...prevState,
             voucher_date: data?.data?.voucher_date,
@@ -71,7 +71,7 @@ const Journal = () => {
           console.log(message);
         });
     } else {
-      console.log("Missing ID values:", { profile_id: id, voucher_id: journalid });
+      console.log("Missing ID values:");
     }
   }, [dispatch, journalid, id]);
   

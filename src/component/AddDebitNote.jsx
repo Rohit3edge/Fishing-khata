@@ -5,8 +5,6 @@ import {toast } from 'react-hot-toast';
 import {PaymentOutGetByCustomer,GetPurchaseVoucherDetail,AddDebitnote} from "../store/slices/purchase"
 import moment from 'moment';
 import Select from 'react-select';
-import Navbarside from './Navbarside';
-import Footer from './Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../common/Loader';
 import AddDebitNoteSec from "./AddDebitNoteSec"
@@ -26,13 +24,13 @@ const AddDebitNote = () => {
 
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id;
-  const Name = user?.data?.company_name;
+  const currentDate = new Date().toISOString().split('T')[0];
 
   const [formData, setFormData] = useState({
     profile_id: id,
     debit_note_prefix: "DN",
     debit_note_number:"",
-    debit_note_date:'' ,
+    debit_note_date:currentDate ,
     fin_year: "2024-2025",
     customer_id: '',
     ref_id: '',
@@ -82,7 +80,7 @@ const AddDebitNote = () => {
     setSelectedParty(selectedOption);
     const partyId = selectedOption.value;
     const partygst = listParties?.find((inv) => inv.id == partyId);
-    console.log(partygst)
+
     setFormData({ ...formData, customer_id: partyId,party_gstn:partygst?.gstn,ledger_id:partygst?.id});
     handleGetCustomer(partyId);
   };
@@ -101,7 +99,6 @@ const AddDebitNote = () => {
       .unwrap()
       .then((data) => {
         setIsLoading(false);
-        console.log('data data', data?.data);
         const purchasevoucher = data?.data;
         setSelectedInvoice(purchasevoucher);
         setVoucherBillData(purchasevoucher)
@@ -134,6 +131,10 @@ const AddDebitNote = () => {
     if (!formData.debit_note_date) {
       newErrors.debit_note_date = 'Date is required.';
     }
+    if (!formData.debit_note_number) {
+      newErrors.debit_note_number = 'Debit Note Number is required.';
+    }
+    
     if ((data.debit_note_items)?.length==0) {
       toast.error('Items is required.')
       return
@@ -168,7 +169,7 @@ const AddDebitNote = () => {
     ...data
  }
 
-console.log("formdata",meargedata)
+// console.log("formdata",meargedata)
     if (validateForm()) {
       setIsLoading(true);
       dispatch(AddDebitnote(meargedata))
@@ -232,12 +233,17 @@ console.log("formdata",meargedata)
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>Debit Note Number</label>
-                                                <input name='debit_note_number' class="form-control" type="text" onChange={handleInputChange}/>
+                                                <label>
+                                                  Debit Note Number <span class="required">*</span>
+                                                  </label>
+                                                <input name='debit_note_number' class="form-control" type="text"  onChange={handleInputChange}/>
+                                                {errors.debit_note_number && <p className="text-danger">{errors.debit_note_number}</p>} 
                                             </div>
                                             <div class="col-md-6">
-                                                <label>Date <span class="required">*</span></label>
-                                                <input name="debit_note_date" type="date" class="form-control" onChange={handleInputChange}/>
+                                                <label>
+                                                  Date 
+                                                  <span class="required">*</span></label>
+                                                <input name="debit_note_date" type="date" class="form-control" value={formData?.debit_note_date} onChange={handleInputChange}/>
                                                 {errors.debit_note_date && <p className="text-danger">{errors.debit_note_date}</p>} 
                                             </div>
                                         </div>

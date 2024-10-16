@@ -199,6 +199,7 @@ const EditPurchaseOrderSec = ({ onChildDataChange, data }) => {
                       <th>Item</th>
                       <th>HSN/SAC</th>
                       <th>Quantity</th>
+                      <th>Unit</th>
                       <th>Price</th>
                       <th>Total Amount</th>
                       <th>Action</th>
@@ -283,18 +284,18 @@ const EditPurchaseOrderSec = ({ onChildDataChange, data }) => {
                     ))}
 
                     <tr>
-                      <td colSpan="4" className="text-right align-middle">
+                      <td colSpan="5" className="text-right align-middle">
                         <strong>Shipment Amount:</strong>
                       </td>
-                      <td colSpan="2" className="align-middle">
+                      <td colSpan="3" className="align-middle">
                         <input type="number" className="form-control" value={state?.shippingCost} onChange={(e) => handleInputChange('shippingCost', e.target.value)} />
                       </td>
                     </tr>
                     <tr>
-                      <td colSpan="4" className="text-right align-middle">
+                      <td colSpan="5" className="text-right align-middle">
                         <strong>Grand Total:</strong>
                       </td>
-                      <td colSpan="2" className="align-middle">
+                      <td colSpan="3" className="align-middle">
                         ₹{(state?.addedItems.reduce((sum, item) => sum + parseFloat(item?.sub_total), 0) + parseFloat(state?.shippingCost || 0))?.toFixed(2)}
                       </td>
                     </tr>

@@ -13,7 +13,7 @@ const LedgerDetails = () => {
   const dispatch = useDispatch();
   const tableRef = useRef(null);
   const {ledgerid}=useParams()
-  console.log("ledgerid",ledgerid)
+  // console.log("ledgerid",ledgerid)
   const [isLoading, setIsLoading] = useState(false);
   const [ledgerEntires, setLedgerEntires] = useState([]);
   const [ledgerDetails, setLedgerDetails] = useState({});

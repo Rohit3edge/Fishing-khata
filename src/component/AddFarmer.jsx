@@ -68,7 +68,6 @@ const handleFileChange = (e) => {
       ...prevFiles,
       [name]: file,
     };
-    console.log("Updated files state:", updatedFiles); // Debugging line
     return updatedFiles;
   });
   
@@ -134,7 +133,6 @@ const handleFileChange = (e) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      console.log("Form data before submission:", files); 
       const submitData = new FormData();
   
       // Append the text data
@@ -148,7 +146,6 @@ const handleFileChange = (e) => {
           submitData.append(key, files[key]);
         }
       }
-      console.log("Form data before submission:", submitData); 
       setIsLoading(true);
       dispatch(Addfarmer(submitData))
         .unwrap()
@@ -179,7 +176,6 @@ const handleFileChange = (e) => {
             pan_card: null,
             uaid_doc: null,
           });
-          console.log('Form submitted successfully', data);
           navigate('/farmer/list');
         })
         .catch(({ message }) => {

@@ -14,9 +14,7 @@ const ShareApplications = () => {
   
     const user = JSON.parse(localStorage.getItem('user'));
     const id = user?.data?.id;
-    const Name = user?.data?.company_name;
-    console.log('user',user);
-  
+
     const [formData, setFormData] = useState({
         profile_id: id || '',
         date_of_receipt: '',

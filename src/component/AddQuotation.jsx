@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ListParties } from '../store/slices/parties';
 import { Getquotationnextnumber, AddQuotation } from '../store/slices/sale';
-import { Getsettings} from "../store/slices/settings";
+import { Getsettings } from '../store/slices/settings';
 import QuotationSecond from './QuotationSecond';
 import Select from 'react-select';
-import Navbarside from './Navbarside';
 import Loader from '../common/Loader';
-import Footer from './Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import AdminLayout from './AdminLayout';
 
@@ -16,8 +14,7 @@ const AddQuotationdata = () => {
   const dispatch = useDispatch();
 
   const user = JSON.parse(localStorage.getItem('user'));
-  const id = user?.data?.id;  // profile_id
-  const Name = user?.data?.company_name;
+  const id = user?.data?.id; // profile_id
   const currentDate = new Date().toISOString().split('T')[0];
 
   const [isLoading, setIsLoading] = useState(false);
@@ -31,8 +28,7 @@ const AddQuotationdata = () => {
     gstin: '',
     phone: '',
     state: '',
-    ledger_id:"",
-    party_id:""
+    ledger_id: '',
   });
   const [shippingAddress, setShippingAddress] = useState({
     address: '',
@@ -44,15 +40,11 @@ const AddQuotationdata = () => {
   // New state for additional fields
   const [formData, setFormData] = useState({
     invoice_date: currentDate,
-    eway_number: '',
-    vehicle_number: '',
     message: '',
-    invoice_number: '',
-    po_number: '',
+    invoice_number: getInvoicesNumber,
   });
 
   const [errors, setErrors] = useState({});
-
 
   const fetchInvoiceNumber = async () => {
     try {
@@ -112,7 +104,7 @@ const AddQuotationdata = () => {
         gstin: party.gstin,
         phone: party.phone,
         state: party.state,
-        ledger_id:party.id,
+        ledger_id: party.id,
       });
 
       if (isSameAsBilling) {
@@ -159,27 +151,32 @@ const AddQuotationdata = () => {
     }
   };
 
- 
-const validateForm = () => {
-  let newErrors = {};
-  if (!selectedPartyDetails.party_id) {
-    newErrors.customer = 'Customer is required.';
-  }
-  if (!selectedPartyDetails.state) {
-    newErrors.selectedPartyState = 'Billing state is required.';
-  }
-  if (!shippingAddress.state) {
-    newErrors.shippingState = 'Shipping state is required.';
-  }
-  if (!invoiceSecond.invoice_items) {
-    // newErrors.invoice_items = 'Invoice items is required.';
-    alert("Invoice items is required.")
-  }
+  const validateForm = () => {
+    let newErrors = {};
+    if (!selectedPartyDetails.ledger_id) {
+      newErrors.customer = 'Customer is required.';
+    }
+    if (!selectedPartyDetails.state) {
+      newErrors.selectedPartyState = 'Billing state is required.';
+    }
+    if (!formData.invoice_number) {
+      newErrors.invoice_number = 'Quotation Number is required.';
+    }
+    if (!formData.invoice_date) {
+      newErrors.invoice_date = 'Expiry Date is required.';
+    }
+    if (!shippingAddress.state) {
+      newErrors.shippingState = 'Shipping state is required.';
+    }
+    if (!invoiceSecond.invoice_items) {
+      // newErrors.invoice_items = 'Invoice items is required.';
+      alert('Invoice items is required.');
+    }
 
-  setErrors(newErrors);
-  // If there are no errors, return true. Otherwise, return false.
-  return Object.keys(newErrors).length === 0;
-};
+    setErrors(newErrors);
+    // If there are no errors, return true. Otherwise, return false.
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -188,36 +185,31 @@ const validateForm = () => {
       return;
     }
     const billingData = {
-      profile_id:Number(id),
-      invoice_prefix:invoicePrefix,
-      party_id: Number(selectedPartyDetails.party_id),
-      ledger_id:Number(selectedPartyDetails.ledger_id),  // Assuming this is hardcoded for now
+      profile_id: Number(id),
+      invoice_prefix: invoicePrefix,
+      ledger_id: Number(selectedPartyDetails.ledger_id), // Assuming this is hardcoded for now
       invoice_number: formData.invoice_number,
       invoice_date: formData.invoice_date,
       fin_year: '2024-2025',
-      po_number: formData.po_number,
       billing_address: selectedPartyDetails.address,
       billing_state: selectedPartyDetails.state,
-      billing_phone: selectedPartyDetails.phone,
-      party_gstn: selectedPartyDetails.gstin,
+      billing_phone: selectedPartyDetails.phone || null,
+      party_gstn: selectedPartyDetails.gstin || null,
       shipping_address: shippingAddress.address,
       shipping_state: shippingAddress.state,
-      shipping_phone: shippingAddress.phone,
-      eway_bill: formData.eway_number,
-      vehicle_number: formData.vehicle_number,
+      shipping_phone: shippingAddress.phone || null,
       notes: formData.message,
     };
 
-
     const mergedData = {
       ...billingData,
-      ...invoiceSecond
+      ...invoiceSecond,
     };
-    console.log('Data to be sent:', mergedData);
+    // console.log('Data to be sent:', mergedData);
 
     // Call API to submit invoice (replace comment with actual API call)
     setIsLoading(true);
-  
+
     dispatch(AddQuotation(mergedData))
       .unwrap()
       .then((data) => {
@@ -230,175 +222,155 @@ const validateForm = () => {
       });
   };
   return (
-      <AdminLayout>
-        {isLoading && <Loader />}
-          <div className="row content-body">
-            <div className="container">
-              <div className="page-header">
-                <div>
-                  <h2 className="main-content-title tx-24 mg-b-5">Quotation</h2>
-                  <ol className="breadcrumb">
-                    <li className="breadcrumb-item">
-                      <a href="#">Sales</a>
-                    </li>
-                    <li className="breadcrumb-item active" aria-current="page">
-                      Add Quotation
-                    </li>
-                  </ol>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="card custom-card">
-                    <div className="card-body">
-                      <div className="form-group">
+    <AdminLayout>
+      {isLoading && <Loader />}
+      <div className="row content-body">
+        <div className="container">
+          <div className="page-header">
+            <div>
+              <h2 className="main-content-title tx-24 mg-b-5">Quotation</h2>
+              <ol className="breadcrumb">
+                <li className="breadcrumb-item">
+                  <a href="#">Sales</a>
+                </li>
+                <li className="breadcrumb-item active" aria-current="page">
+                  Add Quotation
+                </li>
+              </ol>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-md-12">
+              <div className="card custom-card">
+                <div className="card-body">
+                  <div className="form-group">
+                    <div className="row">
+                      <div className="col-md-6">
                         <div className="row">
-                          <div className="col-md-6">
-                            <div className="row">
-                              <div className="col-md-12">
-                                <label>
-                                  Customer <span className="required">*</span>
-                                </label>
-                                <Select options={partyOptions} placeholder="--Select Customer--" onChange={handlePartyChange} />
-                                {errors.customer && <p className="text-danger">{errors.customer}</p>}
-                              </div>
-                            </div>
-                            <fieldset className="form-group border p-2 mt-3">
-                              <legend className="px-2">Billing Address</legend>
-                              <div className="row mt-2">
-                                <div className="col-md-6">
-                                  <label>Address </label>
-                                  <input name="address" type="text" className="form-control" value={selectedPartyDetails?.address} onChange={handleInputChange} />
-                                </div>
-                                <div className="col-md-6">
-                                  <label>
-                                    State <span className="required">*</span>
-                                    </label>
-                                  <input name="state" type="text" className="form-control" value={selectedPartyDetails?.state} onChange={handleInputChange} />
-                                  {errors.selectedPartyState && <p className="text-danger">{errors.selectedPartyState}</p>}
-                                </div>
-                              </div>
-
-                              <div className="row mt-2">
-                                <div className="col-md-6">
-                                  <label>GSTN </label>
-                                  <input name="gstin" type="text" className="form-control" value={selectedPartyDetails?.gstin} onChange={handleInputChange} />
-                                </div>
-                                <div className="col-md-6">
-                                  <label>Phone </label>
-                                  <input name="phone" type="text" className="form-control" value={selectedPartyDetails?.phone} onChange={handleInputChange} />
-                                </div>
-                              </div>
-                            </fieldset>
-                          </div>
-
-                          <div className="col-md-6">
-                            <div className="row">
-                              <div className="col-md-12 mt-4">
-                                <label className="ckbox pt-3">
-                                  <input type="checkbox" className="mx-2" checked={isSameAsBilling} onChange={handleCheckboxChange} />
-                                  <span>Same as Billing Address</span>
-                                </label>
-                              </div>
-                            </div>
-
-                            <fieldset className="form-group border p-2 mt-3">
-                              <legend className="px-2">Shipping Address</legend>
-                              <div className="row mt-2">
-                                <div className="col-md-6">
-                                  <label>Address </label>
-                                  <input name="address" type="text" className="form-control" value={shippingAddress.address} onChange={handleShippingInputChange} />
-                                </div>
-                                <div className="col-md-6">
-                                  <label>
-                                    State <span className="required">*</span>
-                                     </label>
-                                  <input name="state" type="text" className="form-control" value={shippingAddress.state} onChange={handleShippingInputChange} required />
-                                  {errors.shippingState && <p className="text-danger">{errors.shippingState}</p>}
-                                </div>
-                              </div>
-
-                              <div className="row mt-2">
-                                <div className="col-md-6">
-                                  <label>GSTN </label>
-                                  <input name="gstin" type="text" className="form-control" value={shippingAddress.gstin} onChange={handleShippingInputChange} />
-                                </div>
-                                <div className="col-md-6">
-                                  <label>Phone </label>
-                                  <input name="phone" type="text" className="form-control" value={shippingAddress.phone} onChange={handleShippingInputChange} />
-                                </div>
-                              </div>
-                            </fieldset>
+                          <div className="col-md-12">
+                            <label>
+                              Customer <span className="required">*</span>
+                            </label>
+                            <Select options={partyOptions} placeholder="--Select Customer--" onChange={handlePartyChange} />
+                            {errors.customer && <p className="text-danger">{errors.customer}</p>}
                           </div>
                         </div>
-                        <hr />
-                        <div className="row">
-                          <div className="col-md-6">
-                            <div className="row">
+                        <fieldset className="form-group border p-2 mt-3">
+                          <legend className="px-2">Billing Address</legend>
+                          <div className="row mt-2">
                             <div className="col-md-6">
-  <label>Quotation Number</label>
-  <div className="d-flex align-items-center">
-    <span className="me-2 " style={{ paddingRight:"1rem" }}>{invoicePrefix}</span>
-    <input
-      name="invoice_number"
-      type="text"
-      className="form-control"
-      value={formData.invoice_number}
-      readOnly
-      style={{ width: '90%' }} // This ensures the input takes the remaining space
-    />
-  </div>
-</div>
-
-                              <div className="col-md-6">
-                                <label>Quotation Date </label>
-                                <input
-                                  name="invoice_date"
-                                  type="date"
-                                  className="form-control"
-                                  value={!formData?.invoice_date ? currentDate : formData?.invoice_date}
-                                  max={currentDate}
-                                  onChange={handleInputChange}
-                                />
-                              </div>
+                              <label>Address </label>
+                              <input name="address" type="text" className="form-control" value={selectedPartyDetails?.address} onChange={handleInputChange} />
                             </div>
-
-                            <div className="row mt-3">
-                              <div className="col-md-6">
-                                <label>E-Way Bill Number </label>
-                                <input name="eway_number" type="text" className="form-control" value={formData.eway_number} onChange={handleInputChange} />
-                              </div>
-
-                              <div className="col-md-6">
-                                <label>Vehicle Number </label>
-                                <input name="vehicle_number" type="text" className="form-control" value={formData.vehicle_number} onChange={handleInputChange} />
-                              </div>
-                            </div>
-                            <div className="row mt-3">
-                              <div className="col-md-6">
-                                <label>PO Number </label>
-                                <input name="po_number" type="text" className="form-control" value={formData.po_number} onChange={handleInputChange} />
-                              </div>
-
-                              <div className="col-md-6">
-                              </div>
+                            <div className="col-md-6">
+                              <label>
+                                State <span className="required">*</span>
+                              </label>
+                              <input name="state" type="text" className="form-control" value={selectedPartyDetails?.state} onChange={handleInputChange} />
+                              {errors.selectedPartyState && <p className="text-danger">{errors.selectedPartyState}</p>}
                             </div>
                           </div>
 
+                          <div className="row mt-2">
+                            <div className="col-md-6">
+                              <label>GSTN </label>
+                              <input name="gstin" type="text" className="form-control" value={selectedPartyDetails?.gstin} onChange={handleInputChange} />
+                            </div>
+                            <div className="col-md-6">
+                              <label>Phone </label>
+                              <input name="phone" type="text" className="form-control" value={selectedPartyDetails?.phone} onChange={handleInputChange} />
+                            </div>
+                          </div>
+                        </fieldset>
+                      </div>
+
+                      <div className="col-md-6">
+                        <div className="row">
+                          <div className="col-md-12 mt-4">
+                            <label className="ckbox pt-3">
+                              <input type="checkbox" className="mx-2" checked={isSameAsBilling} onChange={handleCheckboxChange} />
+                              <span>Same as Billing Address</span>
+                            </label>
+                          </div>
+                        </div>
+
+                        <fieldset className="form-group border p-2 mt-3">
+                          <legend className="px-2">Shipping Address</legend>
+                          <div className="row mt-2">
+                            <div className="col-md-6">
+                              <label>Address </label>
+                              <input name="address" type="text" className="form-control" value={shippingAddress.address} onChange={handleShippingInputChange} />
+                            </div>
+                            <div className="col-md-6">
+                              <label>
+                                State <span className="required">*</span>
+                              </label>
+                              <input name="state" type="text" className="form-control" value={shippingAddress.state} onChange={handleShippingInputChange} required />
+                              {errors.shippingState && <p className="text-danger">{errors.shippingState}</p>}
+                            </div>
+                          </div>
+
+                          <div className="row mt-2">
+                            <div className="col-md-6">
+                              <label>GSTN </label>
+                              <input name="gstin" type="text" className="form-control" value={shippingAddress.gstin} onChange={handleShippingInputChange} />
+                            </div>
+                            <div className="col-md-6">
+                              <label>Phone </label>
+                              <input name="phone" type="text" className="form-control" value={shippingAddress.phone} onChange={handleShippingInputChange} />
+                            </div>
+                          </div>
+                        </fieldset>
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                      <div className="col-md-6">
+                        <div className="row">
                           <div className="col-md-6">
-                            <label>Notes </label>
-                            <textarea name="message" className="form-control" rows="6" cols="70" value={formData.message} onChange={handleInputChange}></textarea>
+                            <label>
+                              Quotation Number <span className="required">*</span>
+                            </label>
+                            <div className="d-flex align-items-center">
+                              <span className="me-2 " style={{ paddingRight: '1rem' }}>
+                                {invoicePrefix}
+                              </span>
+                              <input
+                                name="invoice_number"
+                                type="text"
+                                className="form-control"
+                                value={formData.invoice_number}
+                                style={{ width: '90%' }} // This ensures the input takes the remaining space
+                                onChange={handleInputChange}
+                              />
+                            </div>
+                            {errors.invoice_number && <p className="text-danger">{errors.invoice_number}</p>}
+                          </div>
+
+                          <div className="col-md-6">
+                            <label>
+                              Expiry Date <span className="required">*</span>
+                            </label>
+                            <input name="invoice_date" type="date" className="form-control" value={formData?.invoice_date} max={currentDate} onChange={handleInputChange} />
+                            {errors.invoice_date && <p className="text-danger">{errors.invoice_date}</p>}
                           </div>
                         </div>
                       </div>
+
+                      <div className="col-md-6">
+                        <label>Notes </label>
+                        <textarea name="message" className="form-control" rows="6" cols="70" value={formData.message} onChange={handleInputChange}></textarea>
+                      </div>
                     </div>
                   </div>
-                  <QuotationSecond onChildDataChange={setInvoiceSecond} onSubmit={handleSubmit}/>
                 </div>
               </div>
+              <QuotationSecond onChildDataChange={setInvoiceSecond} onSubmit={handleSubmit} />
             </div>
           </div>
-        </AdminLayout>
+        </div>
+      </div>
+    </AdminLayout>
   );
 };
 

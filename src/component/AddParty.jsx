@@ -86,7 +86,6 @@ const AddParty = () => {
   };
 
   const handleSubmit = (e) => {
-    console.log(formData)
     e.preventDefault();
     if (validate()) {
       setIsLoading(true);
@@ -107,7 +106,6 @@ const AddParty = () => {
             ob_date: '',
             party_type: 'Customer',
           });
-          console.log('Form submitted successfully', data);
           navigate('/partymaster');
         })
         .catch(({ message }) => {

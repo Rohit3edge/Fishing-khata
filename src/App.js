@@ -131,7 +131,7 @@ function App() {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    console.log("load")
+    // console.log("load")
     const user = Cookies.get("user");
 
     if (!user) {

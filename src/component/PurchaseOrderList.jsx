@@ -67,7 +67,6 @@ const PurchaseOrderList = () => {
       .unwrap()
       .then((data) => {
         setIsLoading(false);
-        console.log(data?.data)
         setPurchaseOrderlist(data?.data);
       })
       .catch(({ message }) => {

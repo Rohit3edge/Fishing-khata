@@ -55,7 +55,6 @@ const JournalList = () => {
       .then((data) => {
         setIsLoading(false);
         setVoucherList(data?.data);
-        console.log(data.data)
       })
       .catch(({ message }) => {
         setIsLoading(false);

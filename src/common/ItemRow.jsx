@@ -16,13 +16,22 @@ const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, 
             type="text"
             className="form-control"
             name="price"
-            value={item?.price}
+            value={item?.price !== undefined ? item.price : ''} // Allow empty input
             onChange={(e) => {
               let inputValue = e.target.value;
-              inputValue = inputValue.replace(/^0+/, '');
-              const validInput = /^\d+(\.\d{0,2})?$/.test(inputValue);
+
+              // Check for valid input: allow numbers with up to 2 decimal places, or allow an empty value
+              const validInput = /^(0|[1-9]\d*)(\.\d{0,2})?$/.test(inputValue);
+
+              // If input is valid or empty, update the state
               if (validInput || inputValue === '') {
                 handleItemChange('price', inputValue, index);
+              }
+            }}
+            onBlur={() => {
+              // On blur, if input is empty, reset it to 0.00
+              if (item.price === '' || item.price === undefined) {
+                handleItemChange('price', '0.00', index);
               }
             }}
           />

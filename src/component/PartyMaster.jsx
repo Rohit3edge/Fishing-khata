@@ -61,7 +61,6 @@ const PartyMaster = () => {
       .then((data) => {
         setIsLoading(false);
         setListParties(data?.data);
-        console.log('party master',data.data);
       })
       .catch(({ message }) => {
         setIsLoading(false);

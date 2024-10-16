@@ -26,7 +26,6 @@ const Categories = () => {
       .then((data) => {
         setIsLoading(false);
         setListCategories(data?.data);
-        console.log(data.data);
       })
       .catch(({ message }) => {
         setIsLoading(false);

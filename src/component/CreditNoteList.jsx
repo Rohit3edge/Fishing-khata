@@ -67,7 +67,6 @@ const CreditNoteList = () => {
       .then((data) => {
         setIsLoading(false);
         setCreditNotelist(data?.data);
-        console.log(data?.data)
       })
       .catch(({ message }) => {
         setIsLoading(false);

@@ -67,7 +67,6 @@ const PurchaseBillList = () => {
       .unwrap()
       .then((data) => {
         setIsLoading(false);
-        console.log("the data",data?.data)
         setPurchaseVoucherlist(data?.data);
       })
       .catch(({ message }) => {

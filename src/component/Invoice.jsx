@@ -47,7 +47,7 @@ const AddInvoice = () => {
     eway_number: '',
     vehicle_number: '',
     message: '',
-    invoice_number: '',
+    invoice_number: getInvoicesNumber,
     po_number: '',
   });
 
@@ -72,7 +72,6 @@ const AddInvoice = () => {
     try {
       const data = await dispatch(ListParties({ profile_id: id })).unwrap();
       setListParties(data?.data);
-      console.log(data.data)
     } catch (error) {
       console.log('Error fetching parties:', error.message);
     }
@@ -136,6 +135,16 @@ const AddInvoice = () => {
     }));
   };
 
+  // Handle input changes for selectedPartyDetails (Billing Address)
+const handleBillingInputChange = (e) => {
+  const { name, value } = e.target;
+  setSelectedPartyDetails((prevDetails) => ({
+    ...prevDetails,
+    [name]: value,
+  }));
+};
+
+
   // Shipping address changes
   const handleShippingInputChange = (e) => {
     const { name, value } = e.target;
@@ -149,12 +158,11 @@ const AddInvoice = () => {
   const handleCheckboxChange = (e) => {
     const checked = e.target.checked;
     setIsSameAsBilling(checked);
-
     if (checked) {
       setShippingAddress({
         address: selectedPartyDetails.address,
         gstin: selectedPartyDetails.gstin,
-        phone: selectedPartyDetails.phone,
+        phone: selectedPartyDetails.phone ,
         state: selectedPartyDetails.state,
       });
     }
@@ -171,6 +179,9 @@ const validateForm = () => {
   }
   if (!shippingAddress.state) {
     newErrors.shippingState = 'Shipping state is required.';
+  }
+  if (!formData.invoice_number) {
+    newErrors.invoice_number = 'Invoice Number is required.';
   }
   if ((invoiceSecond.invoice_items)?.length==0) {
     toast.error("Invoice items is required.")
@@ -214,7 +225,7 @@ const handleSubmit = async (e) => {
     ...invoiceSecond,
   };
 
-  console.log('Data to be sent:', mergedData);
+  // console.log('Data to be sent:', mergedData);
 
 
   setIsLoading(true);
@@ -270,13 +281,13 @@ const handleSubmit = async (e) => {
                               <div className="row mt-2">
                                 <div className="col-md-6">
                                   <label>Address </label>
-                                  <input name="address" type="text" className="form-control" value={selectedPartyDetails?.address} onChange={handleInputChange} />
+                                  <input name="address" type="text" className="form-control" value={selectedPartyDetails?.address} onChange={handleBillingInputChange} />
                                 </div>
                                 <div className="col-md-6">
                                   <label>
                                     State <span className="required">*</span>
                                     </label>
-                                  <input name="state" type="text" className="form-control" value={selectedPartyDetails?.state} onChange={handleInputChange} />
+                                  <input name="state" type="text" className="form-control" value={selectedPartyDetails?.state} onChange={handleBillingInputChange} />
                                   {errors.selectedPartyState && <p className="text-danger">{errors.selectedPartyState}</p>}
                                 </div>
                               </div>
@@ -284,11 +295,11 @@ const handleSubmit = async (e) => {
                               <div className="row mt-2">
                                 <div className="col-md-6">
                                   <label>GSTN </label>
-                                  <input name="gstin" type="text" className="form-control" value={selectedPartyDetails?.gstin} onChange={handleInputChange} />
+                                  <input name="gstin" type="text" className="form-control" value={selectedPartyDetails?.gstin} onChange={handleBillingInputChange} />
                                 </div>
                                 <div className="col-md-6">
                                   <label>Phone </label>
-                                  <input name="phone" type="text" className="form-control" value={selectedPartyDetails?.phone} onChange={handleInputChange} />
+                                  <input name="phone" type="text" className="form-control" value={selectedPartyDetails?.phone} onChange={handleBillingInputChange} />
                                 </div>
                               </div>
                             </fieldset>
@@ -323,7 +334,7 @@ const handleSubmit = async (e) => {
                               <div className="row mt-2">
                                 <div className="col-md-6">
                                   <label>GSTN </label>
-                                  <input name="gstin" type="text" className="form-control" value={shippingAddress.gstin} onChange={handleShippingInputChange} />
+                                  <input name="gstin" type="text" className="form-control" value={shippingAddress.gstin } onChange={handleShippingInputChange} />
                                 </div>
                                 <div className="col-md-6">
                                   <label>Phone </label>
@@ -338,7 +349,9 @@ const handleSubmit = async (e) => {
                           <div className="col-md-6">
                             <div className="row">
                             <div className="col-md-6">
-  <label>Invoice Number</label>
+  <label>
+    Invoice Number <span className="required">*</span>
+    </label>
   <div className="d-flex align-items-center">
     <span className="me-2 " style={{ paddingRight:"1rem" }}>{invoicePrefix}</span>
     <input
@@ -349,7 +362,9 @@ const handleSubmit = async (e) => {
       onChange={handleInputChange}
       style={{ width: '90%' }} // This ensures the input takes the remaining space
     />
+    
   </div>
+  {errors.invoice_number && <p className="text-danger">{errors.invoice_number}</p>}
 </div>
 
                               <div className="col-md-6">

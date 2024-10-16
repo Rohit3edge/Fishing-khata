@@ -157,7 +157,7 @@ const EditInvoicePayment = () => {
   const handleInvoiceChange = (e,bydata,isOnLoad) => {
     const invoiceNumber = isOnLoad ?e :e.target.value;
     const cdata=bydata?.length>0 ? bydata : byCustomer
-    const invoice = cdata.find((inv) => inv.invoice_number == invoiceNumber);
+    const invoice = cdata.find((inv) => inv.id == invoiceNumber);
     setSelectedInvoice(invoice);
     setFormData({ ...formData, ref_id: invoiceNumber });
   };
@@ -193,8 +193,8 @@ const EditInvoicePayment = () => {
         bank_name: bankname,
       }));
   
-      console.log("Payment Mode (Ledger):", PaymentMethods);
-      console.log("Ledger ID:", value);
+      // console.log("Payment Mode (Ledger):", PaymentMethods);
+      // console.log("Ledger ID:", value);
     } else {
       // For other inputs, just update the formData
       setFormData((prevData) => ({
@@ -236,7 +236,7 @@ const EditInvoicePayment = () => {
       ledger_id: formData.ledger_id, 
       bank_name:formData.bank_name,      
     }
-    console.log("data",subdata)
+    // console.log("data",subdata)
     if (validateForm()) {
       setIsLoading(true);
       dispatch(UpdatePayment(subdata))
@@ -310,7 +310,7 @@ const EditInvoicePayment = () => {
                             <select name="ref_id" class="form-control" onChange={handleInvoiceChange} value={formData.ref_id}>
                               <option value="">--Select Invoice--</option>
                               {byCustomer?.map((option, index) => (
-                                <option key={index} value={option?.invoice_number}>
+                                <option key={index} value={option?.id}>
                                   {option?.invoice_number}
                                 </option>
                               ))}

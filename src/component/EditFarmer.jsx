@@ -10,7 +10,6 @@ import AdminLayout from './AdminLayout';
 const FarmerEdit = () => {
   const { id } = useParams();
   const farmerId = id;
-  console.log('farmerId', farmerId);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
@@ -116,7 +115,6 @@ const FarmerEdit = () => {
         ...prevFiles,
         [name]: file,
       };
-      console.log('Updated files state:', updatedFiles); // Debugging line
       return updatedFiles;
     });
 
@@ -220,7 +218,6 @@ const FarmerEdit = () => {
           ifsc: '',
           share_amount: '',
         });
-        console.log('Form submitted successfully', data);
         navigate('/farmer/list');
       })
       .catch(({ message }) => {

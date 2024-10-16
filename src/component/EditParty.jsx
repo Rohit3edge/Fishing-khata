@@ -97,7 +97,6 @@ const PartyForm = () => {
       .unwrap()
       .then((data) => {
         setIsLoading(false);
-        console.log('Party updated successfully', data);
         navigate('/partymaster'); // Navigate back to party list after update
       })
       .catch(({ message }) => {

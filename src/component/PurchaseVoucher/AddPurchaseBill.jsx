@@ -17,8 +17,8 @@ const AddPurchaseBill = () => {
 
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id; // profile_id
-  const Name = user?.data?.company_name;
-  // const currentDate = new Date().toISOString().split('T')[0];
+
+  const currentDate = new Date().toISOString().split('T')[0];
 
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState({});
@@ -57,7 +57,7 @@ const AddPurchaseBill = () => {
     shipping_state: '',
     shipping_phone: '',
     bill_no: '',
-    bill_date: '',
+    bill_date: currentDate,
   });
 
   const [errors, setErrors] = useState({});
@@ -111,7 +111,7 @@ const AddPurchaseBill = () => {
     }
     const ListParties = isData ? ndata : listParties;
     const party = ListParties?.find((p) => p?.id == FinalselectedOption);
-    console.log(party)
+    // console.log(party)
     if (party) {
       setSelectedPartyDetails({
         address: party?.address,
@@ -136,7 +136,7 @@ const AddPurchaseBill = () => {
       .unwrap()
       .then((data) => {
         setIsLoading(false);
-        console.log('data data', data?.data);
+        // console.log('data data', data?.data);
         const purchaseorder = data?.data?.purchase_order;
         setSelectedPartyDetails({
           party_gstn: purchaseorder?.party_gstn || '',
@@ -201,6 +201,13 @@ const AddPurchaseBill = () => {
         toast.error('Supplier/Vendor State is required')
          return
       }
+      if (!formData.bill_date) {
+        newErrors.ledger_id = 'Party Invoice No  is required.';
+      }
+
+      if (!formData.bill_no) {
+        newErrors.ledger_id = 'Party Invoice Date is required.';
+      }
       if ((data?.invoice_items)?.length==0) {
         toast.error('Item is required')
          return
@@ -229,7 +236,7 @@ const AddPurchaseBill = () => {
         ...dataNew,
         ...data
       };
-        console.log('Form Data:', mergedData);
+        // console.log('Form Data:', mergedData);
        
       if (validateForm()) {
 
@@ -306,12 +313,17 @@ const AddPurchaseBill = () => {
 
                             <div class="row mt-3">
                               <div class="col-md-6">
-                                <label>Party Invoice No </label>
+                                <label>
+                                  Party Invoice No <span class="required">*</span>
+                                   </label>
                                 <input name="bill_no" type="text" class="form-control" onChange={handleInputChange} />
+                                {errors.bill_no && <p className="text-danger">{errors.bill_no}</p>}  
                               </div>
                               <div class="col-md-6">
-                                <label>Party Invoice Date </label>
-                                <input name="bill_date" type="date" class="form-control" onChange={handleInputChange} />
+                                <label>Party Invoice Date <span class="required">*</span> 
+                                </label>
+                                <input name="bill_date" type="date" class="form-control" value={formData.bill_date} onChange={handleInputChange} />
+                                {errors.bill_date && <p className="text-danger">{errors.bill_date}</p>}  
                               </div>
                             </div>
 

@@ -3,10 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { ListParties } from '../store/slices/parties';
 import {toast } from 'react-hot-toast';
 import {GetByCustomer,GetInvoicesSingleDetails,AddCreditnote } from '../store/slices/sale';
-import moment from 'moment';
 import Select from 'react-select';
-import Navbarside from './Navbarside';
-import Footer from './Footer';
+import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../common/Loader';
 import AddCreditNoteSec from "./AddCreditNoteSec"
@@ -26,12 +24,12 @@ const AddCreditNote = () => {
 
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id;
-  const Name = user?.data?.company_name;
+  const currentDate = new Date().toISOString().split('T')[0];
 
   const [formData, setFormData] = useState({
     profile_id: id,
     credit_note_number:"",
-    credit_note_date:'' ,
+    credit_note_date:currentDate ,
     fin_year: "2024-2025",
     customer_id: '',
     ref_id: '',
@@ -83,14 +81,13 @@ const AddCreditNote = () => {
     setSelectedParty(selectedOption);
     const partyId = selectedOption.value;
     const partygst = listParties?.find((inv) => inv.id == partyId);
-    console.log(partygst)
     setFormData({ ...formData, customer_id: partyId,party_gstn:partygst?.gstn,ledger_id:partygst?.id});
     handleGetCustomer(partyId);
   };
 
   const handleInvoiceChange = (e) => {
     const invoiceNumber = e.target.value;
-    const invoice = byCustomer?.find((inv) => inv.invoice_number == invoiceNumber);
+    const invoice = byCustomer?.find((inv) => inv.id == invoiceNumber);
     fetchInvoicesSingleDetails(invoice?.id)
     setFormData({ ...formData, ref_id: invoice?.id });
   };
@@ -102,7 +99,6 @@ const AddCreditNote = () => {
       .unwrap()
       .then((data) => {
         setIsLoading(false);
-        console.log('data data', data?.data);
         const purchasevoucher = data?.data;
         setSelectedInvoice(purchasevoucher);
         setVoucherBillData(purchasevoucher)
@@ -134,6 +130,9 @@ const AddCreditNote = () => {
     // Validate credit_note_date
     if (!formData.credit_note_date) {
       newErrors.credit_note_date = 'Date is required.';
+    }
+    if (!formData.credit_note_number) {
+      newErrors.credit_note_number = 'Credit Note Number is required.';
     }
     if ((data.credit_note_items)?.length==0) {
       toast.error('Items is required.')
@@ -170,7 +169,6 @@ const AddCreditNote = () => {
     ...data
  }
 
-console.log("formdata",meargedata)
     if (validateForm()) {
       setIsLoading(true);
       dispatch(AddCreditnote(meargedata))
@@ -221,7 +219,7 @@ console.log("formdata",meargedata)
                                                 <select name="party" class="form-control" value={selectedInvoice?.ref_id} onChange={handleInvoiceChange}> 
                                                     <option value="">--Select Invoice--</option>
                                                     {byCustomer?.map((option, index) => (
-                                                 <option key={index} value={option?.invoice_number}>
+                                                 <option key={index} value={option?.id}>
                                                  {option?.invoice_number}
                                                 </option>
                                                           ))}
@@ -234,12 +232,15 @@ console.log("formdata",meargedata)
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>Credit Note Number</label>
+                                                <label>
+                                                  Credit Note Number <span class="required">*</span>
+                                                  </label>
                                                 <input name='credit_note_number' class="form-control" type="text" onChange={handleInputChange}/>
+                                                {errors.credit_note_number && <p className="text-danger">{errors.credit_note_number}</p>} 
                                             </div>
                                             <div class="col-md-6">
                                                 <label>Date <span class="required">*</span></label>
-                                                <input name="credit_note_date" type="date" class="form-control" onChange={handleInputChange}/>
+                                                <input name="credit_note_date" type="date" class="form-control" value={formData.credit_note_date} onChange={handleInputChange}/>
                                                 {errors.credit_note_date && <p className="text-danger">{errors.credit_note_date}</p>} 
                                             </div>
                                         </div>
@@ -269,16 +270,16 @@ console.log("formdata",meargedata)
                           </tr>
                           <tr>
                             <th>Invoice Date</th>
-                            <td>{selectedInvoice?.invoice?.invoice_date}</td>
+                            <td>{moment(selectedInvoice?.invoice?.invoice_date).format('DD-MM-YYYY')}</td>
                           </tr>
-                          <tr>
+                          {/* <tr>
                             <th>Party Bill Number</th>
                             <td>{selectedInvoice?.invoice?.po_number}</td>
                           </tr>
                           <tr>
                             <th>Party Bill Date</th>
                             <td>{moment(selectedInvoice?.invoice?.added_on).format('DD-MM-YYYY')}</td>
-                          </tr>
+                          </tr> */}
                           <tr>
                             <th>Invoice Amount</th>
                             <td>₹ {selectedInvoice?.invoice?.grand_total}</td>

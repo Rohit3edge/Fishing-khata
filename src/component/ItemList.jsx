@@ -64,7 +64,7 @@ const Item = () => {
       .then((data) => {
         setIsLoading(false);
         setItemList(data?.data);
-        console.log(data.data);
+
       })
       .catch(({ message }) => {
         setIsLoading(false);

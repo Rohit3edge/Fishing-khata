@@ -62,7 +62,6 @@ const AddLedger = () => {
       .then((data) => {
         setIsLoading(false);
         setState(data?.data);
-        console.log('state', data?.data);
       })
       .catch(({ message }) => {
         setIsLoading(false);
@@ -156,8 +155,6 @@ const AddLedger = () => {
        amount:"0.00",
       ...accountDetails, // Include account details if they were entered
     };
-
-    console.log('formdata', ledgerData);
 
     setIsLoading(true);
     dispatch(LedgerAdd(ledgerData))

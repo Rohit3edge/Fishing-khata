@@ -94,7 +94,6 @@ const UpdateDirectors = () => {
             date_of_resolution: '',
             office_of_director: '',
           });
-          console.log('Form submitted successfully', data);
           navigate('/directors/list');
         })
         .catch(({ message }) => {

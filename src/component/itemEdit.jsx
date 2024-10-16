@@ -63,7 +63,7 @@ const UpdateItem = () => {
         .then((data) => {
           setIsLoading(false);
           const item = data?.data;
-          console.log('item',item);
+          // console.log('item',item);
           setFormData({
                 id : id || '',
                 name: item?.name || '',
@@ -125,7 +125,7 @@ const UpdateItem = () => {
   
   
   const handleSubmit = () => {
-    console.log(formData);
+    // console.log(formData);
     setIsLoading(true);
     dispatch(Updateitems(formData))
       .unwrap()

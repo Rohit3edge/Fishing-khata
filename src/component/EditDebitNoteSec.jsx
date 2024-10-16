@@ -55,7 +55,6 @@ const EditDebitNoteSec = ({ onChildDataChange,data}) => {
   const fetchAdditionalTax = useCallback(async () => {
     try {
       const data = await dispatch(GetAdditionalTax({ profile_id: id })).unwrap();
-      console.log( data?.data )
       setState((prevState) => ({ ...prevState, additionaltax: data?.data }));
     } catch (error) {
       console.log(error.message);
@@ -97,7 +96,7 @@ const EditDebitNoteSec = ({ onChildDataChange,data}) => {
       const initialTaxAmounts = initializedItems.reduce((acc, item) => {
         const taxRate = parseFloat(item.tax) || 0;
         const taxAmount = parseFloat(item.tax_amount) || 0;
-        console.log("item.tax",item.tax,"item.tax_amount",item.tax_amount)
+        // console.log("item.tax",item.tax,"item.tax_amount",item.tax_amount)
   
         if (taxRate > 0) {
           if (acc[taxRate]) {
@@ -235,7 +234,7 @@ const EditDebitNoteSec = ({ onChildDataChange,data}) => {
     } else if (discount_type === 'Percentage') {
       discountAmount = +((totalBeforeTax * Number(discount)) / 100).toFixed(2);
     }
-    console.log(discountAmount)
+    // console.log(discountAmount)
     const discountedTotal = +(totalBeforeTax - discountAmount).toFixed(2); // Rounding the discounted total
     // Calculate the additional tax (Cess) if applicable
     const additionalTaxRate = (add_tax?.split('@')[0] || 0); // Get Cess rate
@@ -270,7 +269,7 @@ const EditDebitNoteSec = ({ onChildDataChange,data}) => {
   
     // Calculate the total amounts, including tax, discount, and additional tax (Cess)
     const { taxAmount, subtotal, finalTotal, discountedTotal, additionalTaxAmount,discountAmount } = calculateTotal;
-    console.log("calculateTotal",calculateTotal)
+    // console.log("calculateTotal",calculateTotal)
 
     const newItem = {
       hsn: singleDetail.hsn,
@@ -291,7 +290,7 @@ const EditDebitNoteSec = ({ onChildDataChange,data}) => {
       sub_total: subtotal.toFixed(2),
       total_amount: finalTotal.toFixed(2), // This already includes tax and additional tax
     };
-  console.log("newItem",newItem)
+  // console.log("newItem",newItem)
     // Logic for recalculating tax and additional tax (Cess)
     const recalculatedTax = taxAmount;
   
@@ -300,7 +299,7 @@ const EditDebitNoteSec = ({ onChildDataChange,data}) => {
   
     if (additionalTaxRate > 0) {
       additionalTaxToAdd = +(discountedTotal * additionalTaxRate / 100).toFixed(2); // Recalculate additional tax
-      console.log("newItem2",newItem.total_amount)
+      // console.log("newItem2",newItem.total_amount)
       newItem.total_amount = (parseFloat(newItem.total_amount)).toFixed(2); // Add the additional tax (Cess) to the total amount
     }
   
@@ -376,7 +375,7 @@ const EditDebitNoteSec = ({ onChildDataChange,data}) => {
       let discountAmount = 0;
       let discountedTotal = itemTotalWithoutTax; // Start with the item total without tax
   
-      console.log('Initial Item Total Without Tax:', itemTotalWithoutTax);
+      // console.log('Initial Item Total Without Tax:', itemTotalWithoutTax);
   
       const validNewGst = newGst > 0 ? newGst : 0;
   
@@ -387,7 +386,7 @@ const EditDebitNoteSec = ({ onChildDataChange,data}) => {
         console.log('Discount Amount (Percentage):', discountAmount);
       } else if (discountType === 'Fixed' && discountValue) {
         discountedTotal -= discountValue; // Apply fixed discount
-        console.log('Discount Amount (Fixed):', discountValue);
+        // console.log('Discount Amount (Fixed):', discountValue);
       }
       updatedItems[index].discount_amount= discountAmount.toFixed(2);
   
@@ -395,17 +394,17 @@ const EditDebitNoteSec = ({ onChildDataChange,data}) => {
       if (priceTaxType === 'Excluding Tax') {
         newTaxAmount = (discountedTotal * validNewGst) / 100; // Apply GST
         discountedTotal += newTaxAmount; // Add tax to discountedTotal
-        console.log('GST Amount (Excluding Tax):', newTaxAmount);
+        // console.log('GST Amount (Excluding Tax):', newTaxAmount);
       } else if (priceTaxType === 'Including Tax') {
         const totalWithTax = discountedTotal;
         newTaxAmount = (totalWithTax * validNewGst) / (100 + validNewGst); // Calculate tax included in the price
         // discountedTotal -= newTaxAmount; // Adjust discounted total for the tax already included
-        console.log('GST Amount (Including Tax):', newTaxAmount);
+        // console.log('GST Amount (Including Tax):', newTaxAmount);
       }
   
       updatedItems[index].tax_amount= newTaxAmount.toFixed(2);
       updatedItems[index].sub_total=(discountedTotal-newTaxAmount).toFixed(2);
-      console.log('Total After GST:', discountedTotal);
+      // console.log('Total After GST:', discountedTotal);
   
       // Now, add the 2% Cess calculation if selected
 
@@ -418,20 +417,20 @@ const EditDebitNoteSec = ({ onChildDataChange,data}) => {
         if (priceTaxType === 'Excluding Tax') {
           additionalTaxAmount = (itemTotalWithoutTax *parseFloat( additionalTaxRate)) / 100; // Cess based on original item total
           discountedTotal += additionalTaxAmount; // Add additional tax to discountedTotal
-          console.log('Cess Amount:', additionalTaxAmount);
+          // console.log('Cess Amount:', additionalTaxAmount);
 
         } else if (priceTaxType === 'Including Tax') {
           const finalamount=  discountedTotal - newTaxAmount
         additionalTaxAmount = (finalamount *parseFloat( additionalTaxRate)) / 100; // Cess based on original item total
         // discountedTotal += additionalTaxAmount; // Add additional tax to discountedTotal
-        console.log('Cess Amount:', additionalTaxAmount);
+        // console.log('Cess Amount:', additionalTaxAmount);
         }
        
       }
   
       // Update total amount
       updatedItems[index].total_amount = discountedTotal.toFixed(2);
-      console.log('Final Discounted Total with Cess:', discountedTotal.toFixed(2));
+      // console.log('Final Discounted Total with Cess:', discountedTotal.toFixed(2));
   
       // Tax amounts logic
       const newTaxAmounts = { ...state.taxAmounts };

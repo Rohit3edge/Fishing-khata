@@ -104,7 +104,7 @@ const EditPurchaseBill = () => {
   })), [listParties]);
 
   const handlePartyChange = (selectedOption, ndata, isData) => {
-    console.log("selectedOption, ndata, isData",selectedOption, ndata, isData)
+    // console.log("selectedOption, ndata, isData",selectedOption, ndata, isData)
     const FinalselectedOption = isData ? selectedOption : selectedOption?.value; // Check if selectedOption exists
     if (!FinalselectedOption) {
       console.error('FinalselectedOption is undefined or invalid');
@@ -112,7 +112,7 @@ const EditPurchaseBill = () => {
     }
     const ListParties = isData ? ndata : listParties;
     const party = ListParties?.find((p) => p?.id == FinalselectedOption);
-    console.log("party",party)
+    // console.log("party",party)
     if (party) {
       setSelectedPartyDetails({
         address: party?.address,
@@ -133,13 +133,12 @@ const EditPurchaseBill = () => {
   };
 
   const fetchPurchaseOrderDetails = async (po_id) => {
-    console.log("po_id",po_id)
+
     setIsLoading(true);
     dispatch(GetSingleDetailsPurchaseorders({ profile_id: Id, po_id: po_id }))
       .unwrap()
       .then((data) => {
         setIsLoading(false);
-        console.log('data data', data?.data);
         const purchaseorder = data?.data?.purchase_order;
         setSelectedPartyDetails({
           party_gstn: purchaseorder?.party_gstn || '',
@@ -186,9 +185,8 @@ const EditPurchaseBill = () => {
         setSelectedPartyDetails({
           party_gstn: purchasevoucher?.party_gstn || '',
           ledger_id: purchasevoucher?.ledger_id || '',
-          party_id: purchasevoucher?.party_id || '',
         });
-        if (purchasevoucher?.party_id) {
+        if (purchasevoucher?.ledger_id) {
           fetchParties().then((ndata) => {
             handlePartyChange(purchasevoucher?.ledger_id, ndata, true);
           });
@@ -196,7 +194,7 @@ const EditPurchaseBill = () => {
         if(purchasevoucher?.po_no ){
           fetchPurchaseOrderlist().then((newdata) => {
             const edata = newdata?.find((option) => option?.po_number == purchasevoucher?.po_no).id; // Fix here
-            console.log("edata", edata); // Check if newdata is correct
+            // console.log("edata", edata); // Check if newdata is correct
             if (edata) {
               fetchPurchaseOrderDetails(edata); // Now handle the PO change correctly
             } else {
@@ -272,7 +270,7 @@ const EditPurchaseBill = () => {
     };
 
     if (validateForm()) {
-      console.log('Form Data:', mergedData);
+      // console.log('Form Data:', mergedData);
 
       dispatch(UpdatePurchaseVoucher(mergedData))
       .unwrap()

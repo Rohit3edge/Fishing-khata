@@ -105,7 +105,6 @@ const CashBook = () => {
             cash_opening_balance_date: currentDate,
           });
           fetchClientDetails()
-          console.log('Form submitted successfully', data);
           navigate('/');
         })
         .catch(({ message }) => {
@@ -114,7 +113,6 @@ const CashBook = () => {
         });
     }
   };
-  console.log(formData)
 
   return (
     <AdminLayout>

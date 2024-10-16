@@ -82,7 +82,6 @@ const DividendRegister = () => {
             payment_date: '',
             remarks: ''
           });
-          console.log('Form submitted successfully', data);
           navigate('/dividend/list');
         })
         .catch(({ message }) => {
