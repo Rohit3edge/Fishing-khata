@@ -97,6 +97,8 @@ const AddCreditNoteSec = ({ onChildDataChange,data}) => {
       const initialTaxAmounts = initializedItems.reduce((acc, item) => {
         const taxRate = parseFloat(item.tax) || 0;
         const taxAmount = parseFloat(item.tax_amount) || 0;
+        // console.log("item.tax",item.tax,"item.tax_amount",item.tax_amount)
+  
         if (taxRate > 0) {
           if (acc[taxRate]) {
             acc[taxRate] += taxAmount;
@@ -126,6 +128,14 @@ const AddCreditNoteSec = ({ onChildDataChange,data}) => {
         ...prevState,
         addedItems: initializedItems,
         taxAmounts: initialTaxAmounts,
+        shippingCost: Number(data?.invoice?.shipping_amount) || 0,
+
+      }));
+    }else{
+      setState((prevState) => ({
+        ...prevState,
+        addedItems: [],
+        taxAmounts: [],
         shippingCost: Number(data?.invoice?.shipping_amount) || 0,
 
       }));

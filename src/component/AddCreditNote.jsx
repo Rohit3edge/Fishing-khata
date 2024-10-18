@@ -74,40 +74,60 @@ const AddCreditNote = () => {
       setIsLoading(false);
     }
   };
-
+  
   const handlePartyChange = (selectedOption) => {
     setSelectedInvoice(null); 
-    setByCustomer(null)
+    setByCustomer(null);
+    setVoucherBillData(null); // Reset voucherBillData immediately
     setSelectedParty(selectedOption);
     const partyId = selectedOption.value;
     const partygst = listParties?.find((inv) => inv.id == partyId);
-    setFormData({ ...formData, customer_id: partyId,party_gstn:partygst?.gstn,ledger_id:partygst?.id});
+    setFormData({ 
+      ...formData, 
+      customer_id: partyId,
+      party_gstn: partygst?.gstn,
+      ledger_id: partygst?.id 
+    });
     handleGetCustomer(partyId);
   };
-
+  
   const handleInvoiceChange = (e) => {
     const invoiceNumber = e.target.value;
     const invoice = byCustomer?.find((inv) => inv.id == invoiceNumber);
-    fetchInvoicesSingleDetails(invoice?.id)
-    setFormData({ ...formData, ref_id: invoice?.id });
+  
+    // Reset selectedInvoice and voucherBillData first, then fetch details
+    setSelectedInvoice(null); 
+    setVoucherBillData(null);
+  
+    if (invoice?.id) {
+      fetchInvoicesSingleDetails(invoice.id);
+      setFormData({ ...formData, ref_id: invoice.id });
+    } else {
+      // If invoice is undefined or null, reset the form data
+      setFormData({ ...formData, ref_id: null });
+    }
   };
-
-
+  
   const fetchInvoicesSingleDetails = async (Id) => {
+    if (!Id) {
+      // Ensure voucherBillData is reset if Id is undefined or null
+      setVoucherBillData(null);
+      return;
+    }
+  
     setIsLoading(true);
-    dispatch(GetInvoicesSingleDetails({ profile_id: id, invoice_id: Id }))
-      .unwrap()
-      .then((data) => {
-        setIsLoading(false);
-        const purchasevoucher = data?.data;
-        setSelectedInvoice(purchasevoucher);
-        setVoucherBillData(purchasevoucher)
-      })
-      .catch(({ message }) => {
-        setIsLoading(false);
-        console.log(message);
-      });
+    try {
+      const data = await dispatch(GetInvoicesSingleDetails({ profile_id: id, invoice_id: Id })).unwrap();
+      const purchasevoucher = data?.data;
+      setSelectedInvoice(purchasevoucher);
+      setVoucherBillData(purchasevoucher);
+    } catch (error) {
+      console.log(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
+  
 
 
   const handleInputChange = (e) => {

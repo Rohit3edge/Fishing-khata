@@ -74,6 +74,7 @@ const AddPaymentOut = () => {
 
   const handleGetCustomer = async (partyId) => {
     setIsLoading(true);
+    setByCustomer([]);
     try {
       const data = await dispatch(PaymentOutGetByCustomer({ profile_id: id, customer_id: partyId })).unwrap();
       setByCustomer(data?.data || []);
@@ -83,36 +84,52 @@ const AddPaymentOut = () => {
       setIsLoading(false);
     }
   };
-
+  
   const handlePartyChange = (selectedOption) => {
     setSelectedParty(selectedOption);
     const partyId = selectedOption.value;
-    setFormData({ ...formData, party_ledger_id: partyId});
+    setFormData({ ...formData, party_ledger_id: partyId });
     handleGetCustomer(partyId);
   };
-
+  
   const handleInvoiceChange = (e) => {
     const invoiceNumber = e.target.value;
     const invoice = byCustomer?.find((inv) => inv?.id == invoiceNumber);
-    fetchPurchaseVoucherDetails(invoice?.id)
+    if (invoice) {
+      fetchPurchaseVoucherDetails(invoice?.id); // Fetch details if the invoice exists
+    } else {
+      // Reset state if invoice is not found
+      setSelectedInvoice(null);
+    }
     setFormData({ ...formData, ref_id: invoiceNumber });
   };
-
-
+  
   const fetchPurchaseVoucherDetails = async (Id) => {
+    if (!Id) {
+      setSelectedInvoice(null); // Reset state if no valid ID is passed
+      return;
+    }
+  
     setIsLoading(true);
     dispatch(GetPurchaseVoucherDetail({ profile_id: id, invoice_id: Id }))
       .unwrap()
       .then((data) => {
         setIsLoading(false);
         const purchasevoucher = data?.data;
-        setSelectedInvoice(purchasevoucher);
+        
+        if (purchasevoucher) {
+          setSelectedInvoice(purchasevoucher); // Set the fetched data
+        } else {
+          setSelectedInvoice(null); // Reset state if data is undefined or null
+        }
       })
       .catch(({ message }) => {
         setIsLoading(false);
         console.log(message);
+        setSelectedInvoice(null); // Reset state on error
       });
   };
+  
 
 
   const handleInputChange = (e) => {

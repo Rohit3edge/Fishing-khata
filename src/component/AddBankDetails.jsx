@@ -121,7 +121,7 @@ const AddParty = () => {
             date_as_of: '',
             type: '',
           });
-          navigate('/ledger');
+          navigate('/ledgerlist');
         })
         .catch(({ message }) => {
           setIsLoading(false);

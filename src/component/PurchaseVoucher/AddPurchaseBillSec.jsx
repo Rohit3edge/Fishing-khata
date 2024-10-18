@@ -71,69 +71,70 @@ const AddPurchaseBillSec = ({ onChildDataChange,data }) => {
 
 
   useEffect(() => {
-    // Initialize addedItems from the passed data
+    // Only proceed if data is not null or undefined and contains purchase_order_items
     if (data?.purchase_order_items) {
-      const initializedItems = data?.purchase_order_items?.map((item) => ({
-        id:item?.id,
+      const initializedItems = data.purchase_order_items.map((item) => ({
+        id: item?.id,
         hsn: item?.hsn,
         item_id: item?.item_id,
         quantity: item?.quantity,
         unit_id: item?.unit_id,
-        unit_name: item?.unit_name, 
+        unit_name: item?.unit_name,
         price: Number(item?.price).toFixed(2),
         price_tax_type: item?.price_tax_type || "Including Tax",
         tax: item?.tax || 0,
-        tax_type: item?.tax_type || 'GST' ,
+        tax_type: item?.tax_type || 'GST',
         discount: item?.discount || 0,
         discount_type: item?.discount_type || "Fixed",
-        discount_amount:0,
+        discount_amount: 0,
         tax_amount: item?.tax_amount || 0,
         sub_total: item?.sub_total || 0,
         total_amount: item?.sub_total || 0,
-        add_tax:item?.add_tax || 0,
-        additionalTaxAmount:item?.additionalTaxAmount||0,
+        add_tax: item?.add_tax || 0,
+        additionalTaxAmount: item?.additionalTaxAmount || 0,
       }));
-  
-      // Calculate initial taxAmounts based on data?.items
-      const initialTaxAmounts = initializedItems?.reduce((acc, item) => {
+
+      // Calculate initial tax amounts
+      const initialTaxAmounts = initializedItems.reduce((acc, item) => {
         const taxRate = parseFloat(item?.tax) || 0;
         const taxAmount = parseFloat(item?.tax_amount) || 0;
-  
+
         if (taxRate > 0) {
-          if (acc[taxRate]) {
-            acc[taxRate] += taxAmount;
-          } else {
-            acc[taxRate] = taxAmount;
-          }
+          acc[taxRate] = (acc[taxRate] || 0) + taxAmount;
         }
         return acc;
       }, {});
-  // console.log(data?.purchase_order?.shipping_cost,"state?.shippingCost")
-      // Check if shipping cost exists and calculate shipping GST (12%)
+
+      // Check for shipping cost and calculate shipping GST (12%)
       const shippingCost = parseFloat(data?.purchase_order?.shipping_cost) || 0;
       if (shippingCost > 0) {
         const shippingTaxRate = 12; // Fixed 12% GST for shipping
         const shippingGst = parseFloat(((shippingCost * shippingTaxRate) / 100).toFixed(2));
-        setState((prevState) => ({
-          ...prevState,
-          shippingGst:shippingGst
-        }));
-        // Add shipping GST to initialTaxAmounts
+
+        // Update shipping GST and add it to the initial tax amounts
         if (initialTaxAmounts[shippingTaxRate]) {
           initialTaxAmounts[shippingTaxRate] += shippingGst;
         } else {
           initialTaxAmounts[shippingTaxRate] = shippingGst;
         }
+
+        setState((prevState) => ({
+          ...prevState,
+          shippingGst: shippingGst,
+        }));
       }
+
       setState((prevState) => ({
         ...prevState,
         addedItems: initializedItems,
         taxAmounts: initialTaxAmounts,
         shippingCost: Number(data?.purchase_order?.shipping_cost) || 0,
       }));
+    } else {
+      // Handle case when data is null or doesn't contain purchase_order_items
+      console.log("Data or purchase_order_items is undefined or null:", data);
     }
   }, [data]);
-
 
   const handleProductChange = useCallback(
     async (productId) => {

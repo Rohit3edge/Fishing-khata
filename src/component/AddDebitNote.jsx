@@ -66,6 +66,7 @@ const AddDebitNote = () => {
 
   const handleGetCustomer = async (partyId) => {
     setIsLoading(true);
+    setByCustomer([]);
     try {
       const data = await dispatch(PaymentOutGetByCustomer({ profile_id: id, customer_id: partyId })).unwrap();
       setByCustomer(data?.data || []);
@@ -75,39 +76,68 @@ const AddDebitNote = () => {
       setIsLoading(false);
     }
   };
-
+  
   const handlePartyChange = (selectedOption) => {
     setSelectedParty(selectedOption);
     const partyId = selectedOption.value;
     const partygst = listParties?.find((inv) => inv.id == partyId);
-
-    setFormData({ ...formData, customer_id: partyId,party_gstn:partygst?.gstn,ledger_id:partygst?.id});
+  
+    setFormData({ 
+      ...formData, 
+      customer_id: partyId,
+      party_gstn: partygst?.gstn, 
+      ledger_id: partygst?.id 
+    });
+    
     handleGetCustomer(partyId);
   };
-
+  
   const handleInvoiceChange = (e) => {
     const invoiceNumber = e.target.value;
     const invoice = byCustomer?.find((inv) => inv.bill_no == invoiceNumber);
-    fetchPurchaseVoucherDetails(invoice?.id)
-    setFormData({ ...formData, ref_id: invoice?.id });
+  
+    if (invoice) {
+      fetchPurchaseVoucherDetails(invoice?.id); // Fetch details if the invoice exists
+      setFormData({ ...formData, ref_id: invoice?.id });
+    } else {
+      // Reset selectedInvoice and voucherBillData if no valid invoice is found
+      setSelectedInvoice(null);
+      setVoucherBillData(null);
+    }
   };
-
-
+  
   const fetchPurchaseVoucherDetails = async (Id) => {
+    if (!Id) {
+      // Reset state if no valid Id is passed
+      setSelectedInvoice(null);
+      setVoucherBillData(null);
+      return;
+    }
+  
     setIsLoading(true);
-    dispatch(GetPurchaseVoucherDetail({ profile_id: id, invoice_id: Id }))
-      .unwrap()
-      .then((data) => {
-        setIsLoading(false);
-        const purchasevoucher = data?.data;
-        setSelectedInvoice(purchasevoucher);
-        setVoucherBillData(purchasevoucher)
-      })
-      .catch(({ message }) => {
-        setIsLoading(false);
-        console.log(message);
-      });
+    try {
+      const data = await dispatch(GetPurchaseVoucherDetail({ profile_id: id, invoice_id: Id })).unwrap();
+      setIsLoading(false);
+      
+      const purchasevoucher = data?.data;
+  
+      if (purchasevoucher) {
+        setSelectedInvoice(purchasevoucher); // Set the fetched data if valid
+        setVoucherBillData(purchasevoucher);
+      } else {
+        // Reset state if data is undefined or null
+        setSelectedInvoice(null);
+        setVoucherBillData(null);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error.message);
+      // Reset state on error
+      setSelectedInvoice(null);
+      setVoucherBillData(null);
+    }
   };
+  
 
 
   const handleInputChange = (e) => {

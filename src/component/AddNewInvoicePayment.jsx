@@ -344,11 +344,11 @@ const AddNewInvoicePayment = () => {
                           </tr>
                           <tr>
                             <th>Paid Amount</th>
-                            <td>₹ {selectedInvoice?.grand_total&&selectedInvoice?.balace_amount?parseFloat(selectedInvoice?.grand_total)- parseFloat(selectedInvoice?.balace_amount):0}</td>
+                            <td>₹ {selectedInvoice?.grand_total&&selectedInvoice?.balance_amount?parseFloat(selectedInvoice?.grand_total)- parseFloat(selectedInvoice?.balance_amount):0}</td>
                           </tr>
                           <tr>
                             <th>Balance Amount</th>
-                            <td>₹ {selectedInvoice?.balace_amount}</td>
+                            <td>₹ {selectedInvoice?.balance_amount}</td>
                           </tr>
                         </table>
                       </div>

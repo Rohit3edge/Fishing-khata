@@ -131,22 +131,54 @@ const AddPurchaseBill = () => {
   };
 
   const fetchPurchaseOrderDetails = async (po_id) => {
+    if (!po_id) {
+      // Reset state if po_id is undefined or null
+      setFormData({
+        party_id: '',
+        ledger_id: '',
+        party_gstn: '',
+        po_number: '',
+        po_date: '',
+        quotation_number: '',
+        quotation_date: '',
+        notes: '',
+        billing_name: '',
+        billing_address: '',
+        billing_state: '',
+        billing_gstn: '',
+        billing_phone: '',
+        shipping_name: '',
+        shipping_address: '',
+        shipping_city: '',
+        shipping_state: '',
+        shipping_phone: '',
+      });
+      setSelectedPartyDetails({
+        party_gstn: '',
+        ledger_id: '',
+      });
+      setPoBillData(null); // Reset any fetched purchase order data
+      return; // Exit the function since there's no valid po_id
+    }
+  
     setIsLoading(true);
     dispatch(GetSingleDetailsPurchaseorders({ profile_id: id, po_id: po_id }))
       .unwrap()
       .then((data) => {
         setIsLoading(false);
-        // console.log('data data', data?.data);
         const purchaseorder = data?.data?.purchase_order;
+  
         setSelectedPartyDetails({
           party_gstn: purchaseorder?.party_gstn || '',
           ledger_id: purchaseorder?.ledger_id || '',
         });
+  
         if (purchaseorder?.ledger_id) {
           fetchParties().then((ndata) => {
             handlePartyChange(purchaseorder?.ledger_id, ndata, true);
           });
         }
+  
         setFormData((prevData) => ({
           ...prevData,
           party_id: purchaseorder?.party_id || '',
@@ -168,7 +200,7 @@ const AddPurchaseBill = () => {
           shipping_state: purchaseorder?.shipping_state || '',
           shipping_phone: purchaseorder?.shipping_phone || '',
         }));
-
+  
         setPoBillData(data?.data);
       })
       .catch(({ message }) => {
@@ -176,12 +208,17 @@ const AddPurchaseBill = () => {
         console.log(message);
       });
   };
+  
   const handlePOChange = (e) => {
     const selectedPO = e.target.value;
-    if (selectedPO) {
-      fetchPurchaseOrderDetails(selectedPO);
+    // Clear the data and UI if selectedPO is undefined or invalid
+    if (!selectedPO) {
+      fetchPurchaseOrderDetails(undefined); // Reset state
+    } else {
+      fetchPurchaseOrderDetails(selectedPO); // Fetch data for the valid PO ID
     }
   };
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

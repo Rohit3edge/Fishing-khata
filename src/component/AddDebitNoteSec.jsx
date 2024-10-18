@@ -131,6 +131,14 @@ const AddDebitNoteSec = ({ onChildDataChange,data}) => {
         shippingCost: Number(data?.invoice?.shipping_amount) || 0,
 
       }));
+    }else{
+      setState((prevState) => ({
+        ...prevState,
+        addedItems: [],
+        taxAmounts: [],
+        shippingCost: Number(data?.invoice?.shipping_amount) || 0,
+
+      }));
     }
   }, [data]);
 

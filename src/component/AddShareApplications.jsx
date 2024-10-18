@@ -11,13 +11,16 @@ const ShareApplications = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
-  
+
+    const currentDate = new Date().toISOString().split('T')[0];
+
+
     const user = JSON.parse(localStorage.getItem('user'));
     const id = user?.data?.id;
 
     const [formData, setFormData] = useState({
         profile_id: id || '',
-        date_of_receipt: '',
+        date_of_receipt: currentDate,
         application_no: '',
         name_address: '',
         name: '',
@@ -30,7 +33,7 @@ const ShareApplications = () => {
         distinctive_no_from: '',
         distinctive_no_to: '',
         allotment_letter: '',
-        date_of_intimation: '',
+        date_of_intimation: currentDate,
         folio: '',
         share_certificate: '',
         total_amount_due: '',

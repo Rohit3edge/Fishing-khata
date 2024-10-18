@@ -12,6 +12,8 @@ const AddLedger = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const currentDate = new Date().toISOString().split('T')[0];
+
   const [ledgerGroups, setLedgerGroups] = useState([]);
   const [ledgerName, setLedgerName] = useState('');
   const [groupName, setGroupName] = useState('');
@@ -29,7 +31,7 @@ const AddLedger = () => {
     account_holder: '',
     ifsc: '',
     date: '',
-    date_as_of: '',
+    date_as_of: currentDate,
     state: '',
     gstn: '',
     address: '',
@@ -37,7 +39,7 @@ const AddLedger = () => {
   });
 
   const user = JSON.parse(localStorage.getItem('user'));
-  const Name = user?.data?.company_name;
+
   const parsedObject = groupName ? JSON.parse(groupName) : {};
   const [errors, setErrors] = useState({});
 
@@ -162,7 +164,7 @@ const AddLedger = () => {
       .then((response) => {
         setIsLoading(false);
         alert('Ledger added successfully!');
-        navigate('/ledger');
+        navigate('/ledgerlist');
         setLedgerName('');
     setGroupId('');
     setOpeningDate('');
@@ -247,7 +249,7 @@ const AddLedger = () => {
                             </div>
                             <div className="col-md-3">
                               <label>Opening Date</label>
-                              <input name="opening_date" type="date" className="form-control" value={openingDate} onChange={handleInputChange} />
+                              <input name="opening_date" type="date" className="form-control" value={accountDetails?.date_as_of} onChange={handleInputChange} />
                               <p className="alert-message">{errors.opening_date}</p>
                             </div>
                             <div className="col-md-3">

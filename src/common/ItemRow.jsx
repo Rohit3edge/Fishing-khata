@@ -117,7 +117,7 @@ const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, 
         ₹{grandTotal}
       </td>
     </tr>
-    {Object.entries(state?.taxAmounts).map(([taxRate, amount], index) => {
+    {Object.entries(state?.taxAmounts)?.map(([taxRate, amount], index) => {
       if (amount > 0) {
         // Only show taxes with a non-zero amount
         return (
