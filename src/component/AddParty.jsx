@@ -182,7 +182,6 @@ const AddParty = () => {
                           </div>
                         </div>
                       </div>
-
                       <div class="form-group">
                         <div class="row">
                           <div class="col-md-6">
@@ -197,7 +196,6 @@ const AddParty = () => {
                           </div>
                         </div>
                       </div>
-
                       <div class="form-group">
                         <div class="row">
                           <div class="col-md-6">
@@ -207,12 +205,10 @@ const AddParty = () => {
                           </div>
                         </div>
                       </div>
-
                       <div class="form-group">
                         <div class="row">
                           <div class="col-md-6">
                             <label>Opening Balance</label>
-
                             <div class="input-group">
                               <span class="input-group-text" id="basic-addon1">
                                 ₹
@@ -228,7 +224,6 @@ const AddParty = () => {
                           </div>
                         </div>
                       </div>
-
                       <div class="form-group">
                         <div class="row">
                           <div class="col-md-6">

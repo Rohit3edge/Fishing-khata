@@ -16,6 +16,27 @@ class SettingsService {
             .post(api)
             .then((response) => response.data);
     }
+
+      static Getprofile(item) {
+        const api = `${API_PATHS.Getprofile}`;
+        const formData = new FormData();
+    
+        for (const key in item) {
+          if (item.hasOwnProperty(key)) {
+            formData.append(key, item[key]);
+          }
+        }
+    
+        return axios
+          .post(api, formData, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .then((response) => response.data);
+      }
+
+      
     
     static Updatesettings(item) {
         const user = JSON.parse(localStorage.getItem("user"));

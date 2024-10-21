@@ -62,7 +62,13 @@ const UpdateItem = () => {
         .unwrap()
         .then((data) => {
           setIsLoading(false);
+
           const item = data?.data;
+          const item_id = [
+            {id 
+            : item?.category_id}
+          ]
+          renderCategoryOptions(item_id);
           console.log('item',item);
           setFormData({
                 id : id || '',
@@ -198,7 +204,7 @@ const UpdateItem = () => {
   }, [dispatch]);
 
   const renderCategoryOptions = (categories, level = 0) => {
-    return categories.map((category) => (
+    return categories?.map((category) => (
       <React.Fragment key={category.id}>
         <option value={category.id}>
           {'\u00A0'.repeat(level * 4)} {category.category_name}

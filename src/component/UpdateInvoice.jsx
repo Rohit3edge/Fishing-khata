@@ -10,6 +10,8 @@ import Loader from '../common/Loader';
 import Footer from './Footer';
 import AdminLayout from './AdminLayout';
 import { useDispatch, useSelector } from 'react-redux';
+import { IoDocumentText } from 'react-icons/io5';
+import {API_BASE_URL} from "../utils/constants/api.constants";
 
 const UpdateAddInvoice = () => {
   const { id } = useParams();
@@ -140,6 +142,14 @@ const UpdateAddInvoice = () => {
     }
   };
 
+
+  const handlePDF = (invoiceId) => {
+    const baseURL = API_BASE_URL; 
+    const invoiceIds = invoiceId || 'null'; 
+    console.log();
+    window.open(`${baseURL}/pdf/invoices/${invoiceIds}`, '_blank'); 
+};
+
   // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -238,6 +248,11 @@ const UpdateAddInvoice = () => {
                     </li>
                   </ol>
                 </div>
+                <div className="d-flex justify-content-end">
+                    <button className="btn ripple btn-danger" onClick={() => handlePDF(invoiceId)}>
+                        <IoDocumentText style={{ fontSize: "15px",}} />
+                    </button>
+                </div>
               </div>
               <div className="row">
                 <div className="col-md-12">
@@ -330,19 +345,19 @@ const UpdateAddInvoice = () => {
                                 <input name="invoice_number" type="text" className="form-control" value={formData.invoice_number || ''} onChange={handleInputChange} readOnly/>
                               </div> */}
                               <div className="col-md-6">
-  <label>Invoice Number</label>
-  <div className="d-flex align-items-center">
-    <span className="me-2 " style={{ paddingRight:"1rem" }}>{formData.invoice_prefix }</span>
-    <input
-      name="invoice_number"
-      type="text"
-      className="form-control"
-      value={formData.invoice_number}
-      onChange={handleInputChange}
-      style={{ width: '90%' }} // This ensures the input takes the remaining space
-    />
-  </div>
-</div>
+                                <label>Invoice Number</label>
+                                <div className="d-flex align-items-center">
+                                  <span className="me-2 " style={{ paddingRight:"1rem" }}>{formData.invoice_prefix }</span>
+                                  <input
+                                    name="invoice_number"
+                                    type="text"
+                                    className="form-control"
+                                    value={formData.invoice_number}
+                                    onChange={handleInputChange}
+                                    style={{ width: '90%' }} // This ensures the input takes the remaining space
+                                  />
+                                </div>
+                              </div>
 
                               <div className="col-md-6">
                                 <label>Invoice Date </label>

@@ -19,6 +19,24 @@ export const Getsettings = createAsyncThunk(
     }
 );
 
+export const Getprofile = createAsyncThunk(
+    "/post/getprofile",
+    async (item,thunkAPI) => {
+        try {
+            const data = await SettingsService.Getprofile(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
 
 export const Updatesettings = createAsyncThunk(
     "/post/settings/updateSettings",

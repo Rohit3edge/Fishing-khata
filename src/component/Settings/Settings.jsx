@@ -8,6 +8,7 @@ import Loader from "../../common/Loader"
 import Invoice from "./Invoice";
 import TaxesGst from "./TaxesGst";
 import SettingsItem from "./SettingsItem";
+import Profile from "./Profile";
 import Footer from "../Footer";
 import AdminLayout from '../AdminLayout';
 
@@ -99,6 +100,7 @@ const Settings = () => {
                     <div class="card-body">
                       <div class="settings-section">
                         <ul className="nav nav-tabs">
+                        
                           <li className="nav-item ">
                             <button
                               className={`nav-link  ${
@@ -109,6 +111,17 @@ const Settings = () => {
                               General
                             </button>
                           </li>
+                          <li className="nav-item ">
+                            <button
+                              className={`nav-link  ${
+                                activeTab === "Profile" ? "active" : ""
+                              }`}
+                              onClick={() => handleTabClick("Profile")}
+                            >
+                              Profile
+                            </button>
+                          </li>
+                          
                           <li className="nav-item settings-tab ">
                             <button
                               className={`nav-link ${
@@ -150,7 +163,9 @@ const Settings = () => {
                             </button>
                           </li>
                         </ul>
-
+                        {activeTab === "Profile" && (
+                            <Profile data={settings} />
+                          )}
                         <div class="tab-content">
                           {activeTab === "General" && (
                             <div class="">

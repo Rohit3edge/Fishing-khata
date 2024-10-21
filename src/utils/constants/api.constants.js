@@ -1,3 +1,5 @@
+import InvoiceList from "../../component/InvoiceList";
+
 export const API_BASE_URL =
   process.env.API_BASE_URL || "https://kisaan-khata-api.updateproject.com";
 
@@ -170,5 +172,14 @@ getdetailjournalvoucher:"/journal-voucher/get-detail",
 
 
 stocksummary:"/report/stock-inventory",
-trialbalance:"/ledger/trial-balance"
+trialbalance:"/ledger/trial-balance",
+InvoicePDF : "pdf/invoices/",
+
+clientEdit: "/clients/get-detail",
+clientUpdate: "/clients/update",
+
+
+
+
+
 }
