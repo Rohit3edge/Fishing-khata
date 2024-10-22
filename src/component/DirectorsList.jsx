@@ -1,9 +1,7 @@
 import React, { useState, useEffect ,useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ListDirectors } from '../store/slices/directors.js';
-import Navbarside from './Navbarside';
 import Loader from '../common/Loader';
-import Footer from './Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import Table from '../common/Table';
 import AdminLayout from './AdminLayout';
@@ -15,7 +13,6 @@ const DirectorsMaster = () => {
 
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id;
-  const Name = user?.data?.company_name;
 
   const [isLoading, setIsLoading] = useState(false);
   const [listDirectors, setListDirectors] = useState([]);
@@ -23,6 +20,7 @@ const DirectorsMaster = () => {
     { header: 'Name', field: 'name' },
     { header: 'Type', field: 'type' },
     { header: 'Email', field: 'email' },
+    { header: 'DIN', field: 'din' },
     { header: 'Phone', field: 'phone' },
     { header: 'Date', field: 'date_added' },
     { 
@@ -80,6 +78,7 @@ const DirectorsMaster = () => {
     party?.type?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
     party?.email?.toLowerCase()?.includes(searchQuery?.toLowerCase()) ||
     party?.phone?.toLowerCase()?.includes(searchQuery?.toLowerCase())||
+    party?.din?.toLowerCase()?.includes(searchQuery?.toLowerCase())||
     party?.date_added?.toLowerCase()?.includes(searchQuery?.toLowerCase())
   );
 

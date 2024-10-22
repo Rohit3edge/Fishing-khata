@@ -63,11 +63,11 @@ const UpdateItem = () => {
         .then((data) => {
           setIsLoading(false);
           const item = data?.data;
-          // console.log('item',item);
+          console.log('item',item);
           setFormData({
                 id : id || '',
                 name: item?.name || '',
-                category_id: item?.category_id || '',
+                category_id: String(item?.category_id || ''),
                 serial_no: item?.serial_no || '',
                 type: item?.type || '',
                 unit: item?.unit || '',
@@ -184,12 +184,6 @@ const UpdateItem = () => {
       .then((data) => {
         setIsLoading(false);
         setListCategories(data?.data);
-        if (data?.data.length > 0) {
-          setFormData(prevState => ({
-            ...prevState,
-            category_id: data.data[0].id
-          }));
-        }
       })
       .catch(({ message }) => {
         setIsLoading(false);
@@ -200,13 +194,18 @@ const UpdateItem = () => {
   const renderCategoryOptions = (categories, level = 0) => {
     return categories.map((category) => (
       <React.Fragment key={category.id}>
-        <option value={category.id}>
-          {'\u00A0'.repeat(level * 4)} {category.category_name}
+        <option value={String(category.id)}>
+          {'\u00A0'.repeat(level * 4)} 
+          {category.category_name}
         </option>
-        {category.children && category.children.length > 0 && renderCategoryOptions(category.children, level + 1)}
+        {category.children && category.children.length > 0 &&
+          renderCategoryOptions(category.children, level + 1)}
       </React.Fragment>
     ));
   };
+  
+  console.log('Form Data:', formData);
+
 
   return (
     <AdminLayout>
