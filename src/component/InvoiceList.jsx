@@ -7,6 +7,8 @@ import Footer from './Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import Table from '../common/Table';
 import AdminLayout from './AdminLayout';
+import {API_BASE_URL} from "../utils/constants/api.constants";
+import { IoDocumentText } from 'react-icons/io5';
 
 const InvoiceList = () => {
   const navigate = useNavigate();
@@ -32,6 +34,10 @@ const InvoiceList = () => {
       isAction: true, 
       actionButtons: [
         { name: 'Edit', className: 'btn-default' }, 
+        { 
+          className: 'btn-danger' ,
+          icon: <IoDocumentText style={{ fontSize: "15px",}} />,
+         }, 
       ]
     }
   ]);
@@ -49,6 +55,12 @@ const InvoiceList = () => {
 
   const handleEdit = (item) => {
     navigate(`/Updateaddinvoice/${item.id ? item.id : null}`)
+  };
+  
+  const handlePDF = (item) => {
+      const baseURL = API_BASE_URL; 
+      const invoiceId = item?.id || 'null'; 
+      window.open(`${baseURL}/pdf/invoices/${invoiceId}`, '_blank'); 
   };
 
 
@@ -118,6 +130,7 @@ const InvoiceList = () => {
                     totalCount={filtereditemList?.length}
                     onPageChange={handlePageChange}
                     handleEdit={handleEdit}
+                    handlePDF={handlePDF}
                     handleSearchChange={handleSearchChange}
                   />
                 </div>

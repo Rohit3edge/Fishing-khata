@@ -14,6 +14,7 @@ const Table = ({
   handleSearchChange,
   closing_balance,
   handleEdit,
+  handlePDF,
   handleView,
   showDateFilters,
   fromDate,
@@ -54,9 +55,13 @@ const Table = ({
                 } else if (button.name === "View Ledger Entries") {
                   handleView(row);
                 }
+                else if (button.icon) {
+                  handlePDF(row);
+                }
               }}
             >
               {button.name}
+              {button.icon}
             </button>
           ))}
         </>
