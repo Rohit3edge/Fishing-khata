@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import {toast } from 'react-hot-toast';
+import {GetState } from '../store/slices/ledger';
 import { ListParties } from '../store/slices/parties';
 import {GetSingleDetailsPurchaseorders,UpdatePurchaseOrder} from '../store/slices/purchase'
 import EditPurchaseOrderSec from './EditPurchaseOrderSec';
@@ -19,12 +20,11 @@ const EditPurchaseOrder = () => {
   const po_id=id
   const user = JSON.parse(localStorage.getItem('user'));
   const Id = user?.data?.id; // profile_id
-  const Name = user?.data?.company_name;
-  const currentDate = new Date().toISOString().split('T')[0];
 
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState({});
   const [listParties, setListParties] = useState([]);
+  const [state, setState] = useState([]);
   const [singleDetailsPo, setsingleDetailsPo] = useState([]);
   const [selectedPartyDetails, setSelectedPartyDetails] = useState({
     address: '',
@@ -72,11 +72,19 @@ const EditPurchaseOrder = () => {
       console.log('Error fetching parties:', error.message);
     }
   };
+  const fetchState = async () => {
+    try {
+      const data = await dispatch(GetState()).unwrap();
+      setState(data?.data);;
+    } catch (error) {
+      console.log('Error fetching State:', error.message);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      await Promise.all([fetchParties()]);
+      await Promise.all([fetchParties(),fetchState()]);
       setIsLoading(false);
     };
 
@@ -313,7 +321,15 @@ const EditPurchaseOrder = () => {
                                 </div>
                                 <div class="col-md-6">
                                   <label>State </label>
-                                  <input name="billing_state" type="text" class="form-control" onChange={handleInputChange} value={formData?.billing_state} />
+                                  {/* <input name="billing_state" type="text" class="form-control" onChange={handleInputChange} value={formData?.billing_state} /> */}
+                                  <select  className="form-control" name="billing_state" value={formData.billing_state || ''} onChange={handleInputChange}>
+                                <option value="">--Select State--</option>
+                                {(state || []).map((option, index) => (
+                                  <option key={index} value={option?.state_name}>
+                                    {option?.state_name}
+                                  </option>
+                                ))}
+                              </select>
                                 </div>
                               </div>
 
@@ -354,7 +370,15 @@ const EditPurchaseOrder = () => {
                               <div class="row mt-2">
                                 <div class="col-md-6">
                                   <label>State </label>
-                                  <input name="shipping_state" type="text" class="form-control" onChange={handleInputChange} value={formData?.shipping_state} />
+                                  {/* <input name="shipping_state" type="text" class="form-control" onChange={handleInputChange} value={formData?.shipping_state} /> */}
+                                  <select  className="form-control" name="shipping_state" value={formData.shipping_state || ''} onChange={handleInputChange}>
+                                <option value="">--Select State--</option>
+                                {(state || []).map((option, index) => (
+                                  <option key={index} value={option?.state_name}>
+                                    {option?.state_name}
+                                  </option>
+                                ))}
+                              </select>
                                 </div>
                                 <div class="col-md-6">
                                   <label>Phone </label>

@@ -55,6 +55,9 @@ const Table = ({
                 } else if (button.name === "View Ledger Entries") {
                   handleView(row);
                 }
+                else if (button.name === "View Logs Details") {
+                  handleView(row);
+                }
                 else if (button.icon) {
                   handlePDF(row);
                 }
@@ -73,13 +76,16 @@ const Table = ({
         return row.invoice_prefix == null ? `${row.invoice_number}` : `${row.invoice_prefix}${row.invoice_number}`;
       case 'debit_note_date':
       case 'quotation_combined':
-         if (row.quotation_prefix==null)return`${row.quotation_date}`
-       return `${row.quotation_prefix}${row.quotation_date}`;
+         if (row.quotation_prefix==null)return`${row.quotation_number}`
+       return `${row.quotation_prefix}${row.quotation_number}`;
       case 'added_on':
       case 'date_added':
       case 'payment_date':
+      case 'quotation_date':
       case 'invoice_date':
         return Moment(row[column.field]).format('DD-MM-YYYY');
+        case 'created_at':
+          return Moment(row.created_at).format('DD-MM-YYYY || HH:mm:ss'); 
       case 'dr':
         return Number(row[column.field]) === 0 ? '' : <span className="text-danger">{formatAmount(row[column.field])}</span>;
       case 'cr':

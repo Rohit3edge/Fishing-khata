@@ -1,14 +1,12 @@
 import React, { useState, useEffect ,useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GetByInvoiceslist } from '../store/slices/sale';
-import Navbarside from './Navbarside';
 import Loader from '../common/Loader';
-import Footer from './Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import Table from '../common/Table';
 import AdminLayout from './AdminLayout';
 import {API_BASE_URL} from "../utils/constants/api.constants";
-import { IoDocumentText } from 'react-icons/io5';
+import { FaFilePdf } from "react-icons/fa6";
 
 const InvoiceList = () => {
   const navigate = useNavigate();
@@ -36,7 +34,7 @@ const InvoiceList = () => {
         { name: 'Edit', className: 'btn-default' }, 
         { 
           className: 'btn-danger' ,
-          icon: <IoDocumentText style={{ fontSize: "15px",}} />,
+          icon: <FaFilePdf style={{ fontSize: "15px",}} />,
          }, 
       ]
     }

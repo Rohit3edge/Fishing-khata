@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ListParties } from '../store/slices/parties';
+import {GetState } from '../store/slices/ledger';
 import { Getquotationnextnumber, AddQuotation } from '../store/slices/sale';
 import { Getsettings } from '../store/slices/settings';
 import QuotationSecond from './QuotationSecond';
@@ -19,6 +20,7 @@ const AddQuotationdata = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [listParties, setListParties] = useState([]);
+  const [state, setState] = useState([]);
   const [getInvoicesNumber, setGetInvoicesNumber] = useState();
   const [isSameAsBilling, setIsSameAsBilling] = useState(false);
   const [invoiceSecond, setInvoiceSecond] = useState({});
@@ -45,6 +47,15 @@ const AddQuotationdata = () => {
   });
 
   const [errors, setErrors] = useState({});
+
+  const fetchState = async () => {
+    try {
+      const data = await dispatch(GetState()).unwrap();
+      setState(data?.data);;
+    } catch (error) {
+      console.log('Error fetching State:', error.message);
+    }
+  };
 
   const fetchInvoiceNumber = async () => {
     try {
@@ -83,7 +94,7 @@ const AddQuotationdata = () => {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      await Promise.all([fetchInvoiceNumber(), fetchParties(), fetchSettings()]);
+      await Promise.all([fetchInvoiceNumber(), fetchParties(), fetchSettings(),fetchState()]);
       setIsLoading(false);
     };
 
@@ -127,14 +138,24 @@ const AddQuotationdata = () => {
     }));
   };
 
-  // Shipping address changes
-  const handleShippingInputChange = (e) => {
+  // Handle input changes for selectedPartyDetails (Billing Address)
+  const handleBillingInputChange = (e) => {
     const { name, value } = e.target;
-    setShippingAddress((prevDetails) => ({
+    setSelectedPartyDetails((prevDetails) => ({
       ...prevDetails,
       [name]: value,
     }));
   };
+  
+  
+    // Shipping address changes
+    const handleShippingInputChange = (e) => {
+      const { name, value } = e.target;
+      setShippingAddress((prevDetails) => ({
+        ...prevDetails,
+        [name]: value,
+      }));
+    };
 
   // Checkbox for "Same as Billing Address"
   const handleCheckboxChange = (e) => {
@@ -260,13 +281,21 @@ const AddQuotationdata = () => {
                           <div className="row mt-2">
                             <div className="col-md-6">
                               <label>Address </label>
-                              <input name="address" type="text" className="form-control" value={selectedPartyDetails?.address} onChange={handleInputChange} />
+                              <input name="address" type="text" className="form-control" value={selectedPartyDetails?.address} onChange={handleBillingInputChange} />
                             </div>
                             <div className="col-md-6">
                               <label>
                                 State <span className="required">*</span>
                               </label>
-                              <input name="state" type="text" className="form-control" value={selectedPartyDetails?.state} onChange={handleInputChange} />
+                              {/* <input name="state" type="text" className="form-control" value={selectedPartyDetails?.state} onChange={handleInputChange} /> */}
+                              <select className="form-control" name="state" value={selectedPartyDetails?.state || ''} onChange={handleBillingInputChange}>
+                                <option value="">--Select State--</option>
+                                {(state || []).map((option, index) => (
+                                  <option key={index} value={option?.state_name}>
+                                    {option?.state_name}
+                                  </option>
+                                ))}
+                              </select>
                               {errors.selectedPartyState && <p className="text-danger">{errors.selectedPartyState}</p>}
                             </div>
                           </div>
@@ -274,11 +303,11 @@ const AddQuotationdata = () => {
                           <div className="row mt-2">
                             <div className="col-md-6">
                               <label>GSTN </label>
-                              <input name="gstin" type="text" className="form-control" value={selectedPartyDetails?.gstin} onChange={handleInputChange} />
+                              <input name="gstin" type="text" className="form-control" value={selectedPartyDetails?.gstin} onChange={handleBillingInputChange} />
                             </div>
                             <div className="col-md-6">
                               <label>Phone </label>
-                              <input name="phone" type="text" className="form-control" value={selectedPartyDetails?.phone} onChange={handleInputChange} />
+                              <input name="phone" type="text" className="form-control" value={selectedPartyDetails?.phone} onChange={handleBillingInputChange} />
                             </div>
                           </div>
                         </fieldset>
@@ -305,7 +334,15 @@ const AddQuotationdata = () => {
                               <label>
                                 State <span className="required">*</span>
                               </label>
-                              <input name="state" type="text" className="form-control" value={shippingAddress.state} onChange={handleShippingInputChange} required />
+                              {/* <input name="state" type="text" className="form-control" value={shippingAddress.state} onChange={handleShippingInputChange} required /> */}
+                              <select className="form-control" name="state" value={shippingAddress.state || ''} onChange={handleShippingInputChange}>
+                                <option value="">--Select State--</option>
+                                {(state || []).map((option, index) => (
+                                  <option key={index} value={option?.state_name}>
+                                    {option?.state_name}
+                                  </option>
+                                ))}
+                              </select>
                               {errors.shippingState && <p className="text-danger">{errors.shippingState}</p>}
                             </div>
                           </div>

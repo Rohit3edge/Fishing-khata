@@ -5,8 +5,7 @@ import { Getunits } from '../store/slices/settings';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaInfoCircle } from "react-icons/fa";
 import Loader from '../common/Loader';
-import Navbarside from './Navbarside';
-import Footer from './Footer';
+import AddCategoryPopUp from "../common/AddCategoryPopUp"
 import AdminLayout from './AdminLayout';
 
 const AddItem = () => {
@@ -15,11 +14,12 @@ const AddItem = () => {
 
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id;
-  const Name = user?.data?.company_name;
+
 
   const [units, setUnits] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [listCategories, setListCategories] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     profile_id: id,
@@ -75,6 +75,15 @@ const AddItem = () => {
     }
   };
   
+
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Close the modal
+  };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true); // Open the modal
+  };
 
   const validate = () => {
     let newErrors = {};
@@ -143,7 +152,8 @@ const AddItem = () => {
       });
   }, [dispatch]);
 
-  React.useEffect(() => {
+
+  const handleListCategories = () => {
     setIsLoading(true);
     dispatch(ListCategories({ profile_id: id }))
       .unwrap()
@@ -161,6 +171,10 @@ const AddItem = () => {
         setIsLoading(false);
         console.log(message);
       });
+  };
+
+  React.useEffect(() => {
+    handleListCategories()
   }, [dispatch]);
 
   const renderCategoryOptions = (categories, level = 0) => {
@@ -187,7 +201,7 @@ const AddItem = () => {
                       <a href="#">Items List</a>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
-                       Item Add
+                       Item Add  
                     </li>
                   </ol>
                 </div>
@@ -226,14 +240,14 @@ const AddItem = () => {
                                 <div className="row">
                                   <div className="col-md-6">
                                     <label>
-                                      Item Name <span className="required">*</span>
+                                      Item Name <span className="required">*</span> 
                                     </label>
                                     <input name="name" type="text" className="form-control" onChange={handleInputChange} value={formData.name} />
                                     {errors.name && <p className="alert-message">{errors.name}</p>}
                                   </div>
                                   <div className="col-md-6">
                                     <label>
-                                      Category <span className="required">*</span>
+                                      Category <span className="required">*</span> <a className='footer_url' style={{paddingLeft:"40px",cursor:"pointer"}} onClick={handleOpenModal}> Add Categories</a>
                                     </label>
                                     <select name="category_id" className="form-control" onChange={handleInputChange} value={formData.category_id}>
                                       <option value="">Select Category</option>
@@ -400,6 +414,8 @@ const AddItem = () => {
               </div>
             </div>
           </div>
+
+          {isModalOpen && <AddCategoryPopUp show={isModalOpen} onClose={handleCloseModal}  onCategoryAdded={handleListCategories} />}
         </AdminLayout>
   );
 };

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ListParties } from '../store/slices/parties';
 import {toast } from 'react-hot-toast';
 import { GetInvoicesSingleDetails,InvoiceUpdate } from '../store/slices/sale';
+import {GetState } from '../store/slices/ledger';
 import UpdateInvoiceSecond from './UpdateInvoiceSecond';
 import Select from 'react-select';
 import Navbarside from './Navbarside';
@@ -26,6 +27,7 @@ const UpdateAddInvoice = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [listParties, setListParties] = useState([]);
+  const [state, setState] = useState([]);
   const [isSameAsBilling, setIsSameAsBilling] = useState(false);
   const [invoiceSecond, setInvoiceSecond] = useState([]);
   const [invoicedetails, setInvoicedetails] = useState({});
@@ -116,6 +118,20 @@ const UpdateAddInvoice = () => {
       });
   }, [dispatch, userId]);
 
+  useEffect(() => {
+    fetchState()
+  }, []);
+
+
+  const fetchState = async () => {
+    try {
+      const data = await dispatch(GetState()).unwrap();
+      setState(data?.data);;
+    } catch (error) {
+      console.log('Error fetching State:', error.message);
+    }
+  };
+
   // Party selection logic
   const partyOptions = listParties.map((party) => ({
     value: party.id,
@@ -162,13 +178,23 @@ const UpdateAddInvoice = () => {
   };
 
   // Shipping address changes
-  const handleShippingInputChange = (e) => {
+  const handleBillingInputChange = (e) => {
     const { name, value } = e.target;
-    setShippingAddress((prevDetails) => ({
+    setSelectedPartyDetails((prevDetails) => ({
       ...prevDetails,
       [name]: value,
     }));
   };
+  
+  
+    // Shipping address changes
+    const handleShippingInputChange = (e) => {
+      const { name, value } = e.target;
+      setShippingAddress((prevDetails) => ({
+        ...prevDetails,
+        [name]: value,
+      }));
+    };
 
   // Checkbox for "Same as Billing Address"
   const handleCheckboxChange = (e) => {
@@ -310,22 +336,30 @@ const UpdateAddInvoice = () => {
                               <div className="row mt-2">
                                 <div className="col-md-6">
                                   <label>Address </label>
-                                  <input name="address" type="text" className="form-control" value={selectedPartyDetails?.address || ''} onChange={handleInputChange} />
+                                  <input name="address" type="text" className="form-control" value={selectedPartyDetails?.address || ''} onChange={handleBillingInputChange} />
                                 </div>
                                 <div className="col-md-6">
                                   <label>State </label>
-                                  <input name="state" type="text" className="form-control" value={selectedPartyDetails?.state || ''} onChange={handleInputChange} />
+                                  {/* <input name="state" type="text" className="form-control" value={selectedPartyDetails?.state || ''} onChange={handleInputChange} /> */}
+                                  <select className="form-control" name="state" value={selectedPartyDetails?.state || ''} onChange={handleBillingInputChange}>
+                                <option value="">--Select State--</option>
+                                {(state || []).map((option, index) => (
+                                  <option key={index} value={option?.state_name}>
+                                    {option?.state_name}
+                                  </option>
+                                ))}
+                              </select>
                                 </div>
                               </div>
 
                               <div className="row mt-2">
                                 <div className="col-md-6">
                                   <label>GSTN </label>
-                                  <input name="gstin" type="text" className="form-control" value={selectedPartyDetails?.gstin || ''} onChange={handleInputChange} />
+                                  <input name="gstin" type="text" className="form-control" value={selectedPartyDetails?.gstin || ''} onChange={handleBillingInputChange} />
                                 </div>
                                 <div className="col-md-6">
                                   <label>Phone </label>
-                                  <input name="phone" type="text" className="form-control" value={selectedPartyDetails?.phone || ''} onChange={handleInputChange} />
+                                  <input name="phone" type="text" className="form-control" value={selectedPartyDetails?.phone || ''} onChange={handleBillingInputChange} />
                                 </div>
                               </div>
                             </fieldset>
@@ -350,7 +384,15 @@ const UpdateAddInvoice = () => {
                                 </div>
                                 <div className="col-md-6">
                                   <label>State </label>
-                                  <input name="state" type="text" className="form-control" value={shippingAddress.state || ''} onChange={handleShippingInputChange} />
+                                  {/* <input name="state" type="text" className="form-control" value={shippingAddress.state || ''} onChange={handleShippingInputChange} /> */}
+                                  <select className="form-control" name="state" value={shippingAddress.state || ''} onChange={handleShippingInputChange}>
+                                <option value="">--Select State--</option>
+                                {(state || []).map((option, index) => (
+                                  <option key={index} value={option?.state_name}>
+                                    {option?.state_name}
+                                  </option>
+                                ))}
+                              </select>
                                 </div>
                               </div>
 

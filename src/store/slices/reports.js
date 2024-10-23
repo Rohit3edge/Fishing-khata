@@ -55,3 +55,39 @@ export const GetProfitLoss = createAsyncThunk(
         }
     }
 );
+
+
+export const GetAuditlogList = createAsyncThunk(
+    "/post/getauditloglist",
+    async (item,thunkAPI) => {
+        try {
+            const data = await ReportsService.Getauditloglist(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+export const GetAuditlogDetail = createAsyncThunk(
+    "/post/getauditlogdetail",
+    async (item,thunkAPI) => {
+        try {
+            const data = await ReportsService.Getauditlogdetail(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);

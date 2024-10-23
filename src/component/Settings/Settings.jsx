@@ -25,7 +25,7 @@ const Settings = () => {
 
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState("General");
+  const [activeTab, setActiveTab] = useState("Profile");
   const [settings, setSettings] = useState();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -94,7 +94,7 @@ const Settings = () => {
                 </div>
               </div>
 
-              <div class="row">
+              <div class="row mb-4">
                 <div class="col-md-12">
                   <div class="card custom-card">
                     <div class="card-body">
@@ -104,14 +104,14 @@ const Settings = () => {
                           <li className="nav-item ">
                             <button
                               className={`nav-link  ${
-                                activeTab === "General" ? "active" : ""
+                                activeTab === "Profile" ? "active" : ""
                               }`}
-                              onClick={() => handleTabClick("General")}
+                              onClick={() => handleTabClick("Profile")}
                             >
                               General
                             </button>
                           </li>
-                          <li className="nav-item ">
+                          {/* <li className="nav-item ">
                             <button
                               className={`nav-link  ${
                                 activeTab === "Profile" ? "active" : ""
@@ -120,7 +120,7 @@ const Settings = () => {
                             >
                               Profile
                             </button>
-                          </li>
+                          </li> */}
                           
                           <li className="nav-item settings-tab ">
                             <button
@@ -164,77 +164,9 @@ const Settings = () => {
                           </li>
                         </ul>
                         {activeTab === "Profile" && (
-                            <Profile data={settings} />
+                            <Profile/>
                           )}
                         <div class="tab-content">
-                          {activeTab === "General" && (
-                            <div class="">
-                              <div class="row pt-2">
-                                <div class="col-md-6 col-sm-12">
-                                  <div class="form-group mt-3">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                      <div class="d-flex align-items-center">
-                                        <span>Round Off Total</span>
-                                      </div>
-                                      <div class="form-check form-switch pb-4">
-                                        <input
-                                          class="form-check-input"
-                                          type="checkbox"
-                                          checked={
-                                            setting?.default_roundoff ??
-                                            settings?.default_roundoff
-                                          }
-                                          onChange={(e) => {
-                                            dispatch(
-                                              updateSettingsField({
-                                                default_roundoff:
-                                                  e.target.checked,
-                                              })
-                                            );
-                                          }}
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  <div class="form-group mt-3">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                      <div class="d-flex align-items-center">
-                                        <span>Currency</span>
-                                      </div>
-                                      <div>
-                                        <select
-                                          class="form-control form-control-sm"
-                                          value={
-                                            // !setting?.default_currency
-                                            //   ? settings?.default_currency
-                                            //   : setting?.default_currency
-
-                                              setting?.default_currency ?? settings?.default_currency
-                                          }
-                                          onChange={(e) =>
-                                            dispatch(
-                                              updateSettingsField({
-                                                default_currency:
-                                                  e.target.value,
-                                              })
-                                            )
-                                          }
-                                        >
-                                          <option value="₹">₹</option>
-                                          <option value="$">$</option>
-                                          <option value="€">€</option>
-                                          <option value="£">£</option>
-                                          <option value="¥">¥</option>
-                                        </select>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-
                           {activeTab === "Account" && (
                             <div class="">
                               <div class="container">

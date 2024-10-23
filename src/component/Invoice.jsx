@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ListParties } from '../store/slices/parties';
 import { Getinvoicesnextnumber, AddInvoices } from '../store/slices/sale';
+import {GetState } from '../store/slices/ledger';
 import { Getsettings} from "../store/slices/settings";
 import {toast } from 'react-hot-toast';
 import InvoiceSecond from './InvoiceSecond';
@@ -18,11 +19,11 @@ const AddInvoice = () => {
 
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id;  // profile_id
-  const Name = user?.data?.company_name;
   const currentDate = new Date().toISOString().split('T')[0];
 
   const [isLoading, setIsLoading] = useState(false);
   const [listParties, setListParties] = useState([]);
+  const [state, setState] = useState([]);
   const [getInvoicesNumber, setGetInvoicesNumber] = useState();
   const [isSameAsBilling, setIsSameAsBilling] = useState(false);
   const [invoiceSecond, setInvoiceSecond] = useState({});
@@ -87,11 +88,20 @@ const AddInvoice = () => {
     }
   };
 
+  const fetchState = async () => {
+    try {
+      const data = await dispatch(GetState()).unwrap();
+      setState(data?.data);;
+    } catch (error) {
+      console.log('Error fetching State:', error.message);
+    }
+  };
+
   // useEffect to call all the three functions
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      await Promise.all([fetchInvoiceNumber(), fetchParties(), fetchSettings()]);
+      await Promise.all([fetchInvoiceNumber(), fetchParties(), fetchSettings(),fetchState()]);
       setIsLoading(false);
     };
 
@@ -287,7 +297,15 @@ const handleSubmit = async (e) => {
                                   <label>
                                     State <span className="required">*</span>
                                     </label>
-                                  <input name="state" type="text" className="form-control" value={selectedPartyDetails?.state} onChange={handleBillingInputChange} />
+                                  {/* <input name="state" type="text" className="form-control" value={selectedPartyDetails?.state} onChange={handleBillingInputChange} /> */}
+                                  <select className="form-control" name="state" value={selectedPartyDetails?.state || ''} onChange={handleBillingInputChange}>
+                                <option value="">--Select State--</option>
+                                {(state || []).map((option, index) => (
+                                  <option key={index} value={option?.state_name}>
+                                    {option?.state_name}
+                                  </option>
+                                ))}
+                              </select>
                                   {errors.selectedPartyState && <p className="text-danger">{errors.selectedPartyState}</p>}
                                 </div>
                               </div>
@@ -326,7 +344,15 @@ const handleSubmit = async (e) => {
                                   <label>
                                     State <span className="required">*</span>
                                      </label>
-                                  <input name="state" type="text" className="form-control" value={shippingAddress.state} onChange={handleShippingInputChange} required />
+                                  {/* <input name="state" type="text" className="form-control" value={shippingAddress.state} onChange={handleShippingInputChange} required /> */}
+                                  <select className="form-control" name="state" value={shippingAddress.state || ''} onChange={handleShippingInputChange}>
+                                <option value="">--Select State--</option>
+                                {(state || []).map((option, index) => (
+                                  <option key={index} value={option?.state_name}>
+                                    {option?.state_name}
+                                  </option>
+                                ))}
+                              </select>
                                   {errors.shippingState && <p className="text-danger">{errors.shippingState}</p>}
                                 </div>
                               </div>

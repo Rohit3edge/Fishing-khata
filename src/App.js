@@ -121,6 +121,7 @@ import ReportsSection from "./component/Reports/ReportsSection.jsx"
 import StockSummary from "./component/Reports/StockSummary.jsx"
 import TrialBalance from "./component/Reports/TrialBalance.jsx"
 import ProfitAndLoss from "./component/Reports/ProfitAndLoss.jsx"
+import AuditLogs from "./component/Reports/AuditLogs.jsx"
 
 
 
@@ -280,6 +281,7 @@ function App() {
 
             <Route exact path="/reports/trialbalance" element={<TrialBalance/>} />
             <Route exact path="/reports/profitandloss" element={<ProfitAndLoss/>} />
+            <Route exact path="/reports/auditlogs" element={<AuditLogs/>} />
 
             <Route path="*" element={<Notfoundpage />} />
         </Route>

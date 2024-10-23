@@ -7,12 +7,14 @@ import { Getsingledetail } from '../store/slices/sale';
 import {GetAdditionalTax } from "../store/slices/purchase"
 import ProductSelector from '../common/ProductSelector';
 import ItemRow from '../common/ItemRow';
-import AdminLayout from './AdminLayout';
+import AddItemPopUp from '../common/AddItemPopUp';
 
 const AddDebitNoteSec = ({ onChildDataChange,data}) => {
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id;
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [state, setState] = useState({
     units: [],
     additionaltax:[],
@@ -67,6 +69,14 @@ const AddDebitNoteSec = ({ onChildDataChange,data}) => {
     fetchItemList();
     fetchAdditionalTax();
   }, [fetchUnits, fetchItemList]);
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Close the modal
+  };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true); // Open the modal
+  };
 
 
   useEffect(() => {
@@ -609,10 +619,17 @@ const AddDebitNoteSec = ({ onChildDataChange,data}) => {
   // console.log("addedItems",state.addedItems)
  
   return (
+    <>
+      {isModalOpen && <AddItemPopUp show={isModalOpen} onClose={handleCloseModal}  onCategoryAdded={fetchItemList} />}
     <div className="row my-3">
       <div className="col-md-12">
         <div className="card custom-card">
           <div className="card-body">
+          <div className="d-flex justify-content-end mb-2">
+                  <button className="btn ripple btn-default" onClick={handleOpenModal} >
+                    Add Item
+                  </button>
+                </div>
             <table className="table item-table">
               <ProductSelector
                 itemList={state?.itemList}
@@ -644,6 +661,7 @@ const AddDebitNoteSec = ({ onChildDataChange,data}) => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

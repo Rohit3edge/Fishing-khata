@@ -4,12 +4,14 @@ import { toast } from 'react-hot-toast';
 import { Getunits } from '../store/slices/settings';
 import { Listitems } from '../store/slices/items';
 import { Getsingledetail } from '../store/slices/sale';
+import AddItemPopUp from '../common/AddItemPopUp';
 
 const AddPurchaseOrderSec = ({ onChildDataChange, handleSubmit }) => {
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id;
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [state, setState] = useState({
     units: [],
     itemList: [],
@@ -45,6 +47,14 @@ const AddPurchaseOrderSec = ({ onChildDataChange, handleSubmit }) => {
     fetchUnits();
     fetchItemList();
   }, [fetchUnits, fetchItemList]);
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Close the modal
+  };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true); // Open the modal
+  };
 
   const handleProductChange = useCallback(
     async (e) => {
@@ -165,10 +175,17 @@ const AddPurchaseOrderSec = ({ onChildDataChange, handleSubmit }) => {
   }, [state.addedItems, state.shippingCost, onChildDataChange]);
 
   return (
+    <>
+           {isModalOpen && <AddItemPopUp show={isModalOpen} onClose={handleCloseModal}  onCategoryAdded={fetchItemList} />}
     <div className="row my-3">
       <div className="col-md-12">
         <div className="card custom-card">
           <div className="card-body">
+          <div className="d-flex justify-content-end mb-2">
+                  <button className="btn ripple btn-default" onClick={handleOpenModal} >
+                    Add Item
+                  </button>
+                </div>
             <div className="row">
               <div className="col-md-12">
                 <table className="table item-table">
@@ -290,6 +307,7 @@ const AddPurchaseOrderSec = ({ onChildDataChange, handleSubmit }) => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

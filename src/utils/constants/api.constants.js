@@ -174,9 +174,12 @@ getdetailjournalvoucher:"/journal-voucher/get-detail",
 
 stocksummary:"/report/stock-inventory",
 trialbalance:"/ledger/trial-balance",
-// <<<<<<< HEAD
 ProfitLoss:"/ledger/get-pl-statement",
-// =======
+getauditloglist:"/common/getauditloglist",
+getauditlogdetail:"/common/getauditlogdetail",
+
+
+
 InvoicePDF : "pdf/invoices/",
 
 clientEdit: "/clients/get-detail",
@@ -185,6 +188,4 @@ clientUpdate: "/clients/update",
 
 
 
-
-// >>>>>>> fba04ae1585027dfd053e702a3714e9870509bbb
 }

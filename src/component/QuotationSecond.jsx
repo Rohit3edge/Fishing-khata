@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
+import {toast } from 'react-hot-toast';
 import { Getunits } from '../store/slices/settings';
 import { Listitems } from '../store/slices/items';
 import { Getsingledetail } from '../store/slices/sale';
 import ProductSelector from '../common/ProductSelector';
 import ItemRow from '../common/ItemRow';
+import AddItemPopUp from '../common/AddItemPopUp';
 
 const QuotationSecond = ({ onChildDataChange, onSubmit }) => {
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id;
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [state, setState] = useState({
     units: [],
     itemList: [],
@@ -54,6 +56,15 @@ const QuotationSecond = ({ onChildDataChange, onSubmit }) => {
     fetchItemList();
   }, [fetchUnits, fetchItemList]);
 
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Close the modal
+  };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true); // Open the modal
+  };
+
   const handleProductChange = useCallback(
     async (productId) => {
       setState((prevState) => ({
@@ -66,10 +77,13 @@ const QuotationSecond = ({ onChildDataChange, onSubmit }) => {
           const data = await dispatch(Getsingledetail({ profile_id: id, item_id: productId })).unwrap();
           setState((prevState) => ({
             ...prevState,
+            price: Number(data?.data?.sale_price)?.toFixed(2),
             singleDetail: data?.data,
             unit_id: data?.data?.unit || '',
             tax: data?.data?.tax || 0,
             price_tax_type: data?.data?.sale_price_tax_type || 'Excluding Tax',
+            discount_type: data?.data?.discount_type || "Fixed",
+            discount:Number(data?.data?.discount).toFixed(2)||0,
           }));
         } catch (error) {
           console.error(error.message);
@@ -129,8 +143,8 @@ const QuotationSecond = ({ onChildDataChange, onSubmit }) => {
   };
 
   const calculateTotal = useMemo(() => {
-    const { singleDetail, quantity, discount, discount_type, tax, price_tax_type } = state;
-    let price = Number(singleDetail?.sale_price) || 0;
+    const {quantity, discount, discount_type, tax, price_tax_type } = state;
+    let price = Number(state.price) || 0;
     let quantityTotal = price * quantity || 0;
     let taxAmount = 0;
     let totalBeforeTax = quantityTotal;
@@ -171,8 +185,12 @@ const QuotationSecond = ({ onChildDataChange, onSubmit }) => {
   }, [state]);
 
   const handleAddItem = () => {
-    const { unit_id, singleDetail, price_tax_type, tax, discount, discount_type } = state;
+    const {selectedProduct, unit_id, singleDetail, price_tax_type, tax, discount, discount_type,price,quantity } = state;
 
+    if (!selectedProduct || quantity <= 0 || Number(price) <= 0) {
+      toast.error('Please fill out all fields correctly.');
+      return;
+    }
     // Find the unit name based on the unit_id
     const unitName = state.units.find((unit) => unit.id === unit_id)?.unit || '';
 
@@ -183,7 +201,7 @@ const QuotationSecond = ({ onChildDataChange, onSubmit }) => {
       quantity: state.quantity,
       unit_id: unit_id,
       unit_name: unitName, // Use the unitName here
-      price: singleDetail?.sale_price,
+      price: state.price,
       price_tax_type: price_tax_type,
       tax: tax,
       tax_type: 'GST',
@@ -232,6 +250,7 @@ const QuotationSecond = ({ onChildDataChange, onSubmit }) => {
       price_tax_type: 'Excluding Tax',
       singleDetail: {},
       unit_id: '',
+      price:0
     }));
   };
   const handleItemChange = useCallback(
@@ -413,10 +432,17 @@ const QuotationSecond = ({ onChildDataChange, onSubmit }) => {
   }, [state.addedItems, state.shippingCost, grandTotal, onChildDataChange]);
   // console.log('addedItems', state.addedItems);
   return (
+    <>
+          {isModalOpen && <AddItemPopUp show={isModalOpen} onClose={handleCloseModal}  onCategoryAdded={fetchItemList} />}
     <div className="row my-3">
       <div className="col-md-12">
         <div className="card custom-card">
           <div className="card-body">
+          <div className="d-flex justify-content-end mb-2">
+                  <button className="btn ripple btn-default" onClick={handleOpenModal} >
+                    Add Item
+                  </button>
+                </div>
             <table className="table item-table">
               <ProductSelector
                 itemList={state?.itemList}
@@ -453,6 +479,7 @@ const QuotationSecond = ({ onChildDataChange, onSubmit }) => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

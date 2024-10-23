@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {toast } from 'react-hot-toast';
+import {GetState } from '../store/slices/ledger';
 import { ListParties } from '../store/slices/parties';
 import {AddPurchaseorder} from '../store/slices/purchase'
 import AddPurchaseOrderSec from './AddPurchaseOrderSec';
 import Select from 'react-select';
-import Navbarside from './Navbarside';
 import Loader from '../common/Loader';
-import Footer from './Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import AdminLayout from './AdminLayout';
 
@@ -23,6 +22,7 @@ const AddPurchaseOrder = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState({});
   const [listParties, setListParties] = useState([]);
+  const [state, setState] = useState([]);
   const [selectedPartyDetails, setSelectedPartyDetails] = useState({
     address: '',
     gstin: '' || null,
@@ -84,10 +84,19 @@ const AddPurchaseOrder = () => {
     }));
   };
 
+
+  const fetchState = async () => {
+    try {
+      const data = await dispatch(GetState()).unwrap();
+      setState(data?.data);;
+    } catch (error) {
+      console.log('Error fetching State:', error.message);
+    }
+  };
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      await Promise.all([fetchParties(), fetchLocalData()]);
+      await Promise.all([fetchParties(), fetchLocalData(),fetchState()]);
       setIsLoading(false);
     };
 
@@ -288,7 +297,15 @@ const AddPurchaseOrder = () => {
                                 </div>
                                 <div class="col-md-6">
                                   <label>State </label>
-                                  <input name="billing_state" type="text" class="form-control" onChange={handleInputChange} value={formData.billing_state} />
+                                  {/* <input name="billing_state" type="text" class="form-control" onChange={handleInputChange} value={formData.billing_state} /> */}
+                                  <select  className="form-control" name="billing_state" value={formData.billing_state || ''} onChange={handleInputChange}>
+                                <option value="">--Select State--</option>
+                                {(state || []).map((option, index) => (
+                                  <option key={index} value={option?.state_name}>
+                                    {option?.state_name}
+                                  </option>
+                                ))}
+                              </select>
                                 </div>
                               </div>
 
@@ -329,7 +346,15 @@ const AddPurchaseOrder = () => {
                               <div class="row mt-2">
                                 <div class="col-md-6">
                                   <label>State </label>
-                                  <input name="shipping_state" type="text" class="form-control" onChange={handleInputChange} value={formData.shipping_state} />
+                                  {/* <input name="shipping_state" type="text" class="form-control" onChange={handleInputChange} value={formData.shipping_state} /> */}
+                                  <select  className="form-control" name="shipping_state" value={formData.shipping_state || ''} onChange={handleInputChange}>
+                                <option value="">--Select State--</option>
+                                {(state || []).map((option, index) => (
+                                  <option key={index} value={option?.state_name}>
+                                    {option?.state_name}
+                                  </option>
+                                ))}
+                              </select>
                                 </div>
                                 <div class="col-md-6">
                                   <label>Phone </label>

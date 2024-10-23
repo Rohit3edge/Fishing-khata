@@ -123,6 +123,7 @@ const AddCategory = () => {
                               Parent Category <span className="required">*</span>
                             </label>
                             <select name="parent_category_id" className="form-control" value={formData.parent_category_id} onChange={handleChange}>
+                            <option value="0">New Parent</option>
                               {renderCategoryOptions(listCategories)}
                             </select>
                             {errors.parent_category_id && <span className="text-danger">{errors.parent_category_id}</span>}
