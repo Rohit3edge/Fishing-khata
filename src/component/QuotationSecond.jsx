@@ -38,7 +38,7 @@ const QuotationSecond = ({ onChildDataChange, onSubmit }) => {
       const data = await dispatch(Getunits()).unwrap();
       setState((prevState) => ({ ...prevState, units: data.data }));
     } catch (error) {
-      alert(error.message);
+      console.log(error.message);
     }
   }, [dispatch]);
 

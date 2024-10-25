@@ -148,7 +148,7 @@ const AddItem = () => {
         setUnits(data.data);
       })
       .catch(({ message }) => {
-        alert(message);
+        console.log(message);
       });
   }, [dispatch]);
 

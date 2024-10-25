@@ -16,7 +16,7 @@ const SettingsItem = ({ data }) => {
         setUnits(data.data);
       })
       .catch(({ message }) => {
-        alert(message);
+        console.log(message);
       });
   }, [dispatch]);
 
@@ -33,7 +33,7 @@ const SettingsItem = ({ data }) => {
 
           <div class="form-group row my-2">
               <label for="stock_value_method" class="col-sm-6 col-form-label">
-                Stock Value Method
+              Stock Valuation Method
               </label>
               <div class="col-sm-6">
                 <select

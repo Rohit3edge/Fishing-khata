@@ -138,10 +138,10 @@ const LedgerDetails = () => {
                       <div class="card custom-card">
                         <div class="card-body">
                           <div class="row">
-                            <div class="col-md-3 form-inline">
+                            <div class="col-md-4 form-inline">
                               <div class="form-group">
                                 <label class="font-weight-bold">ledger Name</label>
-                                <span>{ledgerDetails?.ledger_name}</span>
+                                <span style={{width:"40%",lineHeight:"16px"}}>{ledgerDetails?.ledger_name}</span>
                               </div>
                             </div>
                             <div class="col-md-3 form-inline">
@@ -150,7 +150,7 @@ const LedgerDetails = () => {
                                 <span>{ledgerDetails?.group_name}</span>
                               </div>
                             </div>
-                            <div class="col-md-3 form-inline">
+                            <div class="col-md-2 form-inline">
                               <div class="form-group">
                                 <label class="font-weight-bold">State</label>
                                 <span>{ledgerDetails?.state}</span>

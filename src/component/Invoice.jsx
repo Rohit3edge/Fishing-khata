@@ -187,7 +187,7 @@ const validateForm = () => {
   if (!selectedPartyDetails.state) {
     newErrors.selectedPartyState = 'Billing state is required.';
   }
-  if (!shippingAddress.state) {
+  if (!shippingAddress.state ) {
     newErrors.shippingState = 'Shipping state is required.';
   }
   if (!formData.invoice_number) {
@@ -262,7 +262,7 @@ const handleSubmit = async (e) => {
                   <h2 className="main-content-title tx-24 mg-b-5">Invoice</h2>
                   <ol className="breadcrumb">
                     <li className="breadcrumb-item">
-                      <a href="#">Sales</a>
+                      <a href="#" onClick={() => navigate('/invoicelist')}>Invoices</a>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
                       Add Invoice

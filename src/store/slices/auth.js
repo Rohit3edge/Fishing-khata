@@ -41,6 +41,27 @@ export const GetClientsDetail = createAsyncThunk(
 });
 
 
+export const CheckProfile = createAsyncThunk(
+    "auth/checkprofile",
+    async(item, thunkAPI) => {
+        try {
+            const data = await AuthService.CheckProfile(item);
+            return { user: data };
+        } catch (error) {
+            const message = 
+            (error.response &&
+                error.response.data &&
+                error.response.data.messages &&
+                error.response.data.messages.error) || 
+            error.message ||
+            error.toString();
+
+        return thunkAPI.rejectWithValue({ message })
+    }
+});
+
+
+
 
 
 const initialState = {

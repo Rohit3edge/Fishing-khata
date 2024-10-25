@@ -1,13 +1,16 @@
-import React from "react";
+import React,{useState} from "react";
 import "./login.css";
 import { Toaster } from 'react-hot-toast';
 import {
   BrowserRouter as Router,
   Route,
-  Routes,useNavigate,
+  Routes,useNavigate,Navigate
 } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import PublicRoutes from "./component/Routes/PublicRoutes.jsx";
 import ProtectedRoutes from "./component/Routes/ProtectedRoutes.jsx";
+import ProtectedRoutesLogIn from "./component/Routes/ProtectedRoutesLogIn.jsx"
+import { CheckProfile } from "./store/slices/auth"; 
 import Cookies from "js-cookie";
 
 
@@ -124,22 +127,52 @@ import ProfitAndLoss from "./component/Reports/ProfitAndLoss.jsx"
 import AuditLogs from "./component/Reports/AuditLogs.jsx"
 
 
+import AddUserDetails from "./component/Add User Details/AddUserDetails.jsx"
+import CompanyDocuments from "./component/Add User Details/CompanyDocuments.jsx"
+import UpdateSettings from "./component/Add User Details/UpdateSettings.jsx"
+
+
 
 
 
 function App() {
 
+  const [auth, setAuth] = useState(null); 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
-    // console.log("load")
     const user = Cookies.get("user");
-
     if (!user) {
       localStorage.removeItem("user");
       navigate("/login");
+    } else {
+      try {
+        // Safely parse the user data only if it exists
+        const userData = JSON.parse(user);
+        const ID = userData?.id;
+        
+        if (ID) {
+          fetchCheckProfile(ID);
+        }
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        navigate("/login");  // Navigate to login if parsing fails
+      }
     }
   }, [window.location.href]);
+  
+  const fetchCheckProfile = async (id) => {
+    try {
+      const data = await dispatch(CheckProfile({ profile_id: id })).unwrap();
+      setAuth(data?.user?.status);
+      console.log("data?.user?.status", data?.user, data?.user?.status);
+    } catch (error) {
+      console.log(error.message);
+      return false;
+    }
+  };
+  
 
 
   return (
@@ -163,7 +196,7 @@ function App() {
   /> 
       <Routes>
       {/* ProtectedRoutes */}
-        <Route path="/" element={<ProtectedRoutes />}>
+        <Route path="/" element={<ProtectedRoutes /> && <ProtectedRoutesLogIn />}>
 
           <Route exact path="/" element={<Home />} />
           <Route exact path="/ledgerlist" element={<LedgerList />} />
@@ -283,13 +316,33 @@ function App() {
             <Route exact path="/reports/profitandloss" element={<ProfitAndLoss/>} />
             <Route exact path="/reports/auditlogs" element={<AuditLogs/>} />
 
-            <Route path="*" element={<Notfoundpage />} />
+
         </Route>
+
+
+              {/* Route to restrict access to certain pages if authorized */}
+  <Route
+    path="/adduserdetails"
+    element={auth ? <Navigate to="/" /> : <AddUserDetails />}
+  />
+  <Route
+    path="/companydocuments"
+    element={auth ? <Navigate to="/" /> : <CompanyDocuments />}
+  />
+  <Route
+    path="/addsettings"
+    element={auth ? <Navigate to="/" /> : <UpdateSettings />}
+  />
+
+
 
         {/* PublicRoutes */}
         <Route path="/login" element={<PublicRoutes />}>
           <Route exact path="/login" element={<Login />} />
         </Route>
+
+        {/* Fallback for 404 */}
+        <Route path="*" element={<Notfoundpage />} />
       </Routes>
       </>
   );

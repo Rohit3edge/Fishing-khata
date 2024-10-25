@@ -38,17 +38,16 @@ const Navbarside = () => {
     document.getElementById("usermenu").classList.toggle("showuser");
   };
 
-  let data = JSON.parse(localStorage.getItem("user"));
-  const name = data?.data?.name;
 
-
-  const signOut = (e) => {
-
+  const signOut = () => {
+    // Clear localStorage and cookies
     localStorage.clear();
     Cookies.remove("user");
+  
+    // Redirect to the login page
     navigate("/login");
   };
-
+  
   React.useEffect(() => {
     dispatch(Getcompanybanks())
       .unwrap()
@@ -99,7 +98,7 @@ const Navbarside = () => {
                   <ul className="submenu">
                     <li className="submenu-item">
                       <NavLink to="/invoicelist" className="menu-title">
-                        Invoice
+                        Invoices
                       </NavLink>
                     </li>
                     <li className="submenu-item">

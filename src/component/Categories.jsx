@@ -34,18 +34,27 @@ const Categories = () => {
   }, [dispatch]);
 
   const renderCategories = (categories) => {
-    return categories.map((category) => (
-      <li key={category.id}>
-        {category.category_name}&nbsp;
-        [<a href="#" className="link">Edit</a>]
-        {category.children && category.children.length > 0 && (
-          <ul className="sub-categories">
-            {renderCategories(category.children)}
-          </ul>
+    return (
+      <>
+        {!categories?.length ? (
+          <h2 className="text-center">Categories not found</h2>
+        ) : (
+          categories.map((category) => (
+            <li key={category.id}>
+              {category.category_name}&nbsp;
+              [<a href="#" className="link">Edit</a>]
+              {category.children && category.children.length > 0 && (
+                <ul className="sub-categories">
+                  {renderCategories(category.children)}
+                </ul>
+              )}
+            </li>
+          ))
         )}
-      </li>
-    ));
+      </>
+    );
   };
+  
 
   return (
     <AdminLayout>
@@ -74,18 +83,7 @@ const Categories = () => {
                                             
                                             <div className="listgroup-example2">
                                                 <ul className="list-group">
-                                                    {/* <li>Dapibus ac facilisis in&nbsp;[<a href="" className="link">Edit</a>]</li>
-                                                    <li>Morbi leo risus&nbsp;[<a href="" className="link">Edit</a>]</li>
-                                                    <li>Cras justo odio&nbsp;[<a href="" className="link">Edit</a>]
-                                                        <ul className="sub-categories">
-                                                          <li>Lorem &nbsp;[<a href="" className="link">Edit</a>]</li>
-                                                          <li>established&nbsp;[<a href="" className="link">Edit</a>]</li>
-                                                          <li>Contrary&nbsp;[<a href="" className="link">Edit</a>]</li>
-                                                        </ul>
-                                                    </li>
-                                                    <li>Porta ac consectetur ac&nbsp;[<a href="" className="link">Edit</a>]</li>
-                                                    <li>Vestibulum at eros&nbsp;[<a href="" className="link">Edit</a>]</li> */}
-                                                    {renderCategories(listCategories)}
+                                                    {renderCategories(listCategories) }
                                                 </ul>
                                             </div>
                                         </div>

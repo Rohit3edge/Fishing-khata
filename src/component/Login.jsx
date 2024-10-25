@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import {toast } from 'react-hot-toast';
 import Cookies from 'js-cookie';
 import logo from '../img/logos/kisaankhatalogo.png';
-import { login } from '../store/slices/auth';
+import { login ,CheckProfile} from '../store/slices/auth';
+import Loader from '../common/Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { VscEye } from 'react-icons/vsc';
 
@@ -16,6 +17,7 @@ const Login = () => {
   const [alertEmail, setAlertEmail] = useState('');
   const [alertPass, setAlertPass] = useState('');
   const [invalid, setInvalid] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate('');
   const { loading, error, user } = useSelector((state) => state.auth);
@@ -47,36 +49,64 @@ const Login = () => {
     // }
     return true;
   };
-
   const validateInputs = () => {
     const isEmailValid = validateEmail(email);
     const isPasswordValid = validatePassword(password);
     return isEmailValid && isPasswordValid;
   };
 
-  async function signIn(e) {
+  const fetchCheckProfile = async (id) => {
+    try {
+      const data = await dispatch(CheckProfile({profile_id:id})).unwrap();
+      console.log(data.user)
+      return data?.user;
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+
+  async function signIn (e) {
     e.preventDefault();
+    
     if (validateInputs()) {
-      dispatch(login({ email, password }))
-        .unwrap()
-        .then((data) => {
-          // console.log(data?.user?.data);
-          toast.success('LogIn Successfully')
-          const loginTime = new Date();
-          loginTime.setMinutes(loginTime.getMinutes() +100); // Add 10 minutes to the login time
-          Cookies.set('user', JSON.stringify(data?.user?.data), { expires: loginTime });
-          setAlertEmail('');
-          setPassword('');
-          navigate('/');
-        })
-        .catch(({ message }) => {
-          setInvalid(message);
-        });
+      try {
+        setIsLoading(true)
+        // Perform login and unwrap the data
+        const data = await dispatch(login({ email, password })).unwrap();
+        
+        const id = data?.user?.data?.id;
+        
+        // Fetch profile check result and wait for it to resolve
+        const checkProfileresult = await fetchCheckProfile(id);     
+        // toast.success('LogIn Successfully');
+        
+        // Set a login time (e.g., 100 minutes expiration for the cookie)
+        Cookies.set('user', JSON.stringify(data?.user?.data), { expires: 1 / 24 });
+        
+        // Clear form fields
+        setAlertEmail('');
+        setPassword('');
+        if(checkProfileresult?.status){
+          setIsLoading(false)
+          navigate('/')
+        }else if(!checkProfileresult?.status){
+          setIsLoading(false)
+          navigate('/adduserdetails')
+        }
+        
+      } catch (error) {
+        setIsLoading(false)
+        console.error('Error during sign-in:', error);
+        setInvalid(error.message);  // Display error message
+      }
     }
   }
+  
 
   return (
     <div>
+            {isLoading && <Loader isLogin={true} />}
       <section className="login-bg-image">
         <div className="bg-overlay-orange"></div>
         <div className="card-section">

@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbarside from "../component/Navbarside";
 import Featured from "./featured/Featured";
 import Chart from "./chart/Chart";
-import Footer from "./Footer";
 import Widget from "./widget/widget";
 import AdminLayout from './AdminLayout';
 

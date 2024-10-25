@@ -360,7 +360,7 @@ const Prifile = () => {
                                       {/* {errors.email && <span className="text-danger">{errors.email}</span>} */}
                                   </div>
                                   <div class="col-md-6">
-                                      <label>Company GST </label>
+                                      <label>GST Number </label>
                                       <input name="gst" type="text" class="form-control" value={formData.gst} onChange={handleInputChange}/>
                                       {errors.gst && <span className="text-danger">{errors.gst}</span>}
                                   </div>

@@ -25,6 +25,7 @@ export const API_PATHS = {
 
   //authentication
   login: "/client/login",
+  checkprofile:"/client/checkprofile",
 
   getledgergroups: "/common/getledgergroups",
   getledgerdetail:"/ledger/get-ledger-detail",

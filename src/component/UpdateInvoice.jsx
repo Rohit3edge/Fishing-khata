@@ -329,6 +329,7 @@ const UpdateAddInvoice = () => {
                                   onChange={handlePartyChange}
                                   value={partyOptions.find((option) => option.value === selectedPartyDetails.ledger_id) || null}
                                 />
+                                {errors.customer && <p className="text-danger">{errors.customer}</p>}
                               </div>
                             </div>
                             <fieldset className="form-group border p-2 mt-3">
@@ -349,6 +350,7 @@ const UpdateAddInvoice = () => {
                                   </option>
                                 ))}
                               </select>
+                              {errors.selectedPartyState && <p className="text-danger">{errors.selectedPartyState}</p>}
                                 </div>
                               </div>
 
@@ -393,6 +395,7 @@ const UpdateAddInvoice = () => {
                                   </option>
                                 ))}
                               </select>
+                              {errors.shippingState && <p className="text-danger">{errors.shippingState}</p>}
                                 </div>
                               </div>
 
@@ -426,6 +429,7 @@ const UpdateAddInvoice = () => {
                                     style={{ width: '90%' }} // This ensures the input takes the remaining space
                                   />
                                 </div>
+                                {errors.invoice_number && <p className="text-danger">{errors.invoice_number}</p>}
                               </div>
 
                               <div className="col-md-6">
