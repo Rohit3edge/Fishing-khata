@@ -610,6 +610,51 @@ padding: 12px;
   background-color: #F6FFF2 !important;
 }
 
+
+/* Style for smaller images */
+.testimonial-img {
+  width: 80px !important;
+  height: 80px !important;
+  object-fit: cover !important; 
+  border: none !important;
+}
+
+/* Style for larger next and previous buttons */
+.owl-nav button {
+  background-color: rgba(255, 255, 255, 0.8); /* Button background color */
+  border: none; /* Remove border */
+  padding: 15px; /* Increase padding for larger button */
+  font-size: 20px; /* Adjust font size */
+  border-radius: 50%; /* Make buttons circular */
+}
+
+/* Optional: Change color of button icons */
+.owl-nav button span {
+  color: #333; /* Change the color of the arrow icons */
+}
+
+/* Add hover effect for buttons */
+.owl-nav button:hover {
+  background-color: rgba(255, 255, 255, 0.6); /* Change background on hover */
+}
+
+
+.owl-nav button span {
+  font-size: 25px; /* Increase font size */
+  border-radius: 50%; /* Add border radius */
+  background-color: rgba(52, 173, 84, 0.7); /* Background color */
+  color: white; /* Text color */
+  border: none; /* Remove border */
+  padding: 10px 15px; /* Add padding for better spacing */
+  transition: background-color 0.3s ease; /* Transition for hover effect */
+}
+
+/* Optional: Add hover effect */
+.owl-nav button span:hover {
+  background-color: rgba(40, 140, 70, 0.8); /* Darken background on hover */
+}
+
+
 @media (min-width: 991.98px) {
   .banner {
       position: relative;

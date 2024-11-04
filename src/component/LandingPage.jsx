@@ -161,23 +161,21 @@ const LandingPage = () => {
       <div className="container-fluid bg-testimonial py-5 my-5">
             <div className="container py-5">
                 <div className="row justify-content-center">
-                    <div className="col-lg-7">
-                        <OwlCarousel className=" owl-theme" items={1} loop nav style={{ background: 'rgba(52, 173, 84, .7)' }}>
-                            {testimonials.map((testimonial, index) => (
-                                <div key={index} className="testimonial-item text-center text-white">
-                                    
-                                        <img
-                                        className="img-fluid mx-auto p-2 border border-5 border-secondary rounded-circle mb-4"
-                                        src={testimonial.image}
-                                        alt={`Testimonial from ${testimonial.name}`}
-                                    />
-                                  
-                                    <p className="fs-5">{testimonial.text}</p>
-                                    <hr className="mx-auto w-25" />
-                                    <h4 className="text-white mb-0">{testimonial.name}</h4>
-                                </div>
-                            ))}
-                        </OwlCarousel>
+                    <div className="col-lg-10">
+                    <OwlCarousel className="owl-theme" items={1} loop nav style={{ background: 'rgba(52, 173, 84, .7)' }}>
+            {testimonials.map((testimonial, index) => (
+                <div key={index} className="testimonial-item text-center text-white pt-4">
+                    <img
+                        className="testimonial-img img-fluid mx-auto p-2 border border-5 border-secondary rounded-circle mb-4"
+                        src={testimonial.image}
+                        alt={`Testimonial from ${testimonial.name}`}
+                    />
+                    <p className="fs-5">{testimonial.text}</p>
+                    <hr className="mx-auto w-25" />
+                    <h4 className="text-white mb-0">{testimonial.name}</h4>
+                </div>
+            ))}
+        </OwlCarousel>
                     </div>
                 </div>
             </div>
