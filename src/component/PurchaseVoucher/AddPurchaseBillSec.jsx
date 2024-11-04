@@ -445,34 +445,68 @@ const AddPurchaseBillSec = ({ onChildDataChange,data }) => {
       updatedItems[index].total_amount = discountedTotal.toFixed(2);
       // console.log('Final Discounted Total with Cess:', discountedTotal.toFixed(2));
   
-      // Tax amounts logic
-      const newTaxAmounts = { ...state.taxAmounts };
-      const oldTaxAmount = Math.floor(((itemTotalWithoutTax * oldGst) / 100) * 100) / 100;
-  
-      if (newTaxAmounts[oldGst]) {
-        newTaxAmounts[oldGst] -= oldTaxAmount;
-        if (newTaxAmounts[oldGst] < 0) newTaxAmounts[oldGst] = 0;
+    // Calculate `oldDiscountedTotal` for old tax removal
+    let oldDiscountAmount = 0;
+    let oldDiscountedTotal = itemTotalWithoutTax;
+    
+    if (discountType === 'Percentage' && discountValue) {
+      if (state.addedItems[index]?.price_tax_type === 'Including Tax') {
+        const basePrice = oldDiscountedTotal / (1 + oldGst / 100);
+        oldDiscountedTotal = basePrice;
       }
-  
-      if (newTaxAmounts[validNewGst]) {
-        newTaxAmounts[validNewGst] += newTaxAmount;
+      oldDiscountAmount = (oldDiscountedTotal * discountValue) / 100;
+      oldDiscountedTotal -= oldDiscountAmount;
+    } else if (discountType === 'Fixed' && discountValue) {
+      if (state.addedItems[index]?.price_tax_type === 'Including Tax') {
+        const basePrice = oldDiscountedTotal / (1 + oldGst / 100);
+        oldDiscountedTotal = basePrice;
+      }
+      oldDiscountedTotal -= discountValue;
+    }
+    
+    let oldTaxAmount = 0;
+    if (state.addedItems[index]?.price_tax_type === 'Including Tax' && oldGst > 0) {
+      const basePriceWithTax = oldDiscountedTotal / (1 + oldGst / 100);
+      oldTaxAmount = oldDiscountedTotal - basePriceWithTax;
+    } else if (state.addedItems[index]?.price_tax_type === 'Excluding Tax') {
+      oldTaxAmount = (oldDiscountedTotal * oldGst) / 100;
+    }
+          // Additional 2% Cess tax
+          if (additionalTaxRate > 0) {
+            if (newTaxAmounts[additionalTaxRate]) {
+              newTaxAmounts[additionalTaxRate] += additionalTaxAmount;
+            } else {
+              newTaxAmounts[additionalTaxRate] = additionalTaxAmount;
+            }
+          }
+    
+    // Format oldTaxAmount to two decimal places
+    oldTaxAmount = parseFloat(oldTaxAmount.toFixed(2));
+    
+    const newTaxAmounts = { ...state.taxAmounts };
+    if (newTaxAmounts[oldGst]) {
+      newTaxAmounts[oldGst] -= oldTaxAmount;
+      if (newTaxAmounts[oldGst] <= 0) delete newTaxAmounts[oldGst];
+    }
+    
+    // Format newTaxAmount to two decimal places
+    newTaxAmount = parseFloat(newTaxAmount.toFixed(2));
+    
+    if (newTaxAmounts[validNewGst]) {
+      newTaxAmounts[validNewGst] += newTaxAmount;
+    } else {
+      newTaxAmounts[validNewGst] = newTaxAmount;
+    }
+    
+    // Remove any tax amounts that are zero to avoid rendering them
+    Object.keys(newTaxAmounts).forEach((key) => {
+      if (newTaxAmounts[key] === 0) {
+        delete newTaxAmounts[key];
       } else {
-        newTaxAmounts[validNewGst] = newTaxAmount;
+        // Format each tax amount to two decimal places
+        newTaxAmounts[key] = parseFloat(newTaxAmounts[key].toFixed(2));
       }
-  
-      // Additional 2% Cess tax
-      if (additionalTaxRate > 0) {
-        if (newTaxAmounts[additionalTaxRate]) {
-          newTaxAmounts[additionalTaxRate] += additionalTaxAmount;
-        } else {
-          newTaxAmounts[additionalTaxRate] = additionalTaxAmount;
-        }
-      }
-  
-      const taxAmountsDisplay = Object.entries(newTaxAmounts)
-        .filter(([, amount]) => amount > 0)
-        .map(([rate, amount]) => `${rate}: ${amount.toFixed(2)}`)
-        .join(', ');
+    });
   
       setState((prevState) => ({
         ...prevState,

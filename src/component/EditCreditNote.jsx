@@ -269,7 +269,7 @@ const EditCreditNote = () => {
                               options={partyOptions}
                               placeholder="--Select Customer--"
                               onChange={handlePartyChange}
-                              value={partyOptions?.find((option) => option?.value === selectedParty) || null}
+                              value={partyOptions?.find((option) => option?.value === selectedParty?.value) || null}
                             />
                             {errors.customer_id && <p className="text-danger">{errors.customer_id}</p>}
                           </div>

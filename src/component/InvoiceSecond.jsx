@@ -278,6 +278,7 @@ const InvoiceSecond = ({ onChildDataChange, onSubmit }) => {
       const discountType = updatedItems[index]?.discount_type;
       // console.log('Before Change2:', oldGst, newGst, discountValue, discountType);
       // console.log('price_tax_type', updatedItems[index]?.price_tax_type);
+
       let newTaxAmount = 0;
       let discountAmount = 0;
       let discountedTotal = itemTotalWithoutTax;
@@ -306,48 +307,80 @@ const InvoiceSecond = ({ onChildDataChange, onSubmit }) => {
       // Tax Calculation
       if (updatedItems[index]?.price_tax_type === 'Including Tax' && validNewGst > 0) {
         newTaxAmount = (discountedTotal * validNewGst) / (100 + validNewGst);
-        discountedTotal -= newTaxAmount; // Discounted total before tax
+        discountedTotal += newTaxAmount; // Discounted total before tax
+        // console.log("discountedTotal111",discountedTotal,newTaxAmount,)
       } else if (updatedItems[index]?.price_tax_type === 'Excluding Tax') {
         newTaxAmount = (discountedTotal * validNewGst) / 100;
         discountedTotal += newTaxAmount; // Add tax to total
       }
 
+      // console.log("discountedTotal",discountedTotal)
       // Update item with new total amount
       updatedItems[index].total_amount = discountedTotal.toFixed(2);
 
-      // Update tax amounts
-      const newTaxAmounts = { ...state.taxAmounts };
 
-      // Remove the old tax amount
-      const oldTaxAmount = Math.floor(((itemTotalWithoutTax * oldGst) / 100) * 100) / 100;
-      if (newTaxAmounts[oldGst]) {
-        newTaxAmounts[oldGst] -= oldTaxAmount;
-        if (newTaxAmounts[oldGst] < 0) newTaxAmounts[oldGst] = 0;
-      }
 
-      // Add the new tax amount
-      if (newTaxAmounts[validNewGst]) {
-        newTaxAmounts[validNewGst] += newTaxAmount;
-      } else {
-        newTaxAmounts[validNewGst] = newTaxAmount;
-      }
+ // Calculate `oldDiscountedTotal` for old tax removal
+let oldDiscountAmount = 0;
+let oldDiscountedTotal = itemTotalWithoutTax;
 
-      // Ensure proper formatting of multiple tax rates (e.g., "12:34")
-      const taxAmountsDisplay = Object.entries(newTaxAmounts)
-        .filter(([, amount]) => amount > 0)
-        .map(([rate, amount]) => `${rate}: ${amount.toFixed(2)}`)
-        .join(', ');
+if (discountType === 'Percentage' && discountValue) {
+  if (state.addedItems[index]?.price_tax_type === 'Including Tax') {
+    const basePrice = oldDiscountedTotal / (1 + oldGst / 100);
+    oldDiscountedTotal = basePrice;
+  }
+  oldDiscountAmount = (oldDiscountedTotal * discountValue) / 100;
+  oldDiscountedTotal -= oldDiscountAmount;
+} else if (discountType === 'Fixed' && discountValue) {
+  if (state.addedItems[index]?.price_tax_type === 'Including Tax') {
+    const basePrice = oldDiscountedTotal / (1 + oldGst / 100);
+    oldDiscountedTotal = basePrice;
+  }
+  oldDiscountedTotal -= discountValue;
+}
 
-      // Update state with updated items and tax amounts
+let oldTaxAmount = 0;
+if (state.addedItems[index]?.price_tax_type === 'Including Tax' && oldGst > 0) {
+  const basePriceWithTax = oldDiscountedTotal / (1 + oldGst / 100);
+  oldTaxAmount = oldDiscountedTotal - basePriceWithTax;
+} else if (state.addedItems[index]?.price_tax_type === 'Excluding Tax') {
+  oldTaxAmount = (oldDiscountedTotal * oldGst) / 100;
+}
+
+// Format oldTaxAmount to two decimal places
+oldTaxAmount = parseFloat(oldTaxAmount.toFixed(2));
+
+const newTaxAmounts = { ...state.taxAmounts };
+if (newTaxAmounts[oldGst]) {
+  newTaxAmounts[oldGst] -= oldTaxAmount;
+  if (newTaxAmounts[oldGst] <= 0) delete newTaxAmounts[oldGst];
+}
+
+// Format newTaxAmount to two decimal places
+newTaxAmount = parseFloat(newTaxAmount.toFixed(2));
+
+if (newTaxAmounts[validNewGst]) {
+  newTaxAmounts[validNewGst] += newTaxAmount;
+} else {
+  newTaxAmounts[validNewGst] = newTaxAmount;
+}
+
+// Remove any tax amounts that are zero to avoid rendering them
+Object.keys(newTaxAmounts).forEach((key) => {
+  if (newTaxAmounts[key] === 0) {
+    delete newTaxAmounts[key];
+  } else {
+    // Format each tax amount to two decimal places
+    newTaxAmounts[key] = parseFloat(newTaxAmounts[key].toFixed(2));
+  }
+});
+
       setState((prevState) => ({
         ...prevState,
         addedItems: updatedItems,
         taxAmounts: newTaxAmounts,
       }));
 
-      // Log the state after update for debugging
-      // console.log('After Change:', updatedItems);
-      // console.log('Tax Amounts Display:', taxAmountsDisplay);
     },
     [state.addedItems, state.taxAmounts]
   );
@@ -442,7 +475,7 @@ const InvoiceSecond = ({ onChildDataChange, onSubmit }) => {
     };
     onChildDataChange(invoiceData);
   }, [state.addedItems, state.shippingCost, grandTotal, onChildDataChange]);
-  // console.log('addedItems', state.addedItems);
+
   return (
     <>
           {isModalOpen && <AddItemPopUp show={isModalOpen} onClose={handleCloseModal}  onCategoryAdded={fetchItemList} />}

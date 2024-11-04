@@ -3,9 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { LedgerEntires } from '../store/slices/bankbook';
 import Table from '../common/Table';
-import Navbarside from './Navbarside';
+import {toast } from 'react-hot-toast';
 import Loader from '../common/Loader';
-import Footer from './Footer';
 import AdminLayout from './AdminLayout';
 
 const LedgerDetails = () => {
@@ -23,12 +22,27 @@ const LedgerDetails = () => {
   const [pageSize, setPageSize] = useState(25);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const [showDateFilters, setShowDateFilters] = useState(true);
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
+  const [showDateFilters, setShowDateFilters] = useState(true)
+
+
+
+   // Get today's date
+   const today = new Date();
+
+   // Financial year calculation
+   const getFinancialYearStartDate = () => {
+     const currentYear = today.getFullYear();
+     return `${currentYear}-04-01`;
+   };
+ 
+   const getTodayFormattedDate = () => {
+     return today.toISOString().split('T')[0]; // Returns 'YYYY-MM-DD'
+   };
+ 
+   const [fromDate, setFromDate] = useState(getFinancialYearStartDate()); // Financial year start
+   const [toDate, setToDate] = useState(getTodayFormattedDate()); // Today
 
   const user = JSON.parse(localStorage.getItem('user'));
-  const Name = user?.data?.company_name;
   const profile_id = user?.data?.id;
 
   const [item, setItem] = useState({
@@ -48,16 +62,17 @@ const LedgerDetails = () => {
   ]);
 
   React.useEffect(() => {
-    handleLedgerClick(ledgerid)
+    handleLedgerClick(null, ledgerid); // Pass null for event, pass ledgerid directly
   }, [dispatch]);
-
-
-  const handleLedgerClick = async (id) => {
+  
+  const handleLedgerClick = async (e) => {
+    if (e) e.preventDefault(); // Prevent default only if `e` is present
+    
     const newItem = {
       ...item,
-      ledger_id: id,
-      from_date: fromDate, // Ensure from_date is sent
-      to_date: toDate, // Ensure to_date is sent
+      ledger_id: ledgerid,
+      from_date: fromDate,
+      to_date: toDate,
     };
     setItem(newItem);
   
@@ -67,20 +82,20 @@ const LedgerDetails = () => {
   
     try {
       const data = await dispatch(LedgerEntires(newItem)).unwrap();
-
+  
       if (currentRequestId === requestId) {
         setLedgerEntires(data?.data?.entries || []);
         setClosingBalance(data?.data?.closing_balance || "");
-        setLedgerDetails(data?.data?.ledger_details)
-        setFromDate("")
-        setToDate("")
+        setLedgerDetails(data?.data?.ledger_details);
       }
     } catch (error) {
+      toast.error("No Record Found!!")
       console.log(error.message);
     } finally {
       setIsLoading(false);
     }
   };
+  
 
 
 

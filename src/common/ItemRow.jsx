@@ -60,13 +60,22 @@ const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, 
                 type="text"
                 className="form-control"
                 name="discount"
-                value={item?.discount}
+                value={item?.discount !== undefined ? item.discount : ''} // Allow empty input
                 onChange={(e) => {
                   let inputValue = e.target.value;
-                  inputValue = inputValue.replace(/^0+/, '');
-                  const validInput = /^\d+(\.\d{0,2})?$/.test(inputValue);
+    
+                  // Check for valid input: allow numbers with up to 2 decimal places, or allow an empty value
+                  const validInput = /^(0|[1-9]\d*)(\.\d{0,2})?$/.test(inputValue);
+    
+                  // If input is valid or empty, update the state
                   if (validInput || inputValue === '') {
                     handleItemChange('discount', inputValue, index);
+                  }
+                }}
+                onBlur={() => {
+                  // On blur, if input is empty, reset it to 0.00
+                  if (item.discount === '' || item.discount === undefined) {
+                    handleItemChange('discount', '0.00', index);
                   }
                 }}
               />
@@ -118,7 +127,7 @@ const ItemRow = ({ addedItems, handleRemoveItem, handleInputChange, grandTotal, 
       </td>
     </tr>
     {Object.entries(state?.taxAmounts)?.map(([taxRate, amount], index) => {
-      if (amount > 0) {
+      if (Number(amount) > 0) {
         // Only show taxes with a non-zero amount
         return (
           <tr key={index}>

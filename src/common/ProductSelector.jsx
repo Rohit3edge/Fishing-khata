@@ -87,13 +87,22 @@ const ProductSelector = ({ handleProductChange, singleDetail, state, handleInput
               <input
                 type="text"
                 className="form-control"
-                value={state?.discount}
+                value={state?.discount !== undefined ? state.discount : ''} // Allow empty input
                 onChange={(e) => {
                   let inputValue = e.target.value;
-                  inputValue = inputValue.replace(/^0+/, '');
-                  const validInput = /^\d+(\.\d{0,2})?$/.test(inputValue);
+    
+                  // Check for valid input: allow numbers with up to 2 decimal places, or allow an empty value
+                  const validInput = /^(0|[1-9]\d*)(\.\d{0,2})?$/.test(inputValue);
+    
+                  // If input is valid or empty, update the state
                   if (validInput || inputValue === '') {
                     handleInputChange('discount', inputValue);
+                  }
+                }}
+                onBlur={() => {
+                  // On blur, if input is empty, reset it to 0.00
+                  if (state.discount === '' || state.discount === undefined) {
+                    handleInputChange('discount', '0.00');
                   }
                 }}
               />

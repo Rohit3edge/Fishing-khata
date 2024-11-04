@@ -253,13 +253,13 @@ const UpdateAddInvoice = () => {
       invoice_date: formData.invoice_date,
       fin_year: '2024-2025',
       po_number: formData.po_number,
-      billing_address: selectedPartyDetails.address,
-      billing_state: selectedPartyDetails.state,
-      billing_phone: selectedPartyDetails.phone,
+      billing_address: selectedPartyDetails.address || "",
+      billing_state: selectedPartyDetails.state || "",
+      billing_phone: selectedPartyDetails.phone || "",
       party_gstn: selectedPartyDetails.gstin,
       shipping_address: shippingAddress.address,
       shipping_state: shippingAddress.state,
-      shipping_phone: shippingAddress.phone,
+      shipping_phone: shippingAddress.phone || "",
       eway_bill: formData.eway_number,
       vehicle_number: formData.vehicle_number,
       notes: formData.message,
@@ -269,7 +269,7 @@ const UpdateAddInvoice = () => {
       ...billingData,
       ...invoiceSecond,
     };
-    // console.log(mergedData)
+    console.log(mergedData)
     if(validateForm()){
 
  

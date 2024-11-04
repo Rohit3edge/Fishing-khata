@@ -1,9 +1,7 @@
 import React, { useState, useEffect ,useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PaymentOutlist } from '../store/slices/purchase';
-import Navbarside from './Navbarside';
 import Loader from '../common/Loader';
-import Footer from './Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import Table from '../common/Table';
 import AdminLayout from './AdminLayout';
@@ -15,7 +13,6 @@ const PaymentOutList = () => {
 
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id;
-  const Name = user?.data?.company_name;
 
   const [isLoading, setIsLoading] = useState(false);
   const [paymentOutlist, setPaymentOutlist] = useState([]);

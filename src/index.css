@@ -569,3 +569,52 @@ padding: 12px;
 .btn.register-link:hover {
   background-color: #5499c7;
 }
+
+
+.custom-header-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 44px;
+  line-height: 55px;
+  font-weight: 500;
+  text-shadow: 3px 3px 2px rgba(156, 156, 156, 1);
+  text-transform: uppercase;
+}
+
+.custom-text-style {
+  font-family: 'Vollkorn', serif; /* Make sure you have imported the font */
+  color: hsla(0, 0%, 100%, 0.81);
+  font-size: 18px; /* You can use Bootstrap's font size utilities if you prefer */
+  font-style: italic;
+}
+
+.service-item {
+  box-shadow: 0 0 45px #EDEDED;
+  transition: .5s;
+}
+
+.service-item:hover {
+  color: #F6FFF2;
+  background: #34AD54 !important;
+}
+
+
+.service-item:hover h4 {
+  transition: .5s;
+}
+
+.service-item:hover h4 {
+  color: #F6FFF2;
+}
+
+.bg-light {
+  background-color: #F6FFF2 !important;
+}
+
+@media (min-width: 991.98px) {
+  .banner {
+      position: relative;
+      margin-top: -90px;
+      z-index: 1;
+  }
+}
+

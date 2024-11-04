@@ -116,6 +116,7 @@ const EditDebitNote = () => {
   };
 
   const handlePartyChange = (selectedOption, ndata, isData) => {
+    console.log(selectedOption)
     setSelectedParty(selectedOption);
     const FinalselectedOption = isData ? selectedOption : selectedOption?.value; // Check if selectedOption exists
     if (!FinalselectedOption) {
@@ -262,7 +263,7 @@ const EditDebitNote = () => {
                               options={partyOptions}
                               placeholder="--Select Customer--"
                               onChange={handlePartyChange}
-                              value={partyOptions?.find((option) => option?.value === selectedParty) || null}
+                              value={partyOptions?.find((option) => option?.value === selectedParty?.value) || null}
                             />
                             {errors.customer_id && <p className="text-danger">{errors.customer_id}</p>}
                           </div>

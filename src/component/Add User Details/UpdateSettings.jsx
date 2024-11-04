@@ -34,8 +34,8 @@ const UpdateSettings = () => {
             setFormData((prevData) => ({
                 ...prevData,
                 invoice_prefix: data?.data?.invoice_prefix,
-                item_default_type:data?.data?.item_default_type,
-                stock_value_method: data?.data?.stock_value_method,
+                item_default_type:data?.data?.item_default_type || "Product/Service" ,
+                stock_value_method: data?.data?.stock_value_method ||"Average Purchase Price" ,
               }));
         }
       

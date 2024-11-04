@@ -13,6 +13,8 @@ import { AxiosSetup } from "./utils/helpers/api.helpers";
 
 // Bootstrap and jQuery libraries
 // import "bootstrap/dist/css/bootstrap.min.css";
+import 'owl.carousel/dist/assets/owl.carousel.css';
+import 'owl.carousel/dist/assets/owl.theme.default.css';
 import "jquery/dist/jquery.min.js";
 // Datatable Modules
 import "datatables.net-dt/js/dataTables.dataTables";

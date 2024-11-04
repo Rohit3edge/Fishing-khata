@@ -2,9 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { GetTrialBalance } from '../../store/slices/reports';
-import Navbarside from '../Navbarside';
 import Loader from '../../common/Loader';
-import Footer from '../Footer';
 import AdminLayout from '../AdminLayout';
 
 const TrialBalance = () => {

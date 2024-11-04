@@ -74,7 +74,6 @@ const Table = ({
     switch (column.field) {
       case 'invoice_combined':
         return row.invoice_prefix == null ? `${row.invoice_number}` : `${row.invoice_prefix}${row.invoice_number}`;
-      case 'debit_note_date':
       case 'quotation_combined':
          if (row.quotation_prefix==null)return`${row.quotation_number}`
        return `${row.quotation_prefix}${row.quotation_number}`;
@@ -82,6 +81,7 @@ const Table = ({
       case 'date_added':
       case 'payment_date':
       case 'quotation_date':
+      case "debit_note_date":
       case 'invoice_date':
         return Moment(row[column.field]).format('DD-MM-YYYY');
         case 'created_at':
@@ -93,6 +93,10 @@ const Table = ({
       case 'amount':
       case 'grand_total':
       case 'balance':
+      case 'debit_amount':
+      case 'credit_amount':
+      case 'avg_purchase_price':
+      case 'current_stock_value':
       case 'sale_price':
         return formatAmount(row[column.field]);
         case 'purchase_price':
