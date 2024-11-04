@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './login.css';
 import { Toaster } from 'react-hot-toast';
-import { BrowserRouter as Router, Route, Routes, useNavigate, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate, Navigate,useLocation  } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import PublicRoutes from './component/Routes/PublicRoutes.jsx';
 import ProtectedRoutes from './component/Routes/ProtectedRoutes.jsx';
@@ -118,9 +118,9 @@ import TrialBalance from './component/Reports/TrialBalance.jsx';
 import ProfitAndLoss from './component/Reports/ProfitAndLoss.jsx';
 import AuditLogs from './component/Reports/AuditLogs.jsx';
 
-import AddUserDetails from './component/Add User Details/AddUserDetails.jsx';
-import CompanyDocuments from './component/Add User Details/CompanyDocuments.jsx';
-import UpdateSettings from './component/Add User Details/UpdateSettings.jsx';
+import AddUserDetails from './component/AddUserDetails/AddUserDetails.jsx';
+import CompanyDocuments from './component/AddUserDetails/CompanyDocuments.jsx';
+import UpdateSettings from './component/AddUserDetails/UpdateSettings.jsx';
 
 
 import LandingPage from "./component/LandingPage.jsx"
@@ -129,12 +129,16 @@ function App() {
   const [auth, setAuth] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
 
   React.useEffect(() => {
     const user = Cookies.get('user');
+    const currentPath = location.pathname;
     if (!user) {
-      localStorage.removeItem('user');
-      navigate('/login');
+      if (currentPath !== '/login' && currentPath !== '/home') {
+        localStorage.removeItem('user');
+        navigate('/home');
+      }
     } else {
       try {
         // Safely parse the user data only if it exists
@@ -146,7 +150,7 @@ function App() {
         }
       } catch (error) {
         console.error('Error parsing user data:', error);
-        navigate('/login'); // Navigate to login if parsing fails
+        navigate('/home'); // Navigate to login if parsing fails
       }
     }
   }, [window.location.href]);
@@ -293,7 +297,6 @@ function App() {
           <Route exact path="/reports/trialbalance" element={<TrialBalance />} />
           <Route exact path="/reports/profitandloss" element={<ProfitAndLoss />} />
           <Route exact path="/reports/auditlogs" element={<AuditLogs />} />
-          <Route exact path="/LandingPage" element={<LandingPage />} />
         </Route>
 
         {/* Route to restrict access to certain pages if authorized */}
@@ -302,8 +305,9 @@ function App() {
         <Route path="/addsettings" element={auth ? <Navigate to="/" /> : <UpdateSettings />} />
 
         {/* PublicRoutes */}
-        <Route path="/login" element={<PublicRoutes />}>
-          <Route exact path="/login" element={<Login />} />
+        <Route element={<PublicRoutes />}>
+          <Route path="/home" element={<LandingPage />} />
+          <Route path="/login" element={<Login />} />
         </Route>
 
         {/* Fallback for 404 */}

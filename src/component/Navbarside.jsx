@@ -43,9 +43,7 @@ const Navbarside = () => {
     // Clear localStorage and cookies
     localStorage.clear();
     Cookies.remove("user");
-  
-    // Redirect to the login page
-    navigate("/login");
+    navigate("/home");
   };
   
   React.useEffect(() => {

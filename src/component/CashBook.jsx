@@ -16,7 +16,6 @@ const CashBook = () => {
 
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id;
-  const Name = user?.data?.company_name;
 
   const [formData, setFormData] = useState({
     id:id,
@@ -26,13 +25,14 @@ const CashBook = () => {
 
   const [errors, setErrors] = useState({});
 
+  const today = new Date();
+  const formattedDate = today.toISOString().split('T')[0];
 
   useEffect(() => {
 
     fetchClientDetails()
     // Get the current date
-    const today = new Date();
-    const formattedDate = today.toISOString().split('T')[0];
+
     setCurrentDate(formattedDate);
     // Set date and date_as_of to the current date in formData
     setFormData((prevData) => ({
@@ -47,8 +47,8 @@ const CashBook = () => {
       const data = await dispatch(GetClientsDetail({ id: id })).unwrap();
       setFormData((prevData) => ({
         ...prevData,
-        cash_opening_balance: data?.user?.data?.cash_opening_balance,
-        cash_opening_balance_date: data?.user?.data?.cash_opening_balance_date,
+        cash_opening_balance: data?.user?.data?.cash_opening_balance || 0,
+        cash_opening_balance_date: data?.user?.data?.cash_opening_balance_date ||formattedDate ,
       }));
     } catch (error) {
       console.log('Error fetching ClientDetails:', error.message);
@@ -91,6 +91,7 @@ const CashBook = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // console.log("formData",formData,currentDate)
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
@@ -147,9 +148,9 @@ const CashBook = () => {
                               type="text"
                               className="form-control"
                               onChange={handleInputChange}
-                              value={Number(formData.cash_opening_balance) || 0.00}
+                              value={Number(formData?.cash_opening_balance) || 0.00}
                             />
-                            {errors.cash_opening_balance && <span className="alert-message">{errors.cash_opening_balance}</span>}
+                            {errors?.cash_opening_balance && <span className="alert-message">{errors?.cash_opening_balance}</span>}
                           </div>
                           <div className="col-md-6">
                             <label>
@@ -160,7 +161,7 @@ const CashBook = () => {
                               type="date"
                               className="form-control"
                               onChange={handleInputChange}
-                              value={formData.cash_opening_balance_date || currentDate}
+                              value={formData?.cash_opening_balance_date || currentDate}
                             />
                           </div>
                         </div>

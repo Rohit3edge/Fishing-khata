@@ -1,9 +1,7 @@
 import React, { useState, useEffect ,useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Listitems } from '../store/slices/items';
-import Navbarside from './Navbarside';
 import Loader from '../common/Loader';
-import Footer from './Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import Table from '../common/Table';
 import AdminLayout from './AdminLayout';

@@ -134,9 +134,25 @@ ul {
   min-width: 100px;
 }
 
+.btn-default2 {
+  background-color:orange;
+  color: black;
+  border-radius: 5px;
+  padding: 5px 25px;
+  margin-right: 5px;
+  border: none;
+  font-size: 0.9rem;
+  min-width: 100px;
+}
+
+.btn-default2:hover {
+  /* background-color: #172b4d; */
+  color: white;
+}
+
 .btn-default:hover {
   background-color: orange;
-  color: black;
+  color: white;
 }
 
 .page-header {
@@ -594,7 +610,7 @@ padding: 12px;
 
 .service-item:hover {
   color: #F6FFF2;
-  background: #34AD54 !important;
+  background: #172b4d !important;
 }
 
 
@@ -633,27 +649,26 @@ padding: 12px;
   color: #333; /* Change the color of the arrow icons */
 }
 
-/* Add hover effect for buttons */
-.owl-nav button:hover {
-  background-color: rgba(255, 255, 255, 0.6); /* Change background on hover */
-}
+
 
 
 .owl-nav button span {
   font-size: 25px; /* Increase font size */
-  border-radius: 50%; /* Add border radius */
-  background-color: rgba(52, 173, 84, 0.7); /* Background color */
   color: white; /* Text color */
   border: none; /* Remove border */
   padding: 10px 15px; /* Add padding for better spacing */
   transition: background-color 0.3s ease; /* Transition for hover effect */
 }
-
-/* Optional: Add hover effect */
-.owl-nav button span:hover {
-  background-color: rgba(40, 140, 70, 0.8); /* Darken background on hover */
+.bg-footer {
+  background: linear-gradient(rgba(52, 173, 84, .7), rgba(52, 173, 84, .7)), url(../src/img/footer.png) center bottom no-repeat;
+  background-size: contain;
 }
-
+.bg-primary {
+  background-color: #34AD54 !important;
+}
+.bg-secondary {
+  background-color: #f93 !important;
+}
 
 @media (min-width: 991.98px) {
   .banner {

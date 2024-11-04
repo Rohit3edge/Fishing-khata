@@ -1,4 +1,5 @@
-import React from 'react';
+import React,{useRef} from 'react';
+import { useNavigate } from 'react-router-dom';
 import OwlCarousel from 'react-owl-carousel';
 import logo from '../img/logos/Landing.logo.png';
 import img1 from '../img/back.jpg';
@@ -12,31 +13,34 @@ import img8 from '../img/pic4.jpg';
 
 const LandingPage = () => {
 
-
-    const testimonials = [
-        {
-            name: "Rajesh Dhawan",
-            image: img5,
-            text: "“Using this business management software has completely transformed the way we operate our business. It has streamlined our processes, improved our efficiency, and ultimately helped us increase our revenue. I would highly recommend this software to any business looking to take their operations to the next level.” "
-        },
-        {
-            name: "Karan Aujla",
-            image: img6,
-            text: "“As a small business owner, I was initially hesitant to invest in a business management software. But after using this software for just a few weeks, I can confidently say that it was one of the best decisions I have made for my business. It has saved me countless hours of administrative work, and allowed me to focus on what I do best - growing my business.” "
-        },
-        {
-          name: "Kailash Kumar",
-          image: img7,
-          text: "“I have used several business management software solutions in the past, but this one stands out for its user-friendly interface and comprehensive features. It has made it easier for our team to collaborate and communicate, and has improved our overall productivity. I would highly recommend this software to any business looking to streamline their operations.”"
-      },
-      {
-        name: "Phil Johnson",
-        image: img8,
-        text: "“Using this business management software has been a game changer for my small business! It has helped us streamline our operations and improve our productivity, all while saving us time and money. I highly recommend it to any business owner looking to take their operations to the next level."
+  const contactSectionRef = useRef(null);
+  const navigate = useNavigate();
+  const testimonials = [
+    {
+      name: 'Rajesh Dhawan',
+      image: img5,
+      text: '“Using this business management software has completely transformed the way we operate our business. It has streamlined our processes, improved our efficiency, and ultimately helped us increase our revenue. I would highly recommend this software to any business looking to take their operations to the next level.” ',
     },
+    {
+      name: 'Karan Aujla',
+      image: img6,
+      text: '“As a small business owner, I was initially hesitant to invest in a business management software. But after using this software for just a few weeks, I can confidently say that it was one of the best decisions I have made for my business. It has saved me countless hours of administrative work, and allowed me to focus on what I do best - growing my business.” ',
+    },
+    {
+      name: 'Kailash Kumar',
+      image: img7,
+      text: '“I have used several business management software solutions in the past, but this one stands out for its user-friendly interface and comprehensive features. It has made it easier for our team to collaborate and communicate, and has improved our overall productivity. I would highly recommend this software to any business looking to streamline their operations.”',
+    },
+    {
+      name: 'Phil Johnson',
+      image: img8,
+      text: '“Using this business management software has been a game changer for my small business! It has helped us streamline our operations and improve our productivity, all while saving us time and money. I highly recommend it to any business owner looking to take their operations to the next level.',
+    },
+  ];
 
-    ];
-
+  const handleContactClick = () => {
+    contactSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
     <>
@@ -51,8 +55,8 @@ const LandingPage = () => {
           </div>
           <div className="col-lg-6">
             <div className="d-flex align-items-center justify-content-center">
-              <button className="btn btn-default">Login</button>
-              <button className="btn btn-default">Contact</button>
+              <button className="btn btn-default" onClick={() => navigate('/login')}>Login</button>
+              <button className="btn btn-default" onClick={handleContactClick}>Contact</button>
             </div>
           </div>
         </div>
@@ -79,12 +83,12 @@ const LandingPage = () => {
         <div className="container">
           <div className="row gx-0">
             <div className="col-md-12">
-              <div className="d-flex flex-column justify-content-center  p-5" style={{ height: '300px', background: '#34AD54', alignItems: 'center' }}>
-                <p className="text-white w-50" style={{ lineHeight: '30px' }}>
+              <div className="d-flex flex-column justify-content-center  p-5" style={{ height: '300px', background: '#172b4d', alignItems: 'center' }}>
+                <p className="text-white w-75" style={{ lineHeight: '36px', fontSize: '25px' }}>
                   Kisaan management software enables large agribusinesses to have complete control over their farming processes and visibility across different stakeholders. From onboarding all
                   farmers, empowering extension workers to bring all operational data on a single platform, It is just the solution you need.
                 </p>
-                <button className="btn btn-default w-25">Get a Demo</button>
+                <button className="btn btn-default2 w-25">Get a Demo</button>
               </div>
             </div>
           </div>
@@ -157,30 +161,94 @@ const LandingPage = () => {
         </div>
       </div>
 
-
-      <div className="container-fluid bg-testimonial py-5 my-5">
-            <div className="container py-5">
-                <div className="row justify-content-center">
-                    <div className="col-lg-10">
-                    <OwlCarousel className="owl-theme" items={1} loop nav style={{ background: 'rgba(52, 173, 84, .7)' }}>
-            {testimonials.map((testimonial, index) => (
-                <div key={index} className="testimonial-item text-center text-white pt-4">
-                    <img
-                        className="testimonial-img img-fluid mx-auto p-2 border border-5 border-secondary rounded-circle mb-4"
-                        src={testimonial.image}
-                        alt={`Testimonial from ${testimonial.name}`}
-                    />
-                    <p className="fs-5">{testimonial.text}</p>
+      <div className="container-fluid bg-testimonial py-5 my-5" style={{ background: '#f5f5f5' }}>
+        <div className="container py-5">
+          <div className="row justify-content-center">
+            <div className="col-lg-10">
+              <OwlCarousel className="owl-theme" items={1} loop nav style={{ background: 'rgba(52, 173, 84, .7)' }}>
+                {testimonials?.map((testimonial, index) => (
+                  <div key={index} className="testimonial-item text-center text-white pt-4">
+                    <img className="testimonial-img img-fluid mx-auto p-2 border border-5 border-secondary rounded-circle mb-4" src={testimonial.image} alt={`Testimonial from ${testimonial.name}`} />
+                    <p className="fs-5" style={{padding:"30px"}}>{testimonial.text}</p>
                     <hr className="mx-auto w-25" />
-                    <h4 className="text-white mb-0">{testimonial.name}</h4>
-                </div>
-            ))}
-        </OwlCarousel>
-                    </div>
-                </div>
+                    <h4 className="text-white mb-0" style={{fontWeight:"700"}}>{testimonial.name}</h4>
+                  </div>
+                ))}
+              </OwlCarousel>
             </div>
+          </div>
         </div>
-     
+      </div>
+
+      <div ref={contactSectionRef} class="container-fluid bg-footer bg-primary text-white mt-5">
+        <div class="container">
+          <div class="row gx-5">
+            <div class="col-lg-6 col-md-6">
+              <div class="row gx-5">
+                <div class="col-lg-6 col-md-12 pt-5 mb-5">
+                  <h4 class="text-white mb-4 " style={{fontWeight:"700"}}>Get In Touch</h4>
+                  <div class="d-flex mb-2">
+                    <i class="bi bi-geo-alt text-white me-2"></i>
+                    <p class="text-white mb-0">1Office No. 408, 4th Floor, ARG North Avenue Sikar Road, Jaipur, Rajasthan (IND) - 302013</p>
+                  </div>
+                  <div class="d-flex mb-2">
+                    <i class="bi bi-envelope-open text-white me-2"></i>
+                    <p class="text-white mb-0">support@kisaankhata.com</p>
+                  </div>
+                  <div class="d-flex mb-2">
+                    <i class="bi bi-telephone text-white me-2"></i>
+                    <p class="text-white mb-0">9057999771, 9057999772</p>
+                  </div>
+                  <div class="d-flex mt-4">
+                    <a class="btn btn-secondary btn-square rounded-circle me-2" href="#">
+                      <i class="fab fa-twitter"></i>
+                    </a>
+                    <a class="btn btn-secondary btn-square rounded-circle me-2" href="#">
+                      <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a class="btn btn-secondary btn-square rounded-circle me-2" href="#">
+                      <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a class="btn btn-secondary btn-square rounded-circle" href="#">
+                      <i class="fab fa-instagram"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 mt-lg-n5">
+              <div class="d-flex flex-column align-items-center justify-content-center text-center h-100 bg-secondary p-5">
+                <h4 class="text-white" style={{fontWeight:"700"}}>Ready To Digitalized ?</h4>
+                <h6 class="text-white">Sign Up Now Join Sign Up today and feel empowered to teach and engage your company through best</h6>
+                <p>FPO MANAGEMENT ERP SOFTWARE.</p>
+                <form action="">
+                  <input type="text" class=" form-control border-white p-3" placeholder="Your Name" />
+                  <input type="text" class="form-control border-white p-3 mt-4" placeholder="Your Email" />
+
+                  <input type="text" class="form-control border-white p-3 mt-4" placeholder="Your Phone" />
+
+                  <button class="btn btn-default mt-4">Sign Up</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid bg-dark text-white py-4">
+        <div class="container text-center">
+          <span>
+            Copyright © 2024{' '}
+            <a href="#" className="footer_url">
+              Kisaan Khata
+            </a>
+            . Developed by{' '}
+            <a className="footer_url" href="https://www.3edgetechnologies.com/">
+              3 Edge Technologies
+            </a>{' '}
+            All rights reserved.
+          </span>
+        </div>
+      </div>
     </>
   );
 };
