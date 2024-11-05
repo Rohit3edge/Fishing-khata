@@ -58,7 +58,7 @@ const  Registers= () => {
                                         <a  className="btn register-link" onClick={() => navigate('/loans/list')}>Loans, Guarantee</a><br></br>
                                     </div>
                                     <div className="col-md-4 text-center">
-                                        <a  className="btn register-link">Assets</a><br></br>
+                                        <a  className="btn register-link" onClick={() => navigate('/assets/list')}>Assets</a><br></br>
                                         <a  className="btn register-link">Deposits</a><br></br>
                                         <a  className="btn register-link">Seal Book</a><br></br>
                                     </div>
