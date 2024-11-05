@@ -653,7 +653,7 @@ const AddDebitNoteSec = ({ onChildDataChange,data}) => {
       <div className="col-md-12">
         <div className="card custom-card">
           <div className="card-body">
-          <div className="d-flex justify-content-end mb-2">
+          <div className="d-flex justify-content-start mb-2">
                   <button className="btn ripple btn-default" onClick={handleOpenModal} >
                     Add Item
                   </button>

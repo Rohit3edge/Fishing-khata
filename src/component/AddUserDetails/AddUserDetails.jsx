@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Updateclients, GetState, Editclients, LicenceCheck } from '../../store/slices/client';
+import Cookies from 'js-cookie';
 import Select from 'react-select';
 import Loader from '../../common/Loader';
 
@@ -300,10 +301,26 @@ const AddUserDetails = () => {
     }
   };
 
+
+  const signOut = () => {
+    // Clear localStorage and cookies
+    localStorage.clear();
+    Cookies.remove("user");
+    navigate("/home");
+  };
+
   return (
     <>
+           <a 
+        className="footer_url position-absolute" 
+         onClick={signOut}
+        style={{ top: '20px', right: '30px',fontSize:"20px",fontWeight:"600",cursor:"pointer" }}
+      >
+       Logout
+      </a>
   {isLoading && <Loader isLogin={true} />}
       <div className="container-fluid d-flex justify-content-center align-items-center min-vh-100">
+
         <div className="card custom-card w-50" style={{ border: 'none' }}>
           <div className="card-body">
             <h3 className="font-weight-bold mb-4" style={{ borderBottom: '1px solid' }}>

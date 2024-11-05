@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useMemo} from 'react';
+import React, { useState, useEffect,useMemo,useCallback} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {toast } from 'react-hot-toast';
 import { ListParties } from '../../store/slices/parties';
@@ -20,8 +20,7 @@ const EditPurchaseBill = () => {
 
   const user = JSON.parse(localStorage.getItem('user'));
   const Id = user?.data?.id; // profile_id
-  const Name = user?.data?.company_name;
-  // const currentDate = new Date().toISOString().split('T')[0];
+
 
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState({});
@@ -154,9 +153,9 @@ const EditPurchaseBill = () => {
           ledger_id: purchaseorder?.ledger_id || '',
           party_gstn: purchaseorder?.party_gstn || '',
           po_number: purchaseorder?.po_number || '',
-          po_date: purchaseorder?.po_date || '',
+          po_date:  moment(purchaseorder?.po_date).format('DD-MM-YYYY') || '',
           quotation_number: purchaseorder?.quotation_number || '',
-          quotation_date: purchaseorder?.quotation_date || '',
+          quotation_date:purchaseorder?.quotation_date == "0000-00-00" ? "" : moment(purchaseorder?.quotation_date).format('DD-MM-YYYY'),
           notes: purchaseorder?.notes || '',
           billing_name: purchaseorder?.billing_name || '',
           billing_address: purchaseorder?.billing_address || '',
@@ -193,7 +192,7 @@ const EditPurchaseBill = () => {
         }
         if(purchasevoucher?.po_no ){
           fetchPurchaseOrderlist().then((newdata) => {
-            const edata = newdata?.find((option) => option?.po_number == purchasevoucher?.po_no).id; // Fix here
+            const edata = newdata?.find((option) => option?.po_number == purchasevoucher?.po_no)?.id; // Fix here
             // console.log("edata", edata); // Check if newdata is correct
             if (edata) {
               fetchPurchaseOrderDetails(edata); // Now handle the PO change correctly
@@ -249,7 +248,7 @@ const EditPurchaseBill = () => {
   };
 
   // Submit and show the form data
-  const handleSubmit = (e) => {
+  const handleSubmit =useCallback ((e) => {
     e.preventDefault();
 
     const dataNew={
@@ -284,7 +283,7 @@ const EditPurchaseBill = () => {
         console.log(message);
       });
     }
-  };
+  });
   return (
     <AdminLayout>
         {isLoading && <Loader />}
@@ -302,11 +301,11 @@ const EditPurchaseBill = () => {
                     </li>
                   </ol>
                 </div>
-                <div className="d-flex justify-content-end">
+                {/* <div className="d-flex justify-content-end">
                   <button className="btn ripple btn-default" onClick={handleSubmit}>
                     Save
                   </button>
-                </div>
+                </div> */}
               </div>
               <div class="row">
                 <div class="col-md-12">
@@ -383,10 +382,10 @@ const EditPurchaseBill = () => {
 
                             <div class="row">
                               <div class="col-md-6">
-                                <strong>PO Date:</strong>&nbsp;{moment(formData?.po_date).format('DD-MM-YYYY')}
+                                <strong>PO Date:</strong>&nbsp;{formData?.po_date}
                               </div>
                               <div class="col-md-6">
-                                <strong>Quotation Date:</strong>&nbsp;{moment(formData?.quotation_date).format('DD-MM-YYYY')}
+                                <strong>Quotation Date:</strong>&nbsp;{formData?.quotation_date}
                               </div>
                             </div>
 
@@ -421,7 +420,7 @@ const EditPurchaseBill = () => {
                       </div>
                     </div>
                   </div>
-                  <EditPurchaseBillSec onChildDataChange={setData}  data={pVoucherData} />
+                  <EditPurchaseBillSec onChildDataChange={setData}  data={pVoucherData} handleSubmit={handleSubmit}  />
                 </div>
               </div>
             </div>

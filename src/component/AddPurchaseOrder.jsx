@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect ,useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {toast } from 'react-hot-toast';
 import {GetState } from '../store/slices/ledger';
@@ -157,7 +157,7 @@ const AddPurchaseOrder = () => {
   };
  
   // Submit and show the form data
-  const handleSubmit = (e) => {
+  const handleSubmit = useCallback((e) => {
     e.preventDefault();
     const mergedData = {
       ...formData,
@@ -178,7 +178,7 @@ const AddPurchaseOrder = () => {
         console.log(message);
       });
     }
-  };
+  });
 
   return (
      <AdminLayout>
@@ -197,9 +197,9 @@ const AddPurchaseOrder = () => {
                     </li>
                   </ol>
                 </div>
-                <div class="d-flex justify-content-end">
+                {/* <div class="d-flex justify-content-end">
                 <button class="btn ripple btn-default" onClick={handleSubmit}>Save</button>
-              </div>
+              </div> */}
               </div>
               <div class="row">
                 <div class="col-md-12">
@@ -367,7 +367,7 @@ const AddPurchaseOrder = () => {
                       </div>
                     </div>
                   </div>
-                  <AddPurchaseOrderSec onChildDataChange={setData} onSubmit={handleSubmit} />
+                  <AddPurchaseOrderSec onChildDataChange={setData} onSubmit={handleSubmit}  />
                 </div>
               </div>
             </div>

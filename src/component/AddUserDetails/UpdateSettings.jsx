@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import { Getunits,Updatesettings,Getsettings } from '../../store/slices/settings';
 import { useDispatch, useSelector } from 'react-redux';
 import {toast } from 'react-hot-toast';
@@ -89,8 +90,22 @@ const UpdateSettings = () => {
   }
   }
 
+  const signOut = () => {
+    // Clear localStorage and cookies
+    localStorage.clear();
+    Cookies.remove("user");
+    navigate("/home");
+  };
+
   return (
     <>
+      <a 
+        className="footer_url position-absolute" 
+         onClick={signOut}
+        style={{ top: '20px', right: '30px',fontSize:"20px",fontWeight:"600",cursor:"pointer" }}
+      >
+       Logout
+      </a>
      {isLoading && <Loader isLogin={true} />}
       <div className="container-fluid d-flex justify-content-center align-items-center min-vh-100">
         <div className="card custom-card w-50" style={{ border: 'none' }}>

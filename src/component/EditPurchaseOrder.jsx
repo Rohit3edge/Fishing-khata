@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import {toast } from 'react-hot-toast';
@@ -7,9 +7,7 @@ import { ListParties } from '../store/slices/parties';
 import {GetSingleDetailsPurchaseorders,UpdatePurchaseOrder} from '../store/slices/purchase'
 import EditPurchaseOrderSec from './EditPurchaseOrderSec';
 import Select from 'react-select';
-import Navbarside from './Navbarside';
 import Loader from '../common/Loader';
-import Footer from './Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import AdminLayout from './AdminLayout';
 
@@ -189,7 +187,7 @@ const EditPurchaseOrder = () => {
 
  
   // Submit and show the form data
-  const handleSubmit = (e) => {
+  const handleSubmit =useCallback( (e) => {
     e.preventDefault();
 
     const mergedData = {
@@ -208,7 +206,7 @@ const EditPurchaseOrder = () => {
         console.log(message);
       });
     
-  };
+  });
 
   return (
     <AdminLayout>
@@ -227,9 +225,9 @@ const EditPurchaseOrder = () => {
                     </li>
                   </ol>
                 </div>
-                <div class="d-flex justify-content-end">
+                {/* <div class="d-flex justify-content-end">
                 <button class="btn ripple btn-default" onClick={handleSubmit}>Save</button>
-              </div>
+              </div> */}
               </div>
               <div class="row">
                 <div class="col-md-12">
@@ -391,7 +389,7 @@ const EditPurchaseOrder = () => {
                       </div>
                     </div>
                   </div>
-                  <EditPurchaseOrderSec onChildDataChange={setData}  data={singleDetailsPo}/>
+                  <EditPurchaseOrderSec onChildDataChange={setData}  data={singleDetailsPo} handleSubmit={handleSubmit} />
                 </div>
               </div>
             </div>

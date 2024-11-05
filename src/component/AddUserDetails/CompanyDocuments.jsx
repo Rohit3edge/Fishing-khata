@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EditComapnyDucuments, UpdateComapnyDucuments } from '../../store/slices/management-cost';
 import { useDispatch, useSelector } from 'react-redux';
@@ -136,8 +137,22 @@ const CompanyDucuments = () => {
       });
   };
 
+  const signOut = () => {
+    // Clear localStorage and cookies
+    localStorage.clear();
+    Cookies.remove("user");
+    navigate("/home");
+  };
+
   return (
     <>
+      <a 
+        className="footer_url position-absolute" 
+         onClick={signOut}
+        style={{ top: '20px', right: '30px',fontSize:"20px",fontWeight:"600",cursor:"pointer" }}
+      >
+       Logout
+      </a>
       {isLoading && <Loader isLogin={true} />}
       <div className="container-fluid d-flex justify-content-center align-items-center min-vh-100">
         <div className="card custom-card w-50" style={{ border: 'none' }}>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ListParties } from '../../store/slices/parties';
 import {toast } from 'react-hot-toast';
@@ -239,11 +239,11 @@ const AddPurchaseBill = () => {
          return
       }
       if (!formData.bill_date) {
-        newErrors.ledger_id = 'Party Invoice No  is required.';
+        newErrors.bill_date = 'Party Invoice Date is required.';
       }
 
       if (!formData.bill_no) {
-        newErrors.ledger_id = 'Party Invoice Date is required.';
+        newErrors.bill_no = 'Party Invoice No is required.';
       }
       if ((data?.invoice_items)?.length==0) {
         toast.error('Item is required')
@@ -255,7 +255,7 @@ const AddPurchaseBill = () => {
     };
 
   // Submit and show the form data
-    const handleSubmit = (e) => {
+    const handleSubmit =  useCallback((e) => {
       e.preventDefault();
 
       const dataNew={
@@ -289,7 +289,7 @@ const AddPurchaseBill = () => {
           console.log(message);
         });
       }
-    };
+    })
   return (
     
       <AdminLayout>
@@ -308,11 +308,11 @@ const AddPurchaseBill = () => {
                     </li>
                   </ol>
                 </div>
-                <div className="d-flex justify-content-end">
+                {/* <div className="d-flex justify-content-end">
                   <button className="btn ripple btn-default" onClick={handleSubmit}>
                     Save
                   </button>
-                </div>
+                </div> */}
               </div>
               <div class="row">
                 <div class="col-md-12">
@@ -432,7 +432,7 @@ const AddPurchaseBill = () => {
                       </div>
                     </div>
                   </div>
-                  <AddPurchaseBillSec onChildDataChange={setData}  data={poBillData} />
+                  <AddPurchaseBillSec onChildDataChange={setData}  data={poBillData} handleSubmit={handleSubmit} />
                 </div>
               </div>
             </div>

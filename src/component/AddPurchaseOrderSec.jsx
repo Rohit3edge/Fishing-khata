@@ -181,7 +181,7 @@ const AddPurchaseOrderSec = ({ onChildDataChange, handleSubmit }) => {
       <div className="col-md-12">
         <div className="card custom-card">
           <div className="card-body">
-          <div className="d-flex justify-content-end mb-2">
+          <div className="d-flex justify-content-start mb-2">
                   <button className="btn ripple btn-default" onClick={handleOpenModal} >
                     Add Item
                   </button>
@@ -294,11 +294,11 @@ const AddPurchaseOrderSec = ({ onChildDataChange, handleSubmit }) => {
                     </tr>
                   </tbody>
                   <tr>
-                    {/* <td colspan="10" className="text-right align-middle">
+                    <td colspan="10" className="text-right align-middle">
                   <button type="button" className="btn btn-default" onClick={handleSubmit}>
                   Save
                   </button>
-                </td> */}
+                </td>
                   </tr>
                 </table>
               </div>

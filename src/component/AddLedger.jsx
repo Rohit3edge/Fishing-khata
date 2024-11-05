@@ -136,6 +136,10 @@ const AddLedger = () => {
       if (!accountDetails.ifsc) formErrors.ifsc = 'IFSC is required';
     }
 
+    if (parsedObject.group_name === 'Sundry Debtors' || parsedObject.group_name === 'Sundry Creditors') {
+      if (!accountDetails.state) formErrors.state = 'State is required';
+    }
+
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
       return;
@@ -285,7 +289,9 @@ const AddLedger = () => {
                               <input name="phone_number" type="text" className="form-control" value={accountDetails?.phone_number} onChange={handleInputChange} />
                             </div>
                             <div className="col-md-3">
-                              <label>State</label>
+                              <label>
+                                State { (parsedObject.group_name === 'Sundry Debtors' || parsedObject.group_name === 'Sundry Creditors') &&<span className="required">*</span>}
+                                </label>
                               <select className="form-control" name="state" value={accountDetails?.state || ''} onChange={handleInputChange}>
                                 <option value="">--Select State--</option>
                                 {(state || []).map((option, index) => (
@@ -294,6 +300,7 @@ const AddLedger = () => {
                                   </option>
                                 ))}
                               </select>
+                             {errors.state&& <p className="alert-message">{errors.state}</p>} 
                             </div>
                             <div className="col-md-3">
                               <label>Gst Number</label>

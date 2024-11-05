@@ -5,7 +5,7 @@ import { Getunits } from '../store/slices/settings';
 import { Listitems } from '../store/slices/items';
 import { Getsingledetail } from '../store/slices/sale';
 
-const EditPurchaseOrderSec = ({ onChildDataChange, data }) => {
+const EditPurchaseOrderSec = ({ onChildDataChange,data,handleSubmit }) => {
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id;
@@ -301,11 +301,11 @@ const EditPurchaseOrderSec = ({ onChildDataChange, data }) => {
                     </tr>
                   </tbody>
                   <tr>
-                    {/* <td colspan="10" className="text-right align-middle">
+                    <td colspan="10" className="text-right align-middle">
                   <button type="button" className="btn btn-default" onClick={handleSubmit}>
                   Save
                   </button>
-                </td> */}
+                </td>
                   </tr>
                 </table>
               </div>

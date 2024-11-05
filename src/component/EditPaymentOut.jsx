@@ -393,14 +393,18 @@ const EditPaymentOut = () => {
                         <table className="table">
                         <tr>
                             <th>Name</th>
-                            <td>{selectedInvoice?.party?.name }</td>
+                            <td>{selectedInvoice?.party?.ledger }</td>
                           </tr>
                           <tr>
                             <th>Phone Number</th>
-                            <td>{selectedInvoice?.party?.phone}</td>
+                            <td>{selectedInvoice?.party?.phone_number}</td>
                           </tr>
                           <tr>
                             <th>Billing Address</th>
+                            <td>{selectedInvoice?.party?.address}</td>
+                          </tr>
+                          <tr>
+                            <th>State</th>
                             <td>{selectedInvoice?.party?.state}</td>
                           </tr>
                           <tr>

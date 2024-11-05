@@ -629,8 +629,8 @@ padding: 12px;
 
 /* Style for smaller images */
 .testimonial-img {
-  width: 80px !important;
-  height: 80px !important;
+  width: 110px !important;
+  height: 110px !important;
   object-fit: cover !important; 
   border: none !important;
 }

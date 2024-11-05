@@ -108,7 +108,7 @@ const EditLedger = () => {
       gstn: data.gstn || '',
       address: data.address || '',
       phone_number: data.phone_number || '',
-      opening_balance: parseFloat(data.opening_balance),
+      opening_balance: parseFloat(data.opening_balance) || 0,
     });
   };
 

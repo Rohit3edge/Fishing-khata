@@ -9,7 +9,7 @@ import ProductSelector from '../../common/ProductSelector';
 import ItemRow from '../../common/ItemRow';
 import AddItemPopUp from '../../common/AddItemPopUp';
 
-const AddPurchaseBillSec = ({ onChildDataChange,data }) => {
+const AddPurchaseBillSec = ({ onChildDataChange,data,handleSubmit }) => {
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem('user'));
   const id = user?.data?.id;
@@ -656,7 +656,7 @@ const AddPurchaseBillSec = ({ onChildDataChange,data }) => {
       <div className="col-md-12">
         <div className="card custom-card">
           <div className="card-body">
-          <div className="d-flex justify-content-end mb-2">
+          <div className="d-flex justify-content-start mb-2">
                   <button className="btn ripple btn-default" onClick={handleOpenModal} >
                     Add Item
                   </button>
@@ -687,13 +687,13 @@ const AddPurchaseBillSec = ({ onChildDataChange,data }) => {
                   isDiscount={true}
                 />
               </tbody>
-              {/* <tr>
+              <tr>
                 <td colspan="10" className="text-right align-middle">
-                  <button type="button" className="btn btn-default" onClick={onSubmit}>
-                  Update Invoice
+                  <button type="button" className="btn btn-default" onClick={handleSubmit}>
+                 Save
                   </button>
                 </td>
-              </tr> */}
+              </tr>
             </table>
           </div>
         </div>

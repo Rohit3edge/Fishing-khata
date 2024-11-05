@@ -8,7 +8,7 @@ import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalance
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
 
-const Widget = ({ type, amount = 100, diff = 20, title, link, path = "/", isMoney = false }) => {
+const Widget = ({ type, amount = 100,  title, link, path = "/", isMoney = false }) => {
   let data;
 
   // Define icon styles and titles based on `type`
@@ -125,12 +125,6 @@ const Widget = ({ type, amount = 100, diff = 20, title, link, path = "/", isMone
         )}
       </div>
       <div className="right">
-        {data?.showPercentage && (
-          <div className={`percentage ${diff >= 0 ? "positive" : "negative"}`}>
-            {diff >= 0 ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-            {Math.abs(diff)} %
-          </div>
-        )}
         {data.icon}
       </div>
     </div>
