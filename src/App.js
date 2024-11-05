@@ -122,6 +122,10 @@ import AddUserDetails from './component/AddUserDetails/AddUserDetails.jsx';
 import CompanyDocuments from './component/AddUserDetails/CompanyDocuments.jsx';
 import UpdateSettings from './component/AddUserDetails/UpdateSettings.jsx';
 
+import ListAssets from './component/ListAssets.jsx';
+import AddAssets from './component/AddAssets.jsx';
+import EditAssets from './component/EditAssets.jsx';
+
 
 import LandingPage from "./component/LandingPage.jsx"
 
@@ -277,6 +281,12 @@ function App() {
           {/* Loans */}
           <Route exact path="/loans/list" element={<ListLoans />} />
           <Route exact path="/loans/edit/:id" element={<EditLoans />} />
+
+          {/* Assets */}
+          <Route exact path="/assets/list" element={<ListAssets />} />
+          <Route exact path="/assets/create" element={<AddAssets />} />
+          <Route exact path="/assets/edit/:id" element={<EditAssets />} />
+
 
           {/* Quotation */}
           <Route exact path="/quotation/list" element={<ListQuotation />} />

@@ -194,7 +194,12 @@ gettotalbankbalance:"/dashboard/get-total-bank-balance",
 gettotalcash:"/dashboard/get-total-cash",
 gettotalsundrydebtors:"/dashboard/get-total-sundry-debtors",
 gettotalsundrycreditors:"/dashboard/get-total-sundry-creditors",
-stockinventorytotal:"/report/stock-inventory-total"
+stockinventorytotal:"/report/stock-inventory-total",
+
+ListAssets:"/assets/list",
+AddAssets:"/assets/store",
+EditAssets:"/assets/get-detail",
+updateAssets:"/assets/update",
 
 
 }
