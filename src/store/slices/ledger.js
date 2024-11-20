@@ -53,7 +53,7 @@ export const LedgerAdd = createAsyncThunk(
                     error.response.data.message) ||
                 error.message ||
                 error.toString();
-            return thunkAPI.rejectWithValue({ message });
+            return thunkAPI.rejectWithValue( error.response.data.messages.error);
         }
     }
 );

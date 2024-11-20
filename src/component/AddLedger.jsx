@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Navbarside from './Navbarside';
 import { useDispatch } from 'react-redux';
+import {toast } from 'react-hot-toast';
 import { LedgerAdd, Getledgergroups, GetState } from '../store/slices/ledger';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../common/Loader';
-import Footer from './Footer';
 import AdminLayout from './AdminLayout';
 
 
@@ -189,7 +188,8 @@ const AddLedger = () => {
       })
       .catch((error) => {
         setIsLoading(false);
-        alert('Failed to add ledger: ' + error.message);
+        console.log(error) 
+        toast.error(error)
       });
   };
 
