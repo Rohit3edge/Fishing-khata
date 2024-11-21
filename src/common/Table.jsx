@@ -87,9 +87,9 @@ const Table = ({
         case 'created_at':
           return Moment(row.created_at).format('DD-MM-YYYY || HH:mm:ss'); 
       case 'dr':
-        return Number(row[column.field]) === 0 ? '' : <span className="text-danger">{formatAmount(row[column.field])}</span>;
+        return Number(row[column.field]) === 0 ? '' : <span className="">{formatAmount(row[column.field])}</span>;
       case 'cr':
-        return Number(row[column.field]) === 0 ? '' : <span className="text-success">{formatAmount(row[column.field])}</span>;
+        return Number(row[column.field]) === 0 ? '' : <span className="">{formatAmount(row[column.field])}</span>;
       case 'amount':
       case 'grand_total':
       case 'balance':
@@ -166,10 +166,18 @@ const Table = ({
             </div>
           </div>
           {closing_balance ? (
-            <div className="text-right" style={{ padding: '10px 0 10px 0px', fontWeight: '700' }}>
-              Closing Balance: ₹ {closing_balance}
-            </div>
-          ) : null}
+  <div
+    className="text-right"
+    style={{
+      padding: '10px 0',
+      fontWeight: '700',
+      color: parseFloat(closing_balance.replace(/[^0-9.-]/g, '')) < 0 ? 'red' : 'green',
+    }}
+  >
+    Closing Balance: ₹ {closing_balance}
+  </div>
+) : null}
+
           {data?.length === 0 ? (
             <h2 className="text-center">No Record Found!!</h2>
           ) : (
