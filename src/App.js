@@ -126,6 +126,9 @@ import ListAssets from './component/ListAssets.jsx';
 import AddAssets from './component/AddAssets.jsx';
 import EditAssets from './component/EditAssets.jsx';
 
+import ListShareCertificates from './component/ListShareCertificates.jsx';
+
+
 
 import LandingPage from "./component/LandingPage.jsx"
 
@@ -303,6 +306,9 @@ function App() {
 
           <Route exact path="/reportssection" element={<ReportsSection />} />
           <Route exact path="/reports/stocksummary" element={<StockSummary />} />
+
+          <Route exact path="/share-certificates/list" element={<ListShareCertificates />} />
+
 
           <Route exact path="/reports/trialbalance" element={<TrialBalance />} />
           <Route exact path="/reports/profitandloss" element={<ProfitAndLoss />} />

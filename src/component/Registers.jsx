@@ -45,7 +45,7 @@ const  Registers= () => {
                                     <div className="col-md-4 text-center">
                                         <a onClick={() => navigate('/directors/list')} className="btn register-link">Directors &amp; Key Members</a><br></br>
                                         <a onClick={() => navigate('/farmer/list')}  className="btn register-link">Farmer's Data</a><br></br>
-                                        <a  className="btn register-link">Share Certificates</a><br></br>
+                                        <a onClick={() => navigate('/share-certificates/list')} className="btn register-link">Share Certificates</a><br></br>
                                         <a  className="btn register-link">Compliance</a><br></br>
                                         <a   onClick={() => navigate('/company/ducuments')} className="btn register-link">Company Documents</a><br></br>
                                         <a  onClick={() => navigate('/management-cost/list')} className="btn register-link" >Management Cost</a><br></br>
