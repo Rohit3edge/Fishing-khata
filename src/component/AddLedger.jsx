@@ -253,7 +253,7 @@ const AddLedger = () => {
                             </div>
                             <div className="col-md-3">
                               <label>Opening Date</label>
-                              <input name="opening_date" type="date" className="form-control" value={accountDetails?.date_as_of} onChange={handleInputChange} />
+                              <input name="opening_date" type="date" className="form-control" value={accountDetails?.opening_date} onChange={handleInputChange} />
                               <p className="alert-message">{errors.opening_date}</p>
                             </div>
                             <div className="col-md-3">
