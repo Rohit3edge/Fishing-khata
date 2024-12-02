@@ -16,6 +16,7 @@ const Table = ({
   handleEdit,
   handlePDF,
   handleView,
+  handleDelete,
   showDateFilters,
   fromDate,
   toDate,
@@ -54,6 +55,9 @@ const Table = ({
                   handleEdit(row);
                 } else if (button.name === "View Ledger Entries") {
                   handleView(row);
+                }
+                else if (button.name === "Delete") {
+                  handleDelete(row);
                 }
                 else if (button.name === "View Logs Details") {
                   handleView(row);

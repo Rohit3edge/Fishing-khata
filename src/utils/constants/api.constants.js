@@ -202,4 +202,15 @@ EditAssets:"/assets/get-detail",
 updateAssets:"/assets/update",
 
 
+invoicesDelete :"/invoice/delete-invoice",
+creditNoteDelete :"/credit-note/delete",
+quotationDelete :"/quotation/delete",
+Deleteitems : "/items/delete-item",
+DeletePurchaseOrder : "/purchase-orders/delete",
+DeletePurchasevoucher : "/purchase-invoice/delete",
+DeletePurchasepayment : "/purchase-invoice/delete-payment",
+debitNoteDelete : "/debit-note/delete",
+invoicepaymentDelete : "/invoice/delete-payment"
+
+
 }

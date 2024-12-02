@@ -1,6 +1,6 @@
 import React, { useState, useEffect ,useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GetCreditNotelist } from '../store/slices/sale';
+import { GetCreditNotelist ,creditNoteDelete } from '../store/slices/sale';
 import Navbarside from './Navbarside';
 import Loader from '../common/Loader';
 import Footer from './Footer';
@@ -54,10 +54,37 @@ const CreditNoteList = () => {
   };
 
   const handleDelete = (item) => {
-    console.log('Deleting item:', item);
-    // Implement your delete logic here
+    const confirmDelete = window.confirm("Are you sure you want to delete this Credit Note?");
+    if (confirmDelete) {
+          setIsLoading(true);
+          dispatch(creditNoteDelete({ id: item.id }))
+          .unwrap()
+          .then((data) => {
+              setIsLoading(false);
+              hindleReturn();
+          })
+          .catch(({ message }) => {
+            setIsLoading(false);
+            console.log(message);
+          });
+    } else {
+      console.log("Deletion canceled");
+    }
   };
 
+  const hindleReturn = () => {
+    setIsLoading(true);
+    dispatch(GetCreditNotelist({ profile_id: id }))
+      .unwrap()
+      .then((data) => {
+        setIsLoading(false);
+        setCreditNotelist(data?.data);
+      })
+      .catch(({ message }) => {
+        setIsLoading(false);
+        console.log(message);
+      });
+  };
 
 
   React.useEffect(() => {

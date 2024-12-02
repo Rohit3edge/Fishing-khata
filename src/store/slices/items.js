@@ -113,3 +113,22 @@ export const Updateitems = createAsyncThunk(
         }
     }
 );
+
+
+export const Deleteitems = createAsyncThunk(
+    "/post/deleteitems",
+    async (item,thunkAPI) => {
+        try {
+            const data = await ItemsService.Deleteitems(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);

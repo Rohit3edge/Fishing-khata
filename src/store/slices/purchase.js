@@ -333,6 +333,78 @@ export const GetSingleDebitnote = createAsyncThunk(
     }
 );
 
+export const purchaseOrderDelete = createAsyncThunk(
+    "/post/purchaseorderdelete",
+    async (item,thunkAPI) => {
+        try {
+            const data = await PurchaseService.purchaseOrderDelete(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+export const purchaseVouchDelete = createAsyncThunk(
+    "/post/purchaseorderdelete",
+    async (item,thunkAPI) => {
+        try {
+            const data = await PurchaseService.purchaseVouchDelete(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+export const purchasePyamentDelete = createAsyncThunk(
+    "/post/purchasepyamentDelete",
+    async (item,thunkAPI) => {
+        try {
+            const data = await PurchaseService.purchasePyamentDelete(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+export const debitNoteDelete = createAsyncThunk(
+    "/post/debitnotedelete",
+    async (item,thunkAPI) => {
+        try {
+            const data = await PurchaseService.debitNoteDelete(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
 
 
 

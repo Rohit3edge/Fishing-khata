@@ -98,7 +98,29 @@ class ItemsService {
       .then((response) => response.data);
   }
 
+  static Deleteitems(item) {
+    const api = `${API_PATHS.Deleteitems}`;
+    const formData = new FormData();
+
+    for (const key in item) {
+      if (item.hasOwnProperty(key)) {
+        formData.append(key, item[key]);
+      }
+    }
+
+    return axios
+      .post(api, formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      })
+      .then((response) => response.data);
+  }
+
+
 }
+
+
 
 
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect ,useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GetPurchaseOrderlist } from '../store/slices/purchase';
+import { GetPurchaseOrderlist ,purchaseOrderDelete } from '../store/slices/purchase';
 import Navbarside from './Navbarside';
 import Loader from '../common/Loader';
 import Footer from './Footer';
@@ -55,8 +55,36 @@ const PurchaseOrderList = () => {
   };
 
   const handleDelete = (item) => {
-    console.log('Deleting item:', item);
-    // Implement your delete logic here
+    const confirmDelete = window.confirm("Are you sure you want to delete this Purchase Order?");
+    if (confirmDelete) {
+          setIsLoading(true);
+           dispatch(purchaseOrderDelete({ id: item.id }))
+          .unwrap()
+          .then((data) => {
+              setIsLoading(false);
+              hindleReturn();
+          })
+          .catch(({ message }) => {
+            setIsLoading(false);
+            console.log(message);
+          });
+    } else {
+      console.log("Deletion canceled");
+    }
+  };
+
+  const hindleReturn = () => {
+    setIsLoading(true);
+    dispatch(GetPurchaseOrderlist({ profile_id: id }))
+      .unwrap()
+      .then((data) => {
+        setIsLoading(false);
+        setPurchaseOrderlist(data?.data);
+      })
+      .catch(({ message }) => {
+        setIsLoading(false);
+        console.log(message);
+      });
   };
 
 

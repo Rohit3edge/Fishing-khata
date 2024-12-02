@@ -1,17 +1,23 @@
 {
   "files": {
-    "main.css": "/static/css/main.7a85d90b.css",
-    "main.js": "/static/js/main.ba6dab53.js",
+    "main.css": "/static/css/main.3caa01d9.css",
+    "main.js": "/static/js/main.1371ea1c.js",
     "static/js/787.bef6194b.chunk.js": "/static/js/787.bef6194b.chunk.js",
     "static/media/login.jpg": "/static/media/login.47920eba4a9992fb67cf.jpg",
     "static/media/kisaankhatalogo.png": "/static/media/kisaankhatalogo.cba522c1ce72d9e1f134.png",
+    "static/media/sale.png": "/static/media/sale.e7093870195e10fc4e45.png",
+    "static/media/purchase.png": "/static/media/purchase.b1f0e4bb4cda019bab49.png",
+    "static/media/back.jpg": "/static/media/back.88fa9fad30b1d99ba4bc.jpg",
+    "static/media/compliance.png": "/static/media/compliance.0d2c21590bfa37580e22.png",
+    "static/media/Landing.logo.png": "/static/media/Landing.logo.ce0de3f7afd40cd107b4.png",
+    "static/media/pic4.jpg": "/static/media/pic4.cb32b4ee8765d650ba06.jpg",
     "index.html": "/index.html",
-    "main.7a85d90b.css.map": "/static/css/main.7a85d90b.css.map",
-    "main.ba6dab53.js.map": "/static/js/main.ba6dab53.js.map",
+    "main.3caa01d9.css.map": "/static/css/main.3caa01d9.css.map",
+    "main.1371ea1c.js.map": "/static/js/main.1371ea1c.js.map",
     "787.bef6194b.chunk.js.map": "/static/js/787.bef6194b.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.7a85d90b.css",
-    "static/js/main.ba6dab53.js"
+    "static/css/main.3caa01d9.css",
+    "static/js/main.1371ea1c.js"
   ]
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect ,useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CreatePurchaseVoucherList } from '../store/slices/purchase';
+import { CreatePurchaseVoucherList ,purchaseVouchDelete } from '../store/slices/purchase';
 import Navbarside from './Navbarside';
 import Loader from '../common/Loader';
 import Footer from './Footer';
@@ -55,8 +55,36 @@ const PurchaseBillList = () => {
   };
 
   const handleDelete = (item) => {
-    console.log('Deleting item:', item);
-    // Implement your delete logic here
+    const confirmDelete = window.confirm("Are you sure you want to delete this Purchase Voucher?");
+    if (confirmDelete) {
+          setIsLoading(true);
+           dispatch(purchaseVouchDelete({ id: item.id }))
+          .unwrap()
+          .then((data) => {
+              setIsLoading(false);
+              hindleReturn();
+          })
+          .catch(({ message }) => {
+            setIsLoading(false);
+            console.log(message);
+          });
+    } else {
+      console.log("Deletion canceled");
+    }
+  };
+
+  const hindleReturn = () => {
+    setIsLoading(true);
+    dispatch(CreatePurchaseVoucherList({ profile_id: id }))
+      .unwrap()
+      .then((data) => {
+        setIsLoading(false);
+        setPurchaseVoucherlist(data?.data);
+      })
+      .catch(({ message }) => {
+        setIsLoading(false);
+        console.log(message);
+      });
   };
 
 
