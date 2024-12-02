@@ -1,11 +1,6 @@
 import React, { useState, useEffect ,useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
-import { Listitems } from '../store/slices/items';
-=======
 import { Listitems , Deleteitems} from '../store/slices/items';
-import Navbarside from './Navbarside';
->>>>>>> 7dbdc62f5cbc8efdb4f2bef21b03433b63d57bf5
 import Loader from '../common/Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import Table from '../common/Table';
