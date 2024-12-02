@@ -1,6 +1,6 @@
 import React, { useState, useEffect ,useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GetByInvoiceslist } from '../store/slices/sale';
+import { GetByInvoiceslist ,invoicesDelete } from '../store/slices/sale';
 import Loader from '../common/Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import Table from '../common/Table';
@@ -32,10 +32,12 @@ const InvoiceList = () => {
       isAction: true, 
       actionButtons: [
         { name: 'Edit', className: 'btn-default' }, 
+        { name: 'Delete', className: 'btn-cancel' },
         { 
           className: 'btn-danger' ,
           icon: <FaFilePdf style={{ fontSize: "15px",}} />,
          }, 
+        
       ]
     }
   ]);
@@ -54,6 +56,40 @@ const InvoiceList = () => {
   const handleEdit = (item) => {
     navigate(`/Updateaddinvoice/${item.id ? item.id : null}`)
   };
+
+  const handleDelete = (item) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this invoice?");
+    if (confirmDelete) {
+          setIsLoading(true);
+          dispatch(invoicesDelete({ id: item.id }))
+          .unwrap()
+          .then((data) => {
+              setIsLoading(false);
+              hindleReturn();
+          })
+          .catch(({ message }) => {
+            setIsLoading(false);
+            console.log(message);
+          });
+    } else {
+      console.log("Deletion canceled");
+    }
+  };
+
+  const hindleReturn = () => {
+    setIsLoading(true);
+    dispatch(GetByInvoiceslist({ profile_id: id }))
+      .unwrap()
+      .then((data) => {
+        setIsLoading(false);
+        setInvoicelist(data?.data);
+      })
+      .catch(({ message }) => {
+        setIsLoading(false);
+        console.log(message);
+      });
+  };
+  
   
   const handlePDF = (item) => {
       const baseURL = API_BASE_URL; 
@@ -62,6 +98,7 @@ const InvoiceList = () => {
   };
 
 
+  
 
 
   React.useEffect(() => {
@@ -128,6 +165,7 @@ const InvoiceList = () => {
                     totalCount={filtereditemList?.length}
                     onPageChange={handlePageChange}
                     handleEdit={handleEdit}
+                    handleDelete={handleDelete}
                     handlePDF={handlePDF}
                     handleSearchChange={handleSearchChange}
                   />

@@ -1,6 +1,6 @@
 import React, { useState, useEffect ,useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PaymentOutlist } from '../store/slices/purchase';
+import { PaymentOutlist ,purchasePyamentDelete } from '../store/slices/purchase';
 import Loader from '../common/Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import Table from '../common/Table';
@@ -52,8 +52,36 @@ const PaymentOutList = () => {
   };
 
   const handleDelete = (item) => {
-    console.log('Deleting item:', item);
-    // Implement your delete logic here
+    const confirmDelete = window.confirm("Are you sure you want to delete this Payment Out?");
+    if (confirmDelete) {
+          setIsLoading(true);
+           dispatch(purchasePyamentDelete({ id: item.id }))
+          .unwrap()
+          .then((data) => {
+              setIsLoading(false);
+              hindleReturn();
+          })
+          .catch(({ message }) => {
+            setIsLoading(false);
+            console.log(message);
+          });
+    } else {
+      console.log("Deletion canceled");
+    }
+  };
+
+  const hindleReturn = () => {
+    setIsLoading(true);
+    dispatch(PaymentOutlist({ profile_id: id }))
+      .unwrap()
+      .then((data) => {
+        setIsLoading(false);
+        setPaymentOutlist(data?.data);
+      })
+      .catch(({ message }) => {
+        setIsLoading(false);
+        console.log(message);
+      });
   };
 
 

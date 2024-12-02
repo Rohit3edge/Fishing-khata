@@ -1,6 +1,11 @@
 import React, { useState, useEffect ,useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 import { Listitems } from '../store/slices/items';
+=======
+import { Listitems , Deleteitems} from '../store/slices/items';
+import Navbarside from './Navbarside';
+>>>>>>> 7dbdc62f5cbc8efdb4f2bef21b03433b63d57bf5
 import Loader from '../common/Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import Table from '../common/Table';
@@ -49,8 +54,36 @@ const Item = () => {
   };
 
   const handleDelete = (item) => {
-    console.log('Deleting item:', item);
-    // Implement your delete logic here
+    const confirmDelete = window.confirm("Are you sure you want to delete this Items?");
+      if (confirmDelete) {
+            setIsLoading(true);
+            dispatch(Deleteitems({ id: item.id }))
+            .unwrap()
+            .then((data) => {
+                setIsLoading(false);
+                hindleReturn();
+            })
+            .catch(({ message }) => {
+              setIsLoading(false);
+              console.log(message);
+            });
+      } else {
+        console.log("Deletion canceled");
+      }
+  };
+
+  const hindleReturn = () => {
+    setIsLoading(true);
+    dispatch(Listitems({ profile_id: id }))
+      .unwrap()
+      .then((data) => {
+        setIsLoading(false);
+        setItemList(data?.data);
+      })
+      .catch(({ message }) => {
+        setIsLoading(false);
+        console.log(message);
+      });
   };
 
 

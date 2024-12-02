@@ -1,6 +1,6 @@
 import React, { useState, useEffect ,useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GetByQuotationlist } from '../store/slices/sale';
+import { GetByQuotationlist ,quotationDelete } from '../store/slices/sale';
 import Loader from '../common/Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import Table from '../common/Table';
@@ -29,6 +29,7 @@ const QuotationList = () => {
       isAction: true, 
       actionButtons: [
         { name: 'Edit', className: 'btn-default' }, 
+        { name: 'Delete', className: 'btn-cancel' }
       ]
     }
   ]);
@@ -49,6 +50,39 @@ const QuotationList = () => {
   };
 
 
+  const handleDelete = (item) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this Quotation?");
+    if (confirmDelete) {
+          setIsLoading(true);
+           dispatch(quotationDelete({ id: item.id }))
+          .unwrap()
+          .then((data) => {
+              setIsLoading(false);
+              hindleReturn();
+          })
+          .catch(({ message }) => {
+            setIsLoading(false);
+            console.log(message);
+          });
+    } else {
+      console.log("Deletion canceled");
+    }
+  };
+
+
+  const hindleReturn = () => {
+    setIsLoading(true);
+    dispatch(GetByQuotationlist({ profile_id: id }))
+      .unwrap()
+      .then((data) => {
+        setIsLoading(false);
+        setInvoicelist(data?.data);
+      })
+      .catch(({ message }) => {
+        setIsLoading(false);
+        console.log(message);
+      });
+  };
 
 
   React.useEffect(() => {
@@ -115,6 +149,7 @@ const QuotationList = () => {
                     totalCount={filtereditemList?.length}
                     onPageChange={handlePageChange}
                     handleEdit={handleEdit}
+                    handleDelete={handleDelete}
                     handleSearchChange={handleSearchChange}
                   />
                 </div>

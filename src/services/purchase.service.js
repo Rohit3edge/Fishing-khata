@@ -308,6 +308,82 @@ class PurchaseService {
           .then((response) => response.data);
       }
 
+      static purchaseOrderDelete(item) {
+        const api = `${API_PATHS.DeletePurchaseOrder}`;
+        const formData = new FormData();
+    
+        for (const key in item) {
+          if (item.hasOwnProperty(key)) {
+            formData.append(key, item[key]);
+          }
+        }
+    
+        return axios
+          .post(api, formData, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .then((response) => response.data);
+      }
+
+      static purchaseVouchDelete(item) {
+        const api = `${API_PATHS.DeletePurchaseOrder}`;
+        const formData = new FormData();
+    
+        for (const key in item) {
+          if (item.hasOwnProperty(key)) {
+            formData.append(key, item[key]);
+          }
+        }
+    
+        return axios
+          .post(api, formData, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .then((response) => response.data);
+      }
+
+      static purchasePyamentDelete(item) {
+        const api = `${API_PATHS.DeletePurchasepayment}`;
+        const formData = new FormData();
+    
+        for (const key in item) {
+          if (item.hasOwnProperty(key)) {
+            formData.append(key, item[key]);
+          }
+        }
+    
+        return axios
+          .post(api, formData, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .then((response) => response.data);
+      }
+
+      static debitNoteDelete(item) {
+        const api = `${API_PATHS.debitNoteDelete}`;
+        const formData = new FormData();
+    
+        for (const key in item) {
+          if (item.hasOwnProperty(key)) {
+            formData.append(key, item[key]);
+          }
+        }
+    
+        return axios
+          .post(api, formData, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+          .then((response) => response.data);
+      }
+
 }
 
 export default PurchaseService;
