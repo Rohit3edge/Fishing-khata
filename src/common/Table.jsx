@@ -86,6 +86,7 @@ const Table = ({
       case 'payment_date':
       case 'quotation_date':
       case "debit_note_date":
+      case "ledger_date":
       case 'invoice_date':
         return Moment(row[column.field]).format('DD-MM-YYYY');
         case 'created_at':

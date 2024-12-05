@@ -29,7 +29,7 @@ const BankBook = () => {
 
   const [columns, setcolumns] = useState([
     { header: 'Description', field: 'description', isMultiline: true },
-    { header: 'Date', field: 'added_on', isDate: true },
+    { header: 'Date', field: 'ledger_date', isDate: true },
     { header: 'Dr', field: 'dr', isDrCr: true, isDr: true },
     { header: 'Cr', field: 'cr', isDrCr: true, isDr: false },
     { header: 'Closing Balance', field: 'balance' }

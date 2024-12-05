@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ListParties } from '../store/slices/parties';
 import { AddJournalVoucher } from '../store/slices/journal';
-
 import Select from 'react-select';
-import Navbarside from './Navbarside';
-import Footer from './Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import AdminLayout from './AdminLayout';
+import {toast } from 'react-hot-toast';
 
 import Loader from '../common/Loader';
 
@@ -27,6 +25,7 @@ const Journal = () => {
     debit_entries: [],
     credit_entries: [],
   });
+
 
   const [debitEntry, setDebitEntry] = useState({
     debit_ledger_id: null,
@@ -217,18 +216,44 @@ const Journal = () => {
     (total, entry) => total + (parseFloat(entry.credit_amount) || 0), 0
   );
 
+
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.voucher_date) {
+      newErrors.voucher_date = "Voucher date is required.";
+    }
+    if (!formData.debit_entries || formData.debit_entries.length === 0) {
+      toast.error('At least one debit entry is required.');
+      newErrors.debit_entries = "At least one debit entry is required.";
+    }
+    if (!formData.credit_entries || formData.credit_entries.length === 0) {
+      toast.error('At least one credit entry is required.');
+      newErrors.credit_entries = "At least one credit entry is required.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; // Return true if no errors
+  };
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData)
+
+    // Validate the form
+    if (!validateForm()) {
+      return; // Stop submission if validation fails
+    }
+
     setIsLoading(true);
 
     try {
-      // Use await to wait for the dispatch to finish
       await dispatch(AddJournalVoucher(formData)).unwrap();
       setIsLoading(false);
-      navigate('/journallist');
+      navigate("/journallist");
     } catch (error) {
-      // Handle the error if the API call fails
       setIsLoading(false);
       console.log(error.message);
     }
@@ -269,6 +294,7 @@ const Journal = () => {
                           Voucher Date <span class="required">*</span>
                         </label>
                         <input name="voucher_date" type="date" class="form-control" value={formData.voucher_date} onChange={handleInputChange} />
+                        {errors.voucher_date&&<p className='alert-message'>{errors.voucher_date}</p>}
                       </div>
                       <div class="col-md-3">
                         <label>
