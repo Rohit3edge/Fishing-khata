@@ -72,3 +72,21 @@ export const Getdetailjournalvoucher = createAsyncThunk(
         }
     }
 );
+
+export const JournalvoucherDelete = createAsyncThunk(
+    "/post/journalvoucherDelete",
+    async (item,thunkAPI) => {
+        try {
+            const data = await JournalService.JournalvoucherDelete(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect ,useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { JournalVoucherList } from '../store/slices/journal';
+import { JournalVoucherList, JournalvoucherDelete} from '../store/slices/journal';
 import Navbarside from './Navbarside';
 import Loader from '../common/Loader';
 import Footer from './Footer';
@@ -30,6 +30,7 @@ const JournalList = () => {
       isAction: true, 
       actionButtons: [
         { name: 'Edit', className: 'btn-default' }, 
+        { name: 'Delete', className: 'btn-cancel' }
       ]
     }
   ]);
@@ -45,6 +46,39 @@ const JournalList = () => {
 
   const handleEdit = (item) => {
      navigate(`/editjournalvoucher/edit/${item.id ? item.id : null}`)
+  };
+
+  const handleDelete = (item) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this Journal Voucher?");
+    if (confirmDelete) {
+          setIsLoading(true);
+           dispatch(JournalvoucherDelete({ id: item.id }))
+          .unwrap()
+          .then((data) => {
+              setIsLoading(false);
+              hindleReturn();
+          })
+          .catch(({ message }) => {
+            setIsLoading(false);
+            console.log(message);
+          });
+    } else {
+      console.log("Deletion canceled");
+    }
+  };
+
+  const hindleReturn = () => {
+    setIsLoading(true);
+    dispatch(JournalVoucherList({ profile_id: id }))
+      .unwrap()
+      .then((data) => {
+        setIsLoading(false);
+        setVoucherList(data?.data);
+      })
+      .catch(({ message }) => {
+        setIsLoading(false);
+        console.log(message);
+      });
   };
 
 
@@ -111,6 +145,7 @@ const JournalList = () => {
                     totalCount={filteredParties.length} 
                     onPageChange={handlePageChange}
                     handleEdit={handleEdit}
+                    handleDelete={handleDelete}
                     handleSearchChange={handleSearchChange}
                   />
                 </div>

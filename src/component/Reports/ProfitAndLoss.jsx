@@ -173,6 +173,8 @@ const ProfitAndLoss = () => {
                                 ''
                               )}
 
+                              
+
                               <div className="d-flex justify-content-end" style={{ marginBottom: '15px', paddingTop: '10px', paddingBottom: '10px' }}>
                                 <div style={{ paddingLeft: '110px', paddingTop: '10px', paddingBottom: '10px', textAlign: 'right', borderTop: '1px solid', borderBottom: '1px solid' }}>
                                   ₹
@@ -184,16 +186,20 @@ const ProfitAndLoss = () => {
                                 </div>
                               </div>
 
-                              {profitLoss?.income_statement?.['Indirect Expense'] && (
+                              {profitLoss?.income_statement?.['Indirect Expenses'] && (
                                 <div className="mb-2">
-                                  {profitLoss?.income_statement?.['Indirect Expense']?.map((income, index) => (
+                                  {profitLoss?.income_statement?.['Indirect Expenses']?.map((income, index) => (
                                     <>
+                                     {index == 0?
                                       <div className="d-flex justify-content-between font-weight-bold">
                                         <b>{income?.group}</b>
                                       </div>
+                                      :
+                                      ''
+                                     }
                                       <span key={index} className="d-flex justify-content-between ">
                                         <span style={{ paddingLeft: '20px' }}>{income?.ledger}</span>
-                                        <span>{income?.amount}</span>
+                                        <span>₹{parseFloat(income?.amount?.replace(/,/g, '') || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
                                       </span>
                                     </>
                                   ))}
@@ -253,9 +259,13 @@ const ProfitAndLoss = () => {
                                 <div className="mb-2">
                                   {profitLoss?.income_statement?.['Indirect Income']?.map((income, index) => (
                                     <>
+                                    {index == 0 ?
                                       <div className="d-flex justify-content-between font-weight-bold">
                                         <b>{income?.group}</b>
                                       </div>
+                                      :
+                                      ''
+                                    }
                                       <span key={index} className="d-flex justify-content-between ">
                                         <span style={{ paddingLeft: '20px' }}>{income.ledger}</span>
                                         <span>₹{parseFloat(income?.amount?.replace(/,/g, '') || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
