@@ -75,13 +75,13 @@ const ProfitAndLoss = () => {
         <div className="container-fluid">
           <div className="page-header">
             <div>
-              <h2 class="main-content-title tx-24 mg-b-5">Trial Balance</h2>
+              <h2 class="main-content-title tx-24 mg-b-5">Profit and Loss</h2>
               <ol class="breadcrumb">
                 <li class="breadcrumb-item">
                   <a href="#">Reports</a>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page">
-                  Trial Balance
+                  Profit and Loss
                 </li>
               </ol>
             </div>
@@ -206,6 +206,26 @@ const ProfitAndLoss = () => {
                                 </div>
                               )}
 
+                              <div className="d-flex justify-content-end" style={{ marginBottom: '15px', paddingTop: '10px', paddingBottom: '10px' }}>
+                                <div style={{ paddingLeft: '110px', paddingTop: '10px', paddingBottom: '10px', textAlign: 'right', borderTop: '1px solid', borderBottom: '1px solid' }}>
+                                  ₹
+                                    {(
+                                      ((profitLoss?.income_statement?.['Indirect Expenses']?.description === 'Indirect Expenses' &&
+                                        parseFloat(profitLoss?.income_statement?.['Indirect Expenses']?.amount?.replace(/,/g, ''))) ||
+                                        0) + (profitLoss?.income_statement?.['Indirect Expenses']?.reduce((acc, income) => acc + parseFloat(income?.amount?.replace(/,/g, '')), 0) || 0)
+                                    ).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                </div>
+                              </div>
+
+                             {profitLoss?.income_statement?.['Gross Profit/Loss']?.description == 'Gross Loss' ? (
+                                <div className="d-flex justify-content-between">
+                                  <b>Gross Loss</b>
+                                  <b>₹{parseFloat(profitLoss?.income_statement?.['Gross Profit/Loss']?.amount?.replace(/,/g, '') || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</b>
+                                </div>
+                              ) : (
+                                ''
+                              )}
+
                               {profitLoss?.income_statement?.['Net Profit/Loss']?.description == 'Net Profit' ? (
                                 <div className="d-flex justify-content-between">
                                   <b>Net Profit</b>
@@ -234,7 +254,7 @@ const ProfitAndLoss = () => {
                                   </>
                                 ))}
                               </div>
-
+                              
                               {profitLoss?.income_statement?.['Gross Profit/Loss']?.description == 'Gross Loss' ? (
                                 <div className="d-flex justify-content-between">
                                   <b>Gross Loss</b>
@@ -243,6 +263,7 @@ const ProfitAndLoss = () => {
                               ) : (
                                 ''
                               )}
+                              
 
                               <div className="d-flex justify-content-end" style={{ marginBottom: '15px', paddingTop: '10px', paddingBottom: '10px' }}>
                                 <div style={{ paddingLeft: '110px', paddingTop: '10px', paddingBottom: '10px', textAlign: 'right', borderTop: '1px solid', borderBottom: '1px solid' }}>
@@ -254,6 +275,8 @@ const ProfitAndLoss = () => {
                                   ).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                 </div>
                               </div>
+
+                             
 
                               {profitLoss?.income_statement?.['Indirect Income'] && (
                                 <div className="mb-2">
@@ -275,6 +298,19 @@ const ProfitAndLoss = () => {
                                 </div>
                               )}
 
+                             
+
+                              <div className="d-flex justify-content-end" style={{ marginBottom: '15px', paddingTop: '10px', paddingBottom: '10px' }}>
+                                <div style={{ paddingLeft: '110px', paddingTop: '10px', paddingBottom: '10px', textAlign: 'right', borderTop: '1px solid', borderBottom: '1px solid' }}>
+                                  ₹
+                                    {(
+                                      ((profitLoss?.income_statement?.['Indirect Income']?.description === 'Indirect Income' &&
+                                        parseFloat(profitLoss?.income_statement?.['Indirect Income']?.amount?.replace(/,/g, ''))) ||
+                                        0) + (profitLoss?.income_statement?.['Indirect Income']?.reduce((acc, income) => acc + parseFloat(income?.amount?.replace(/,/g, '')), 0) || 0)
+                                    ).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                </div>
+                              </div>
+
                               {profitLoss?.income_statement?.['Net Profit/Loss']?.description == 'Net Loss' ? (
                                 <div className="d-flex justify-content-between">
                                   <b>Net Loss</b>
@@ -292,13 +328,7 @@ const ProfitAndLoss = () => {
                                 <span>Total</span>
                                 <span className="font-weight-bold">
                                   ₹
-                                  {(
-                                    (parseFloat(profitLoss?.total_expenses?.replace(/,/g, '')) || 0) +
-                                    ((profitLoss?.income_statement?.['Gross Profit/Loss']?.description == 'Gross Profit' &&
-                                      parseFloat(profitLoss?.income_statement?.['Net Profit/Loss']?.amount?.replace(/,/g, ''))) ||
-                                      0) -
-                                    (profitLoss?.income_statement?.['Indirect Income']?.reduce((acc, income) => acc + (parseFloat(income?.amount?.replace(/,/g, '')) || 0), 0) || 0)
-                                  ).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                  {parseFloat(profitLoss?.income_statement?.['Net Profit/Loss']?.amount?.replace(/,/g, '') || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                 </span>
                               </div>
                             </td>
@@ -308,13 +338,7 @@ const ProfitAndLoss = () => {
                                 <span>Total</span>
                                 <span className="font-weight-bold">
                                   ₹
-                                  {(
-                                    ((profitLoss?.income_statement?.['Gross Profit/Loss']?.description === 'Gross Loss' &&
-                                      parseFloat(profitLoss?.income_statement?.['Gross Profit/Loss']?.amount?.replace(/,/g, ''))) ||
-                                      0) +
-                                    (profitLoss?.income_statement?.Income?.reduce((acc, income) => acc + (parseFloat(income?.amount?.replace(/,/g, '')) || 0), 0) || 0) -
-                                    (profitLoss?.income_statement?.['Indirect Income']?.reduce((acc, income) => acc + (parseFloat(income?.amount?.replace(/,/g, '')) || 0), 0) || 0)
-                                  ).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                  {parseFloat(profitLoss?.income_statement?.['Net Profit/Loss']?.amount?.replace(/,/g, '') || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                 </span>
                               </div>
                             </td>
