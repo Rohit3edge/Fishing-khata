@@ -221,6 +221,10 @@ const Journal = () => {
   const validateForm = () => {
     const newErrors = {};
 
+    if (!formData.voucher_name) {
+      newErrors.voucher_name = "Voucher Name is required.";
+    }
+
     if (!formData.voucher_date) {
       newErrors.voucher_date = "Voucher date is required.";
     }
@@ -300,7 +304,8 @@ const Journal = () => {
                         <label>
                           Voucher Name <span class="required">*</span>
                         </label>
-                        <input name="voucher_name" aria-describedby="basic-addon1" aria-label="Username" class="form-control" type="text" value={formData.voucher_name} onChange={handleInputChange} />
+                        <input name="voucher_name" aria-describedby="basic-addon1" required="required" aria-label="Username" class="form-control" type="text" value={formData.voucher_name} onChange={handleInputChange} />
+                        {errors.voucher_name&&<p className='alert-message'>{errors.voucher_name}</p>}
                       </div>
                     </div>
                   </div>

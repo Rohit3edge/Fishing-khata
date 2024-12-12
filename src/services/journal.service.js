@@ -70,6 +70,25 @@ class JournalService {
             .then((response) => response.data);
         }
 
+        static JournalvoucherDelete(item) {
+          const api = `${API_PATHS.JournalvoucherDelete}`;
+          const formData = new FormData();
+      
+          for (const key in item) {
+            if (item.hasOwnProperty(key)) {
+              formData.append(key, item[key]);
+            }
+          }
+      
+          return axios
+            .post(api, formData, {
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+            })
+            .then((response) => response.data);
+        }
+
 
 }
 

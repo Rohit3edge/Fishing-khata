@@ -21,7 +21,7 @@ const PurchaseBillList = () => {
   const [purchaseVoucherlist, setPurchaseVoucherlist] = useState([]);
   const [columns, setcolumns] = useState([
     { header: 'Bill NO', field: 'bill_no' },
-    {header: 'Date', field: 'date_added' },
+    {header: 'Date', field: 'bill_date' },
     { header: 'Party', field: 'party_name' },  
     { header: 'Party Gstn', field: 'party_gstn' },
     { header: 'Amount', field: 'total_amount' },

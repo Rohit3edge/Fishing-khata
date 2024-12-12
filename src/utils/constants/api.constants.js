@@ -210,7 +210,8 @@ DeletePurchaseOrder : "/purchase-orders/delete",
 DeletePurchasevoucher : "/purchase-invoice/delete",
 DeletePurchasepayment : "/purchase-invoice/delete-payment",
 debitNoteDelete : "/debit-note/delete",
-invoicepaymentDelete : "/invoice/delete-payment"
+invoicepaymentDelete : "/invoice/delete-payment",
+JournalvoucherDelete : "/journal-voucher/delete"
 
 
 }

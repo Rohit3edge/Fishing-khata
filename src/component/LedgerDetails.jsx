@@ -55,7 +55,7 @@ const LedgerDetails = () => {
   const [columns, setcolumns] = useState([
     { header: 'Type', field: 'type' },
     { header: 'Description', field: 'description',isMultiline: true },
-    { header: 'Date', field: 'added_on' },
+    { header: 'Date', field: 'ledger_date' },
     { header: 'Dr', field: 'dr', isDrCr: true, isDr: true  },
     { header: 'Cr', field: 'cr', isDrCr: true, isDr: false  },
     { header: 'Closing Balance', field: 'balance' },

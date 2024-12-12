@@ -82,7 +82,7 @@ const AddParty = () => {
       bank_name: '',
       ifsc: '',
       opening_balance: '',
-      date_as_of: currentDate,
+      date_as_of: "",
       type: '',
     });
   };
@@ -94,7 +94,7 @@ const AddParty = () => {
     if (!formData.ifsc) newErrors.ifsc = 'IFSC is required.';
     if (!formData.type) newErrors.type = 'Account Type is required.';
     if (!formData.account_holder) newErrors.account_holder = 'Account Holder Name is required.';
-    if (!formData.opening_balance || (parseFloat(formData.opening_balance)<= 0)) newErrors.opening_balance='Please enter a valid amount greater than 0.'; 
+    // if (!formData.opening_balance || (parseFloat(formData.opening_balance)<= 0)) newErrors.opening_balance='Please enter a valid amount greater than 0.'; 
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -103,6 +103,7 @@ const AddParty = () => {
   // Submit handler
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(formData)
     if (validate()) {
       setIsLoading(true);
       dispatch(AddBankBook(formData))
@@ -228,7 +229,7 @@ const AddParty = () => {
                             <label>
                               As of Date <span class="required">*</span>
                             </label>
-                            <input name="as_of_date" type="date" class="form-control" value={currentDate} onChange={handleInputChange} />
+                            <input name="date_as_of" type="date" class="form-control" value={formData.date_as_of} onChange={handleInputChange} />
                           </div>
                         </div>
                       </div>
