@@ -18,56 +18,110 @@ const ProfitAndLoss = () => {
     const currentYear = today.getFullYear();
     return `${currentYear}-04-01`;
   };
-
+  
   const getTodayFormatteddate = () => {
     const options = { day: '2-digit', month: 'long', year: 'numeric' };
     return today.toLocaleDateString('en-GB', options); // e.g., 31-October-2024
   };
-
+  
   const getTodayFormattedDate = () => {
     return today.toISOString().split('T')[0]; // Returns 'YYYY-MM-DD'
   };
-
-  const [fromDate, setFromDate] = useState(getFinancialYearStartDate()); // Financial year start
-  const [toDate, setToDate] = useState(getTodayFormattedDate()); // Today's date
-
+  
+  // Load dates from local storage or set default dates
+  const loadSavedDates = () => {
+    const savedFromDate = localStorage.getItem('profitLossFromDate');
+    const savedToDate = localStorage.getItem('profitLossToDate');
+    return {
+      fromDate: savedFromDate || getFinancialYearStartDate(),
+      toDate: savedToDate || getTodayFormattedDate(),
+    };
+  };
+  
+  const { fromDate: initialFromDate, toDate: initialToDate } = loadSavedDates();
+  
+  const [fromDate, setFromDate] = useState(initialFromDate);
+  const [toDate, setToDate] = useState(initialToDate);
+  
   const user = JSON.parse(localStorage.getItem('user'));
   const Name = user?.data?.company_name;
   const profile_id = user?.data?.id;
-
+  
   useEffect(() => {
     handleProfitLoss();
   }, []);
-
+  
   const handleProfitLoss = async () => {
     const newItem = {
       profile_id: profile_id,
       from_date: fromDate, // Ensure from_date is sent
       to_date: toDate, // Ensure to_date is sent
     };
-
+  
     setIsLoading(true);
-
+  
     try {
       const data = await dispatch(GetProfitLoss(newItem)).unwrap();
-
-      setProfitLoss(data?.data || []); // Update stockSummary with the response
+  
+      setProfitLoss(data?.data || []); // Update profitLoss with the response
     } catch (error) {
-      console.error('Error fetching stock summary:', error.message);
+      console.error('Error fetching profit/loss data:', error.message);
     } finally {
       setIsLoading(false);
     }
   };
-
+  
+  const handleDateChange = (startDate, endDate) => {
+    setFromDate(startDate);
+    setToDate(endDate);
+  
+    // Save the selected dates to local storage with unique keys
+    localStorage.setItem('profitLossFromDate', startDate);
+    localStorage.setItem('profitLossToDate', endDate);
+  };
+  
+  const resetDates = async () => {
+    const defaultFromDate = getFinancialYearStartDate();
+    const defaultToDate = getTodayFormattedDate();
+  
+    // Update state
+    setFromDate(defaultFromDate);
+    setToDate(defaultToDate);
+  
+    // Clear local storage with unique keys
+    localStorage.removeItem('profitLossFromDate');
+    localStorage.removeItem('profitLossToDate');
+  
+    // Call handleProfitLoss with updated values directly
+    const newItem = {
+      profile_id: profile_id,
+      from_date: defaultFromDate, // Use updated dates here
+      to_date: defaultToDate, // Use updated dates here
+    };
+  
+    setIsLoading(true);
+  
+    try {
+      const data = await dispatch(GetProfitLoss(newItem)).unwrap();
+  
+      setProfitLoss(data?.data || []); // Update Profit/Loss with the response
+    } catch (error) {
+      console.error('Error fetching profit/loss data:', error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  
   function formatDateRange(startDate, endDate) {
     const options = { day: '2-digit', month: 'long', year: 'numeric' };
-
+  
     const formattedStartDate = new Date(startDate).toLocaleDateString('en-GB', options);
     const formattedEndDate = new Date(endDate).toLocaleDateString('en-GB', options);
-
+  
     return `${formattedStartDate} to ${formattedEndDate}`;
   }
-
+  
   return (
     <AdminLayout>
       {isLoading && <Loader />}
@@ -97,13 +151,13 @@ const ProfitAndLoss = () => {
                         <div class="col-md-4 form-inline">
                           <div class="form-group">
                             <label class="">From Date</label>
-                            <input class="form-control" type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
+                            <input class="form-control" type="date" value={fromDate} onChange={(e) => handleDateChange(e.target.value, toDate)}/>
                           </div>
                         </div>
                         <div class="col-md-4 form-inline">
                           <div class="form-group">
                             <label class="">To Date</label>
-                            <input class="form-control" type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
+                            <input class="form-control" type="date" value={toDate} onChange={(e) => handleDateChange(fromDate, e.target.value)} />
                           </div>
                         </div>
                         <div class="col-md-3 form-inline">
@@ -111,6 +165,11 @@ const ProfitAndLoss = () => {
                             <button type="submit" class="btn btn-default" onClick={() => handleProfitLoss()}>
                               Submit
                             </button>
+                          </div>
+                          <div class="form-group">
+                          <button type="button" className="btn btn-default" onClick={resetDates}>
+                             Reset Date
+                          </button>
                           </div>
                         </div>
                       </div>

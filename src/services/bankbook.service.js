@@ -79,6 +79,69 @@ class BankBookService {
         })
         .then((response) => response.data);
     }
+    static AddClosingStock(item) {
+
+        const api = `${API_PATHS.addclosingstock}`;
+        
+        return axios
+        .post(api,item,{
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+        })
+        .then((response) => response.data);
+    }
+
+    static Deleteclosingstock(item) {
+
+        const api = `${API_PATHS.deleteclosingstock}`;
+        
+        return axios
+        .post(api,item,{
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+        })
+        .then((response) => response.data);
+    }
+    static Updateclosingstock(item) {
+
+        const api = `${API_PATHS.updateclosingstock}`;
+        
+        return axios
+        .post(api,item,{
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+        })
+        .then((response) => response.data);
+    }
+    static Closingstocklist(item) {
+
+        const api = `${API_PATHS.closingstocklist}`;
+        
+        return axios
+        .post(api,item,{
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+        })
+        .then((response) => response.data);
+    }
+
+    static Getclosingstock(item) {
+        // console.log(item)
+
+        const api = `${API_PATHS.Getclosingstock}/${item}`;
+        
+        return axios
+        .get(api,item,{
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+        })
+        .then((response) => response.data);
+    }
 
 }
 

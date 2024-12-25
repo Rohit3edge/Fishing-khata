@@ -45,7 +45,7 @@ const EditLedger = () => {
     group_name:''
   });
 
-
+console.log(accountDetails)
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -97,7 +97,7 @@ const EditLedger = () => {
       ledger: data.ledger,
       group_name:data.group_name,
       group_id: data.group_id,
-      opening_date:  data.added_on ? Moment(data.added_on).format('YYYY-MM-DD') : '',
+      opening_date: data.opening_date ? Moment(data.opening_date).format('YYYY-MM-DD') : '',
       dr_cr: data.dr_cr,
       is_default: data.is_default,
       account_no: data.account_no || '',

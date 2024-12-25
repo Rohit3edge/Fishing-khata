@@ -8,7 +8,7 @@ function Footer() {
                 <div className="container">
                     <div className="row row-sm">
                         <div className="col-md-12">
-                            <span>Copyright © 2024 <a href="#" className="footer_url">Kisaan Khata</a>. Developed by <a className="footer_url" href="https://www.3edgetechnologies.com/">3 Edge Technologies</a> All rights reserved.</span>
+                            <span>Copyright © 2024 <a href="#" className="footer_url">Khata Darpan</a>. Developed by <a className="footer_url" href="https://www.3edgetechnologies.com/">3 Edge Technologies</a> All rights reserved.</span>
                         </div>
                     </div>
                 </div>

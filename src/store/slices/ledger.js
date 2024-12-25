@@ -113,6 +113,24 @@ export const UpdateLedger = createAsyncThunk(
     }
 );
 
+export const UpdateOpeningBalance = createAsyncThunk(
+    "/post/UpdateOpeningBalance",
+    async (item,thunkAPI) => {
+        try {
+            const data = await LedgerService.UpdateOpeningBalance(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
 
 
 const initialState = {

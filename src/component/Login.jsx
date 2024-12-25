@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import {toast } from 'react-hot-toast';
 import Cookies from 'js-cookie';
-import logo from '../img/logos/kisaankhatalogo.png';
+import logo from '../img/logos/logo-.png';
 import { login ,CheckProfile} from '../store/slices/auth';
 import Loader from '../common/Loader';
 import { useDispatch, useSelector } from 'react-redux';
@@ -83,6 +83,8 @@ const Login = () => {
         
         // Set a login time (e.g., 100 minutes expiration for the cookie)
         Cookies.set('user', JSON.stringify(data?.user?.data), { expires: 1 / 24 });
+        // Cookies.set('user', JSON.stringify(data?.user?.data), { expires: 1 / 1440 });
+
         
         // Clear form fields
         setAlertEmail('');

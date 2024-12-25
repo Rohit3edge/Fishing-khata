@@ -1,13 +1,14 @@
 import InvoiceList from "../../component/InvoiceList";
 
 export const API_BASE_URL =
-  process.env.API_BASE_URL || "https://kisaan-khata-api.updateproject.com";
+  process.env.API_BASE_URL || "https://api.khatadarpan.in";
 
 export const X_API_KEY="z3rlamk8xyv4r79x5wb8t35x3ot49yzg"
  // CommonImgUploadService
-export const CommonImgUploadService_BASE_URL="https://updateproject.com/kisaan-khata-api/uploads"
+export const CommonImgUploadService_BASE_URL="https://khatadarpan.in/api/uploads"
 
-
+// process.env.API_BASE_URL || "https://api.khatadarpan.in";
+// export const CommonImgUploadService_BASE_URL="https://khatadarpan.in/api/uploads"
 export const API_PATHS = {
   
   // // get Expert list
@@ -211,7 +212,12 @@ DeletePurchasevoucher : "/purchase-invoice/delete",
 DeletePurchasepayment : "/purchase-invoice/delete-payment",
 debitNoteDelete : "/debit-note/delete",
 invoicepaymentDelete : "/invoice/delete-payment",
-JournalvoucherDelete : "/journal-voucher/delete"
-
+JournalvoucherDelete : "/journal-voucher/delete",
+updateopeningbalance:"ledger/update-opening-balance",
+addclosingstock:"/closing-stock/add",
+updateclosingstock:"/closing-stock/update",
+closingstocklist:"/closing-stock/list",
+deleteclosingstock:"/closing-stock/delete",
+Getclosingstock:"/closing-stock/edit"
 
 }

@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import OwlCarousel from 'react-owl-carousel';
-import logo from '../img/logos/Landing.logo.png';
-import img1 from '../img/NewImg.jpg';
+import logo from '../img/logos/logo-.png';
+import img1 from '../img/imsogabriel-stock-qTSlAXJnGvk-unsplash.jpg';
 import img2 from '../img/compliance.png';
 import img3 from '../img/sale.png';
 import img4 from '../img/purchase.png';
@@ -145,7 +145,7 @@ const LandingPage = () => {
         <div className="container">
           <div className="row gx-0">
             <div className="col-md-12">
-              <div className="d-flex flex-column justify-content-center  p-5" style={{ height: '300px', background: '#172b4d', alignItems: 'center' }}>
+              <div className="d-flex flex-column justify-content-center  p-5" style={{ height: '300px', background: '#05696B', alignItems: 'center' }}>
                 <p className="text-white text-center" style={{ lineHeight: '34px', fontSize: '22px' }}>
                   Kisaan management software enables large agribusinesses to have complete control over their farming processes and visibility across different stakeholders. From onboarding all
                   farmers, empowering extension workers to bring all operational data on a single platform, It is just the solution you need.
@@ -314,7 +314,7 @@ const LandingPage = () => {
                     </div>
                   </div>
 
-                  <button class="btn btn-default mt-4" onClick={handleSubmit} disabled={!isVerified}>
+                  <button class="btn btn-default mt-4" onClick={handleSubmit} disabled={!isVerified} style={{background:"orange"}}>
                     Sign Up
                   </button>
                 </form>
@@ -328,7 +328,7 @@ const LandingPage = () => {
           <span>
             Copyright © 2024{' '}
             <a href="#" className="footer_url">
-              Kisaan Khata
+             khata Darpan
             </a>
             . Developed by{' '}
             <a className="footer_url" href="https://www.3edgetechnologies.com/">

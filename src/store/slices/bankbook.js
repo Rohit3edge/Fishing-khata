@@ -111,6 +111,96 @@ export const UpdateCashOpeningBalance = createAsyncThunk(
     }
 );
 
+export const AddClosingstock = createAsyncThunk(
+    "/post/addclosingstock",
+    async (item,thunkAPI) => {
+        try {
+            const data = await BankBookService.AddClosingStock(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+export const Closingstocklist = createAsyncThunk(
+    "/post/closingstocklist",
+    async (item,thunkAPI) => {
+        try {
+            const data = await BankBookService.Closingstocklist(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+export const Deleteclosingstock = createAsyncThunk(
+    "/post/deleteclosingstock",
+    async (item,thunkAPI) => {
+        try {
+            const data = await BankBookService.Deleteclosingstock(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+export const Updateclosingstock = createAsyncThunk(
+    "/post/deleteclosingstock",
+    async (item,thunkAPI) => {
+        try {
+            const data = await BankBookService.Updateclosingstock(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
+export const Getclosingstock = createAsyncThunk(
+    "/post/getclosingstock",
+    async (item,thunkAPI) => {
+        try {
+            const data = await BankBookService.Getclosingstock(item);
+            return data;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            return thunkAPI.rejectWithValue({ message });
+        }
+    }
+);
+
 
 
 const initialState = {

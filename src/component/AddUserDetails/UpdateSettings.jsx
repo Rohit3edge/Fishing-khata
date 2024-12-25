@@ -20,6 +20,7 @@ const UpdateSettings = () => {
     invoice_prefix: '',
     item_default_type: 'Product/Service',
     stock_value_method: 'Average Purchase Price',
+    stock_calculation_method:'Non-Integrated'
   });
 
 
@@ -53,6 +54,7 @@ const UpdateSettings = () => {
   
     if (!formData.invoice_prefix) newErrors.invoice_prefix = 'Invoice prefix is required.';
     if (!formData.stock_value_method) newErrors.stock_value_method = 'Stock Valuation method is required.';   
+    if (!formData.stock_calculation_method) newErrors.stock_calculation_method = 'Stock calculation method is required.';
     setErrors(newErrors);
   
     // Show an alert if any errors exist
@@ -129,6 +131,17 @@ const UpdateSettings = () => {
                   <option value="Product/Service">Product/Service</option>
                   <option value="Product">Product</option>
                   <option value="Service">Service</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group row my-2">
+              <label for="stock_calculation_method" class="col-sm-6 col-form-label">
+              Stock Calculation Method <span class="required">*</span>
+              </label>
+              <div class="col-sm-6">
+                <select name="stock_calculation_method" id="sell_type" class="form-control form-control-sm" value={formData?.stock_calculation_method} onChange={handleInputChange}>
+                <option value="Non-Integrated">Non-Integrated</option>
+                <option value="Integrated ">Integrated </option>
                 </select>
               </div>
             </div>

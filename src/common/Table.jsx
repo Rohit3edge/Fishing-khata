@@ -22,6 +22,7 @@ const Table = ({
   toDate,
   setFromDate,
   setToDate,
+  resetDates,
   handleSubmit,
 }) => {
   const handlePageSizeChange = (e) => {
@@ -53,16 +54,13 @@ const Table = ({
               onClick={() => {
                 if (button.name === 'Edit') {
                   handleEdit(row);
-                } else if (button.name === "View Ledger Entries") {
+                } else if (button.name === 'View Ledger Entries') {
                   handleView(row);
-                }
-                else if (button.name === "Delete") {
+                } else if (button.name === 'Delete') {
                   handleDelete(row);
-                }
-                else if (button.name === "View Logs Details") {
+                } else if (button.name === 'View Logs Details') {
                   handleView(row);
-                }
-                else if (button.icon) {
+                } else if (button.icon) {
                   handlePDF(row);
                 }
               }}
@@ -79,19 +77,20 @@ const Table = ({
       case 'invoice_combined':
         return row.invoice_prefix == null ? `${row.invoice_number}` : `${row.invoice_prefix}${row.invoice_number}`;
       case 'quotation_combined':
-         if (row.quotation_prefix==null)return`${row.quotation_number}`
-       return `${row.quotation_prefix}${row.quotation_number}`;
+        if (row.quotation_prefix == null) return `${row.quotation_number}`;
+        return `${row.quotation_prefix}${row.quotation_number}`;
       case 'added_on':
       case 'date_added':
       case 'payment_date':
       case 'quotation_date':
-      case "debit_note_date":
-      case "ledger_date":
-      case "bill_date":
+      case 'debit_note_date':
+      case 'ledger_date':
+      case "closing_date":
+      case 'bill_date':
       case 'invoice_date':
         return Moment(row[column.field]).format('DD-MM-YYYY');
-        case 'created_at':
-          return Moment(row.created_at).format('DD-MM-YYYY || HH:mm:ss'); 
+      case 'created_at':
+        return Moment(row.created_at).format('DD-MM-YYYY || HH:mm:ss');
       case 'dr':
         return Number(row[column.field]) === 0 ? '' : <span className="">{formatAmount(row[column.field])}</span>;
       case 'cr':
@@ -105,8 +104,8 @@ const Table = ({
       case 'current_stock_value':
       case 'sale_price':
         return formatAmount(row[column.field]);
-        case 'purchase_price':
-          return formatAmount(row[column.field]);
+      case 'purchase_price':
+        return formatAmount(row[column.field]);
       case 'description':
         const trimmedDescription = row[column.field].trim();
         return trimmedDescription.split('\n').map((line, index) => (
@@ -122,34 +121,39 @@ const Table = ({
 
   return (
     <div className="card custom-card mb-4">
+
       {showDateFilters && ( // Conditionally render the date filter section
-      <div class="card custom-card">
-      <div class="card-body">
-        <div className="row">
-          <div className="col-md-3 form-inline">
-            <div className="form-group">
-              <label>From Date</label>
-              <input className="form-control" type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
+        <div class="card custom-card">
+          <div class="card-body">
+            <div className="row">
+              <div className="col-md-3 form-inline">
+                <div className="form-group">
+                  <label>From Date</label>
+                  <input className="form-control" type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
+                </div>
+              </div>
+              <div className="col-md-3 form-inline">
+                <div className="form-group">
+                  <label>To Date</label>
+                  <input className="form-control" type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
+                </div>
+              </div>
+              <div className="col-md-3 form-inline">
+                <div className="form-group">
+                  <button type="submit" className="btn btn-default" onClick={handleSubmit}>
+                    Submit
+                  </button>
+                </div>
+                <div class="form-group">
+                  <button type="button" className="btn btn-default" onClick={resetDates}>
+                    Reset Date
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="col-md-3 form-inline">
-            <div className="form-group">
-              <label>To Date</label>
-              <input className="form-control" type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
-            </div>
-          </div>
-          <div className="col-md-3 form-inline">
-            <div className="form-group">
-              <button type="submit" className="btn btn-default" onClick={handleSubmit}>
-                Submit
-              </button>
-            </div>
-          </div>
-        </div>
-        </div>
         </div>
       )}
-
       {data?.length === 0 && !handleSearchChange ? (
         <div className="card-body">
           <h2 className="text-center">No Record Found!!</h2>
@@ -172,17 +176,17 @@ const Table = ({
             </div>
           </div>
           {closing_balance ? (
-  <div
-    className="text-right"
-    style={{
-      padding: '10px 0',
-      fontWeight: '700',
-      color: parseFloat(closing_balance.replace(/[^0-9.-]/g, '')) < 0 ? 'red' : 'green',
-    }}
-  >
-    Closing Balance: ₹ {closing_balance}
-  </div>
-) : null}
+            <div
+              className="text-right"
+              style={{
+                padding: '10px 0',
+                fontWeight: '700',
+                color: parseFloat(closing_balance.replace(/[^0-9.-]/g, '')) < 0 ? 'red' : 'green',
+              }}
+            >
+              Closing Balance: ₹ {closing_balance}
+            </div>
+          ) : null}
 
           {data?.length === 0 ? (
             <h2 className="text-center">No Record Found!!</h2>

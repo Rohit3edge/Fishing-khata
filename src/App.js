@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect,useRef} from 'react';
 import './login.css';
 import { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { BrowserRouter as Router, Route, Routes, useNavigate, Navigate,useLocation  } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import PublicRoutes from './component/Routes/PublicRoutes.jsx';
@@ -127,51 +128,114 @@ import AddAssets from './component/AddAssets.jsx';
 import EditAssets from './component/EditAssets.jsx';
 
 import ListShareCertificates from './component/ListShareCertificates.jsx';
-
-
-
 import LandingPage from "./component/LandingPage.jsx"
+
+
+import AddClosingStock from "./component/AddClosingStock.jsx"
+import ClosingStockList from "./component/ClosingStockList.jsx"
+import EditClosingStock from "./component/EditClosingStock.jsx"
+
+
+const clearCacheData = () => {
+  caches.keys().then((names) => {
+    names.forEach((name) => {
+      caches.delete(name);
+    });
+  });
+};
+
 
 function App() {
   const [auth, setAuth] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
+  const hasToastBeenShown = useRef(false); 
+  const [toastDisplayed, setToastDisplayed] = useState(false);
 
-  React.useEffect(() => {
-    const user = Cookies.get('user');
-    const currentPath = location.pathname;
-    if (!user) {
-      if (currentPath !== '/login' && currentPath !== '/home') {
-        localStorage.removeItem('user');
-        navigate('/home');
-      }
-    } else {
-      try {
-        // Safely parse the user data only if it exists
-        const userData = JSON.parse(user);
-        const ID = userData?.id;
 
-        if (ID) {
-          fetchCheckProfile(ID);
-        }
-      } catch (error) {
-        console.error('Error parsing user data:', error);
-        navigate('/home'); // Navigate to login if parsing fails
-      }
+  const user = Cookies.get("user");
+  const authsec = user ? true : false;
+
+
+  
+ 
+useEffect(() => {
+  const currentPath = location.pathname;
+  if (!user) {
+    if (currentPath !== "/login" && currentPath !== "/home" && !toastDisplayed && !hasToastBeenShown.current) {
+      hasToastBeenShown.current = true; // Mark toast as shown
+
+      toast.custom(
+        (t) => (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "30px",
+              background: "#fff",
+              padding: "38px",
+              borderRadius: "8px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            <p style={{ margin: 0, fontSize: "20px" }}>
+              Session expired. Please log in again.
+            </p>
+            <button
+              className="btn ripple btn-default"
+              onClick={() => {
+                clearCacheData(); // Clear cache
+                toast.dismiss(t.id); // Dismiss the toast
+                localStorage.removeItem("user"); // Remove user data
+                localStorage.removeItem("fromDate");
+                localStorage.removeItem("toDate");
+                navigate("/home"); // Navigate to home page
+                setToastDisplayed(false); // Reset the flag after navigation
+                hasToastBeenShown.current = false; // Reset ref after user action
+              }}
+              style={{
+                padding: "10px 20px",
+                background: "#007bff",
+                color: "#fff",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+            >
+              OK
+            </button>
+          </div>
+        ),
+        { duration: Infinity } // Keep the toast visible until action is taken
+      );
     }
-  }, [window.location.href]);
+  } else {
+    try {
+      const userData = JSON.parse(user);
+      const ID = userData?.id;
+
+      if (ID) {
+        fetchCheckProfile(ID);
+      }
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+      navigate("/home"); // Navigate to login if parsing fails
+    }
+  }
+}, [location.pathname, toastDisplayed]);
 
   const fetchCheckProfile = async (id) => {
     try {
       const data = await dispatch(CheckProfile({ profile_id: id })).unwrap();
       setAuth(data?.user?.status);
-      console.log('data?.user?.status', data?.user, data?.user?.status);
     } catch (error) {
       console.log(error.message);
       return false;
     }
   };
+
+
 
   return (
     <>
@@ -215,6 +279,9 @@ function App() {
           {/* CashBook */}
 
           <Route exact path="/cashbook" element={<CashBook />} />
+          <Route exact path="/addclosingstock" element={<AddClosingStock />} />
+          <Route exact path="/closingstocklist" element={<ClosingStockList />} />
+          <Route exact path="/editclosingstock/edit/:closingstockid" element={<EditClosingStock />} />
 
           {/* Sell */}
           <Route exact path="/invoice" element={<Invoice />} />
@@ -316,9 +383,16 @@ function App() {
         </Route>
 
         {/* Route to restrict access to certain pages if authorized */}
-        <Route path="/adduserdetails" element={auth ? <Navigate to="/" /> : <AddUserDetails />} />
-        <Route path="/companydocuments" element={auth ? <Navigate to="/" /> : <CompanyDocuments />} />
-        <Route path="/addsettings" element={auth ? <Navigate to="/" /> : <UpdateSettings />} />
+
+        {!authsec ? (
+        <Route path="*" element={<Navigate to="/home" replace />} />
+      ) : (
+        <>
+          <Route path="/adduserdetails" element={auth ? <Navigate to="/" /> : <AddUserDetails />} />
+          <Route path="/companydocuments" element={auth ? <Navigate to="/" /> : <CompanyDocuments />} />
+          <Route path="/addsettings" element={auth ? <Navigate to="/" /> : <UpdateSettings />} />
+        </>
+      )}
 
         {/* PublicRoutes */}
         <Route element={<PublicRoutes />}>

@@ -21,7 +21,7 @@ import { GiWallet, GiNotebook } from "react-icons/gi";
 import { IoSettings } from "react-icons/io5";
 import { MdOutlineLogout } from "react-icons/md";
 import { Getcompanybanks } from "../store/slices/bankbook";
-import logo from "../img/logos/kisaankhatalogo.png";
+import logo from "../img/logos/logo-.png";
 
 const Navbarside = () => {
   const navigate = useNavigate();
@@ -41,11 +41,21 @@ const Navbarside = () => {
 
   const signOut = () => {
     // Clear localStorage and cookies
+    clearCacheData()
     localStorage.clear();
     Cookies.remove("user");
     navigate("/home");
   };
   
+  const clearCacheData = () => {
+    caches.keys().then((names) => {
+        names.forEach((name) => {
+            caches.delete(name);
+        });
+    });
+};
+
+
   React.useEffect(() => {
     dispatch(Getcompanybanks())
       .unwrap()
@@ -61,7 +71,7 @@ const Navbarside = () => {
     <>
       {/* Sidebar */}
       <div className="col-md-2 sidebar">
-        <div className="row">
+        <div className="row" style={{background:"#fff"}}>
           <div className="col-12 text-center logo">
             <img src={logo} alt="logo" className="img-responsive" />
           </div>
@@ -240,6 +250,12 @@ const Navbarside = () => {
                 <NavLink to="/cashbook" className="menu-title">
                   <GiWallet className="nav_icons" />
                   Cash Book
+                </NavLink>
+              </li>
+              <li className="nav_items">
+                <NavLink to="/closingstocklist" className="menu-title">
+                  <GiWallet className="nav_icons" />
+                  Closing Stock
                 </NavLink>
               </li>
               <li className="nav_items">

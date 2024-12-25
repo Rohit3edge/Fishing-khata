@@ -31,6 +31,33 @@ const SettingsItem = ({ data }) => {
         <div class="row pt-4">
           <div class="col-sm-6">
 
+
+          <div class="form-group row my-2">
+              <label for="stock_value_method" class="col-sm-6 col-form-label">
+              Stock Calculation Method
+              </label>
+              <div class="col-sm-6">
+                <select
+                  name="stock_value_method"
+                  id="sell_type"
+                  class="form-control form-control-sm"
+                  value={
+                    setting?.stock_calculation_method ??
+                    data?.stock_calculation_method
+                  }
+                  onChange={(e) => {
+                    dispatch(
+                      updateSettingsField({
+                        stock_calculation_method: e.target.value,
+                      })
+                    );
+                  }}
+                >
+                  <option value="Non-Integrated">Non-Integrated</option>
+                  <option value="Integrated ">Integrated </option>
+                </select>
+              </div>
+            </div>
           <div class="form-group row my-2">
               <label for="stock_value_method" class="col-sm-6 col-form-label">
               Stock Valuation Method

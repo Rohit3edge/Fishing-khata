@@ -20,6 +20,7 @@ const JournalList = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [VoucherList, setVoucherList] = useState([]);
   const [columns, setcolumns] = useState([
+    { header: 'Id', field: 'id' },
     { header: 'Voucher Name', field: 'voucher_name' },
     { header: 'Voucher Date', field: 'voucher_date' },
     { header: 'Debit Amount', field: 'debit_amount' },

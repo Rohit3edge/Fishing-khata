@@ -93,6 +93,19 @@ class LedgerService {
             })
             .then((response) => response.data);
     }
+
+    static UpdateOpeningBalance(item) {
+ 
+        const api = `${API_PATHS.updateopeningbalance}`;
+        
+        return axios
+            .post(api,item,{
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+            })
+            .then((response) => response.data);
+    }
 }
 
 

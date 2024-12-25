@@ -13,12 +13,11 @@ const TrialBalance = () => {
   const [totaldebits, setTotaldebits] = useState([]);
   const [totalcredits, setTotalcredits] = useState([]);
 
-  // Get today's date
   const today = new Date();
 
   // Financial year calculation
   const getFinancialYearStartDate = () => {
-    const currentYear = today.getFullYear();
+    const currentYear = today.getMonth() >= 3 ? today.getFullYear() : today.getFullYear() - 1;
     return `${currentYear}-04-01`;
   };
 
@@ -26,8 +25,20 @@ const TrialBalance = () => {
     return today.toISOString().split('T')[0]; // Returns 'YYYY-MM-DD'
   };
 
-  const [fromDate, setFromDate] = useState(getFinancialYearStartDate()); // Financial year start
-  const [toDate, setToDate] = useState(getTodayFormattedDate()); // Today's date
+  // Load dates from local storage or set default dates
+  const loadSavedDates = () => {
+    const savedFromDate = localStorage.getItem('fromDate');
+    const savedToDate = localStorage.getItem('toDate');
+    return {
+      fromDate: savedFromDate || getFinancialYearStartDate(),
+      toDate: savedToDate || getTodayFormattedDate(),
+    };
+  };
+
+  const { fromDate: initialFromDate, toDate: initialToDate } = loadSavedDates();
+
+  const [fromDate, setFromDate] = useState(initialFromDate);
+  const [toDate, setToDate] = useState(initialToDate);
 
   const user = JSON.parse(localStorage.getItem('user'));
   const Name = user?.data?.company_name;
@@ -59,6 +70,51 @@ const TrialBalance = () => {
     }
   };
 
+  const handleDateChange = (startDate, endDate) => {
+    setFromDate(startDate);
+    setToDate(endDate);
+
+    // Save the selected dates to local storage
+    localStorage.setItem('fromDate', startDate);
+    localStorage.setItem('toDate', endDate);
+  };
+
+  const resetDates = async () => {
+    const defaultFromDate = getFinancialYearStartDate();
+    const defaultToDate = getTodayFormattedDate();
+  
+    // Update state
+    setFromDate(defaultFromDate);
+    setToDate(defaultToDate);
+  
+    // Clear local storage
+    localStorage.removeItem('fromDate');
+    localStorage.removeItem('toDate');
+  
+    // Call handleTrialBalance with updated values directly
+    const newItem = {
+      profile_id: profile_id,
+      from_date: defaultFromDate, // Use updated dates here
+      to_date: defaultToDate, // Use updated dates here
+    };
+  
+    setIsLoading(true);
+  
+    try {
+      const data = await dispatch(GetTrialBalance(newItem)).unwrap();
+  
+      setTrialBalance(data?.data?.trial_balance || []); // Update stockSummary with the response
+      setTotaldebits(data?.data?.total_debits);
+      setTotalcredits(data?.data?.total_credits);
+    } catch (error) {
+      console.error('Error fetching trial balance:', error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+
+
   function formatDateRange(startDate, endDate) {
     const options = { day: '2-digit', month: 'long', year: 'numeric' };
 
@@ -67,7 +123,6 @@ const TrialBalance = () => {
 
     return `${formattedStartDate} to ${formattedEndDate}`;
   }
-
   return (
     <AdminLayout>
       {isLoading && <Loader />}
@@ -97,13 +152,13 @@ const TrialBalance = () => {
                         <div class="col-md-4 form-inline">
                           <div class="form-group">
                             <label class="">From Date</label>
-                            <input class="form-control" type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
+                            <input class="form-control" type="date" value={fromDate} onChange={(e) => handleDateChange(e.target.value, toDate)} />
                           </div>
                         </div>
                         <div class="col-md-4 form-inline">
                           <div class="form-group">
                             <label class="">To Date</label>
-                            <input class="form-control" type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
+                            <input class="form-control" type="date" value={toDate}  onChange={(e) => handleDateChange(fromDate, e.target.value)} />
                           </div>
                         </div>
                         <div class="col-md-3 form-inline">
@@ -111,6 +166,11 @@ const TrialBalance = () => {
                             <button type="submit" class="btn btn-default" onClick={() => handleTrialBalance()}>
                               Submit
                             </button>
+                          </div>
+                          <div class="form-group">
+                          <button type="button" className="btn btn-default" onClick={resetDates}>
+                             Reset Date
+                          </button>
                           </div>
                         </div>
                       </div>
@@ -134,8 +194,8 @@ const TrialBalance = () => {
                         <thead>
                           <tr style={{ BorderBottom: '2px solid black' }}>
                             <th>Particulars</th>
-                            <th style={{ textAlign: 'center', width: '125px' }}>Dr</th>
-                            <th style={{ textAlign: 'center', width: '125px' }}>Cr</th>
+                            <th style={{ textAlign: 'right', width: '125px' }}>Dr</th>
+                            <th style={{ textAlign: 'right', width: '125px' }}>Cr</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -143,7 +203,7 @@ const TrialBalance = () => {
                             <React.Fragment key={group}>
                               <tr>
                                 <td style={{ textAlign: 'left', fontWeight: 'bold', border: 'none' }}>{group}</td>
-                                <td style={{ border: 'none', fontWeight: 'bold', textAlign: 'center' }}>
+                                <td style={{ border: 'none', fontWeight: 'bold', textAlign: 'right',paddingRight:"0px" }}>
                                   {' '}
                                   {items?.reduce((sum, item) => {
                                     const debitValue = Number(item?.debit?.toString()?.replace(/,/g, '')); // Remove commas if any
@@ -160,7 +220,7 @@ const TrialBalance = () => {
                                   {/* Render blank if total is 0 */}
                                 </td>
 
-                                <td style={{ border: 'none', fontWeight: 'bold', textAlign: 'center' }}>
+                                <td style={{ border: 'none', fontWeight: 'bold', textAlign: 'right',paddingRight:"0px" }}>
                                   {' '}
                                   {items?.reduce((sum, item) => {
                                     const creditValue = Number(item?.credit?.toString()?.replace(/,/g, '')); // Remove commas if any
@@ -186,7 +246,7 @@ const TrialBalance = () => {
                                       borderBottom: index === items.length - 1 ? '2px solid black' : 'none',
                                       borderTop: 'none',
                                       padding: '2px 0px 2px 0px',
-                                      textAlign: 'center',
+                                      textAlign: 'right',
                                     }}
                                   >
                                     {Number(item?.debit?.toString()?.replace(/,/g, '')) > 0
@@ -199,7 +259,7 @@ const TrialBalance = () => {
                                       borderBottom: index === items.length - 1 ? '2px solid black' : 'none',
                                       borderTop: 'none',
                                       padding: '2px 0px 2px 0px',
-                                      textAlign: 'center',
+                                      textAlign: 'right',
                                     }}
                                   >
                                     {Number(item?.credit?.toString().replace(/,/g, '')) > 0
@@ -214,13 +274,15 @@ const TrialBalance = () => {
                             <td className="td1" style={{ borderTop: '1px solid', borderBottom: '1px solid' }}>
                               <b>Total</b>
                             </td>
-                            <td className="td2" style={{ borderTop: '1px solid', borderBottom: '1px solid' }}>
+                            <td className="td2" style={{ borderTop: '1px solid', borderBottom: '1px solid',
+                                      textAlign: 'right',paddingRight:"0px" }}>
                               ₹
                               {typeof totaldebits === 'string'
                                 ? parseFloat(totaldebits.replace(/,/g, '')).toLocaleString('en-IN', { minimumFractionDigits: 2 })
                                 : parseFloat(totaldebits || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                             </td>
-                            <td className="td2" style={{ borderTop: '1px solid', borderBottom: '1px solid' }}>
+                            <td className="td2" style={{ borderTop: '1px solid', borderBottom: '1px solid' ,
+                                      textAlign: 'right',paddingRight:"0px"}}>
                               ₹
                               {typeof totalcredits === 'string'
                                 ? parseFloat(totalcredits.replace(/,/g, '')).toLocaleString('en-IN', { minimumFractionDigits: 2 })
